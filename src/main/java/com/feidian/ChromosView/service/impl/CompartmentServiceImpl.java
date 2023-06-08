@@ -1,8 +1,11 @@
 package com.feidian.ChromosView.service.impl;
 
+import com.feidian.ChromosView.domain.Chromosome;
+import com.feidian.ChromosView.domain.CompartmentPoint;
 import com.feidian.ChromosView.domain.Cultivar;
 import com.feidian.ChromosView.domain.Species;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
+import com.feidian.ChromosView.mapper.CompartmentMapper;
 import com.feidian.ChromosView.mapper.CultivarMapper;
 import com.feidian.ChromosView.mapper.SpeciesMapper;
 import com.feidian.ChromosView.service.CompartmentService;
@@ -10,17 +13,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.ArrayList;
 
 @Service
 public class CompartmentServiceImpl implements CompartmentService {
     private final SpeciesMapper speciesMapper;
     private final CultivarMapper cultivarMapper;
     private final ChromosomeMapper chromosomeMapper;
+    private final CompartmentMapper compartmentMapper;
     @Autowired
-    public CompartmentServiceImpl(SpeciesMapper speciesMapper, CultivarMapper cultivarMapper, ChromosomeMapper chromosomeMapper) {
+    public CompartmentServiceImpl(SpeciesMapper speciesMapper, CultivarMapper cultivarMapper, ChromosomeMapper chromosomeMapper, CompartmentMapper compartmentMapper) {
         this.speciesMapper = speciesMapper;
         this.cultivarMapper = cultivarMapper;
         this.chromosomeMapper = chromosomeMapper;
+        this.compartmentMapper = compartmentMapper;
     }
 
     public int addSpecies_Chromosome_raw() {
@@ -75,6 +81,30 @@ public class CompartmentServiceImpl implements CompartmentService {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+        return 0;
+    }
+
+    @Override
+    public int addPointFromFile(String path) {
+        File file=new File(path);
+        ArrayList<CompartmentPoint> compartmentPointArrayList=new ArrayList<>();
+        try {
+            BufferedReader bufferedReader=new BufferedReader(new FileReader(file));
+            String data;
+            while ((data = bufferedReader.readLine()) != null) {
+                String[] split = data.split("\t");
+                Chromosome byCultivarIDCsName = chromosomeMapper.findByCultivarID_CSName(67, split[0].trim());
+                compartmentPointArrayList.add(new CompartmentPoint(1
+                        ,byCultivarIDCsName.getCS_ID()
+                        ,Long.parseLong(split[1]),Long.parseLong(split[2])
+                        ,Double.parseDouble(split[3])));
+            }
+            compartmentMapper.insertFromFile(compartmentPointArrayList);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return 0;
     }

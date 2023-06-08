@@ -187,6 +187,10 @@ class ChromosViewTests {
         //System.out.println(list2);
         chromosomeMapper.insertChromosome(list2);
     }
+    @Test
+    void insertFromFile(){
+        compartmentService.addPointFromFile("D:\\DNA\\A2_Compartment.bed");
+    }
 }
 
 

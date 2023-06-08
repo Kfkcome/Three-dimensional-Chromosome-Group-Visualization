@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompartmentPoint {
+    int ID;
     int CS_ID;
     long START_POINT;
-    int END_POINT;
-    int VALUE;
+    long END_POINT;
+    double VALUE;
 }

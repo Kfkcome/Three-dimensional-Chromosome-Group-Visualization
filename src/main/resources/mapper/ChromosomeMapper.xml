@@ -16,4 +16,7 @@
     <select id="findByCultivarID" resultType="com.feidian.ChromosView.domain.Chromosome">
         select CS_ID, CS_NAME, CS_LENGTH, CULTIVAR_ID FROM biology.t_chromosome where CULTIVAR_ID=#{id};
     </select>
+    <select id="findByCultivarID_CSName" resultType="com.feidian.ChromosView.domain.Chromosome">
+        select CS_ID, CS_NAME, CS_LENGTH, CULTIVAR_ID FROM biology.t_chromosome where CULTIVAR_ID=#{id} and CS_NAME=#{name};
+    </select>
 </mapper>
