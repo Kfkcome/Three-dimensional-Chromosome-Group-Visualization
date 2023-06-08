@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.feidian.ChromosView.mapper.CultivarMapper">
+
+    <insert id="addCultivar">
+        insert into biology.t_cultivar (CULTIVAR_NAME, SPECIES_ID) values (#{CULTIVAR_NAME},#{SPECIES_ID});
+    </insert>
+    <update id="updateCSNum">
+        update  biology.t_cultivar set CS_NUM=#{CS_NUM} where CULTIVAR_ID=#{CULTIVAR_ID};
+    </update>
+    <select id="findAll" resultType="com.feidian.ChromosView.domain.Cultivar">
+        select cultivar_id, cultivar_name, species_id,CS_NUM from biology.t_cultivar;
+    </select>
+    <select id="findByName_SpeciesID" resultType="java.lang.Integer">
+        select CULTIVAR_ID from biology.t_cultivar where SPECIES_ID=#{SPECIES_ID} and CULTIVAR_NAME=#{CULTIVAR_NAME};
+    </select>
+    <select id="findBCLABySpeciesID" resultType="com.feidian.ChromosView.domain.Cultivar">
+        select cultivar_id, cultivar_name, species_id, cs_num from biology.t_cultivar where SPECIES_ID=#{SPECIES_ID};
+    </select>
+</mapper>

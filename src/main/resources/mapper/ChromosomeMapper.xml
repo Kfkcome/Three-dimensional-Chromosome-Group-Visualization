@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.feidian.ChromosView.mapper.ChromosomeMapper">
+    <insert id="insertChromosome">
+        insert into biology.t_chromosome (cs_name, cs_length, cultivar_id)values
+        <foreach collection="list" separator="," item="item">
+            (#{item.CS_NAME},#{item.CS_LENGTH},#{item.CULTIVAR_ID})
+        </foreach>
+    </insert>
+    <select id="findMaxLength" resultType="com.feidian.ChromosView.domain.Chromosome">
+        SELECT CS_ID, CS_NAME, CS_LENGTH, CULTIVAR_ID FROM biology.t_chromosome_raw where CULTIVAR_ID=#{CULTIVATE_ID} ORDER BY CS_LENGTH DESC LIMIT #{limit};
+    </select>
+    <select id="findAll" resultType="com.feidian.ChromosView.domain.Chromosome">
+        select CS_ID, CS_NAME, CS_LENGTH, CULTIVAR_ID FROM biology.t_chromosome;
+    </select>
+    <select id="findByCultivarID" resultType="com.feidian.ChromosView.domain.Chromosome">
+        select CS_ID, CS_NAME, CS_LENGTH, CULTIVAR_ID FROM biology.t_chromosome where CULTIVAR_ID=#{id};
+    </select>
+</mapper>

@@ -1,0 +1,13 @@
+server:
+  port: 8082
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/biology?characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml # mapper??????
+  type-aliases-package: com.feidian.ChromosView.domain   # ??????????????
+  #configuration:
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
