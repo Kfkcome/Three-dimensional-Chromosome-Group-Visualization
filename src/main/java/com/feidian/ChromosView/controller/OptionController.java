@@ -3,6 +3,7 @@ package com.feidian.ChromosView.controller;
 import com.feidian.ChromosView.domain.Chromosome;
 import com.feidian.ChromosView.domain.Cultivar;
 import com.feidian.ChromosView.domain.Species;
+import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.service.CultivarService;
 import com.feidian.ChromosView.service.SpeciesService;
 import com.feidian.ChromosView.utils.ApiResponse;
@@ -33,11 +34,11 @@ public class OptionController {
         return ApiResponse.success(allCultivar);
     }
     @GetMapping("/cultivar/id/{SpeciesID}")
-    ApiResponse findCultivarBySpeciesID(@PathVariable(value ="SpeciesID" ) Integer SpeciesID){
+    ApiResponse findCultivarBySpeciesID(@PathVariable(value ="SpeciesID" ) Integer SpeciesID) throws QueryException {
         List<Cultivar> cultivarBySpeciesID = cultivarService.findCultivarBySpeciesID(SpeciesID);
         if(cultivarBySpeciesID.isEmpty())
         {
-            return ApiResponse.fail(ApiResponse.fail().getCode(),"查询不到物种数据");
+            throw new QueryException("查询不到数据");
         }
         return ApiResponse.success(cultivarBySpeciesID);
     }
@@ -47,12 +48,11 @@ public class OptionController {
         return ApiResponse.success(allChromosome);
     }
     @GetMapping("/chromosome/id/{CultivarID}")
-    ApiResponse findChromosomeByID(@PathVariable(value = "CultivarID") Integer CultivarID)
-    {
+    ApiResponse findChromosomeByID(@PathVariable(value = "CultivarID") Integer CultivarID) throws QueryException {
         List<Chromosome> csByID = cultivarService.findCSByID(CultivarID);
         if(csByID.isEmpty())
         {
-            return ApiResponse.fail(ApiResponse.fail().getCode(), "查询不到数据");
+            throw new QueryException("查询不到数据");
         }
         return ApiResponse.success(csByID);
     }

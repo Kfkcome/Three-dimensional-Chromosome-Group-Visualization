@@ -9,4 +9,8 @@
             (#{item.CS_ID},#{item.START_POINT},#{item.END_POINT},#{item.VALUE})
             </foreach>
     </insert>
+    <select id="findCompartmentID" resultType="com.feidian.ChromosView.domain.CompartmentPoint">
+        select ID, CS_ID, START_POINT, END_POINT, VALUE
+        from biology.t_compartment where CS_ID=#{cs_id};
+    </select>
 </mapper>

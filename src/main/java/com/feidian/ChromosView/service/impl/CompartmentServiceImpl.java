@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CompartmentServiceImpl implements CompartmentService {
@@ -107,6 +108,12 @@ public class CompartmentServiceImpl implements CompartmentService {
             throw new RuntimeException(e);
         }
         return 0;
+    }
+
+    @Override
+    public List<CompartmentPoint> findPointByCS_ID(int id) {
+        List<CompartmentPoint> compartment = compartmentMapper.findCompartmentID(id);
+        return compartment;
     }
 
 //    public static void main(String[] args) {
