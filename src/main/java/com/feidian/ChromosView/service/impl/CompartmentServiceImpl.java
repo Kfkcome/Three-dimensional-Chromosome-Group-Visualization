@@ -1,9 +1,6 @@
 package com.feidian.ChromosView.service.impl;
 
-import com.feidian.ChromosView.domain.Chromosome;
-import com.feidian.ChromosView.domain.CompartmentPoint;
-import com.feidian.ChromosView.domain.Cultivar;
-import com.feidian.ChromosView.domain.Species;
+import com.feidian.ChromosView.domain.*;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.CompartmentMapper;
 import com.feidian.ChromosView.mapper.CultivarMapper;
@@ -89,14 +86,14 @@ public class CompartmentServiceImpl implements CompartmentService {
     @Override
     public int addPointFromFile(String path) {
         File file=new File(path);
-        ArrayList<CompartmentPoint> compartmentPointArrayList=new ArrayList<>();
+        ArrayList<CompartmentPointMB> compartmentPointArrayList=new ArrayList<>();
         try {
             BufferedReader bufferedReader=new BufferedReader(new FileReader(file));
             String data;
             while ((data = bufferedReader.readLine()) != null) {
                 String[] split = data.split("\t");
                 Chromosome byCultivarIDCsName = chromosomeMapper.findByCultivarID_CSName(67, split[0].trim());
-                compartmentPointArrayList.add(new CompartmentPoint(1
+                compartmentPointArrayList.add(new CompartmentPointMB(1
                         ,byCultivarIDCsName.getCS_ID()
                         ,Long.parseLong(split[1]),Long.parseLong(split[2])
                         ,Double.parseDouble(split[3])));

@@ -1,6 +1,7 @@
 package com.feidian.ChromosView.service;
 
 import com.feidian.ChromosView.domain.CompartmentPoint;
+import com.feidian.ChromosView.domain.CompartmentPointMB;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
