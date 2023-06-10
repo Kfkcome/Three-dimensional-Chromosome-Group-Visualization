@@ -6,6 +6,7 @@ import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.service.CompartmentService;
 import com.feidian.ChromosView.utils.ApiResponse;
 import com.feidian.ChromosView.utils.UnitConversion;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,16 @@ public class CompartmentController {
             throw new QueryException("查询不到数据");
         }
         ArrayList<CompartmentPointMB> convert = UnitConversion.convert((ArrayList<CompartmentPoint>) pointByCSId);
+        return ApiResponse.success(convert);
+    }
+    @GetMapping("/cs_id/{cs_id}/start/{start}/end/{end}")
+    ApiResponse findPointBYStart_End(@PathVariable int cs_id, @PathVariable int start,@PathVariable int end) throws QueryException {
+        List<CompartmentPoint> pointByENDStart = compartmentService.findPointByEND_START(cs_id, start, end);
+        if(pointByENDStart.isEmpty())
+        {
+            throw new QueryException("查询不到数据");
+        }
+        ArrayList<CompartmentPointMB> convert=UnitConversion.convert((ArrayList<CompartmentPoint>) pointByENDStart);
         return ApiResponse.success(convert);
     }
 }

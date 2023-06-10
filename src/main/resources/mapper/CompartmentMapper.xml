@@ -13,4 +13,8 @@
         select ID, CS_ID, START_POINT, END_POINT, VALUE
         from biology.t_compartment where CS_ID=#{cs_id};
     </select>
+    <select id="findCompartmentEND_START" resultType="com.feidian.ChromosView.domain.CompartmentPoint">
+        select ID,CS_ID,START_POINT,END_POINT,VALUE
+        from biology.t_compartment where CS_ID=#{cs_id} and START_POINT&gt;=#{start} and END_POINT&lt;=#{end};
+    </select>
 </mapper>

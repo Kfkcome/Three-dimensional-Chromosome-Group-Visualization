@@ -13,4 +13,6 @@ import java.util.List;
 public interface CompartmentMapper {
     int insertFromFile(List<CompartmentPointMB> compartmentPoints);
     List<CompartmentPoint> findCompartmentID(@Param("cs_id") int cs_id);
+    List<CompartmentPoint> findCompartmentEND_START(@Param("cs_id")int cs_id
+            ,@Param("start")int start,@Param("end")int end);
 }

@@ -113,6 +113,11 @@ public class CompartmentServiceImpl implements CompartmentService {
         return compartment;
     }
 
+    @Override
+    public List<CompartmentPoint> findPointByEND_START(int cs_id, int start, int end) {
+        List<CompartmentPoint> compartmentENDStart = compartmentMapper.findCompartmentEND_START(cs_id, start, end);
+        return compartmentENDStart;
+    }
 //    public static void main(String[] args) {
 //        File file=new File("C:/Users/15858/Documents/WeChat Files/wxid_7x1dm3fi3js422/FileStorage/File/2023-06/Chr_ID");
 //        File[] files=file.listFiles();
