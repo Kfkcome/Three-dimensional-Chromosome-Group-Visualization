@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.feidian.ChromosView.mapper.LoopMapper">
+
+    <insert id="insertFromFile">
+        insert into biology.t_loop(CS_ID, START_POINT1, END_POINT1, STRAT_POINT2, END_POINT2, IC_NUM, FDR_VALUE)values
+            <foreach collection="list" separator="," item="item">
+                (#{item.CS_ID},#{item.START_POINT1},#{item.END_POINT1},#{item.START_POINT2},#{item.END_POINT2},#{item.IC_NUM},#{item.FDR_VALUE})
+            </foreach>
+    </insert>
+    <select id="findAllPoint" resultType="com.feidian.ChromosView.domain.LoopPoint">
+        select IC_ID, CS_ID, START_POINT1, END_POINT1, STRAT_POINT2, END_POINT2, IC_NUM, FDR_VALUE from biology.t_loop where CS_ID=#{cs_id};
+    </select>
+
+</mapper>

@@ -5,6 +5,7 @@ import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.CultivarMapper;
 import com.feidian.ChromosView.mapper.SpeciesMapper;
 import com.feidian.ChromosView.service.CompartmentService;
+import com.feidian.ChromosView.service.impl.LoopServiceImpl;
 import com.feidian.ChromosView.utils.ReadFile;
 import com.feidian.ChromosView.domain.Chromosome;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,8 @@ class ChromosViewTests {
     SpeciesMapper speciesMapper;
     @Autowired
     CultivarMapper cultivarMapper;
+    @Autowired
+    LoopServiceImpl loopService;
     @Test
     void contextLoads() {
     }
@@ -190,6 +193,10 @@ class ChromosViewTests {
     @Test
     void insertFromFile(){
         compartmentService.addPointFromFile("D:\\DNA\\A2_Compartment.bed");
+    }
+    @Test
+    void insertLoopFromFile(){
+        loopService.insertDataFromFile("D:\\DNA\\A2_loop.txt");
     }
 }
 
