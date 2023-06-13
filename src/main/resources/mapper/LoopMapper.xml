@@ -11,5 +11,9 @@
     <select id="findAllPoint" resultType="com.feidian.ChromosView.domain.LoopPoint">
         select IC_ID, CS_ID, START_POINT1, END_POINT1, STRAT_POINT2, END_POINT2, IC_NUM, FDR_VALUE from biology.t_loop where CS_ID=#{cs_id};
     </select>
+    <select id="findPointBySTART_EDN" resultType="com.feidian.ChromosView.domain.LoopPoint">
+        select IC_ID, CS_ID, START_POINT1, END_POINT1, STRAT_POINT2, END_POINT2, IC_NUM, FDR_VALUE from biology.t_loop where CS_ID=#{cs_id} and START_POINT1&gt;=#{start}
+        and STRAT_POINT2&gt;=#{start} and END_POINT1&lt;=#{end} and END_POINT2&lt;=#{end};
+    </select>
 
 </mapper>

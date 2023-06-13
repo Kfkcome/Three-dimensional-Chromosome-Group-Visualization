@@ -12,4 +12,5 @@ import java.util.List;
 public interface LoopMapper {
     int insertFromFile(List<LoopPoint> item);
     List<LoopPoint> findAllPoint(@Param("cs_id") int cs_id);
+    List<LoopPoint> findPointBySTART_EDN(@Param("cs_id")int cs_id,@Param("start")long start,@Param("end")long end);
 }

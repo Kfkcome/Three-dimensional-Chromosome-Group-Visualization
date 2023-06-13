@@ -53,4 +53,9 @@ public class LoopServiceImpl implements LoopService {
         return loopMapper.findAllPoint(cs_id);
     }
 
+    @Override
+    public List<LoopPoint> findPointByStart_End(int cs_id, long start, long end) {
+        return loopMapper.findPointBySTART_EDN(cs_id,start,end);
+    }
+
 }

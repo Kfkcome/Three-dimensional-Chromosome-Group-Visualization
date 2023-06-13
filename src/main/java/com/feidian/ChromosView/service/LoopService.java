@@ -7,4 +7,5 @@ import java.util.List;
 public interface LoopService {
     void  insertDataFromFile(String path);
     List<LoopPoint> findAllPoint(int cs_id);
+    List<LoopPoint> findPointByStart_End(int cs_id,long start,long end);
 }
