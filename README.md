@@ -10,3 +10,7 @@ Three-dimensional Chromosome Group Visualization
 3. A2_matrix.hic(使用straw包来解析)
 4. A2_TAD.bed
 其他的使用mysql数据存储
+## 依赖 
+### java-straw
+[java-straw](https://github.com/sa501428/java-straw)
+用来解析.hic文件

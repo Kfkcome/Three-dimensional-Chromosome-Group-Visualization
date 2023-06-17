@@ -1,7 +1,6 @@
 package com.feidian.ChromosView.service.impl;
 
-import com.feidian.ChromosView.domain.Chromosome;
-import com.feidian.ChromosView.domain.CompartmentPoint;
+import com.feidian.ChromosView.domain.ChromosomeT;
 import com.feidian.ChromosView.domain.LoopPoint;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.LoopMapper;
@@ -33,7 +32,7 @@ public class LoopServiceImpl implements LoopService {
             String s;
             while((s = bufferedReader.readLine())!=null){
                 String[] split = s.split("\t");
-                Chromosome byCultivarIDCsName = chromosomeMapper.findByCultivarID_CSName(67, split[0].trim());
+                ChromosomeT byCultivarIDCsName = chromosomeMapper.findByCultivarID_CSName(67, split[0].trim());
                 LoopPoint loopPoint=new LoopPoint(0,byCultivarIDCsName.getCS_ID(),Long.parseLong(split[1]),
                         Long.parseLong(split[2]),Long.parseLong(split[4]),Long.parseLong(split[5]),Integer.parseInt(split[6])
                         ,Double.parseDouble(split[7]));
@@ -54,8 +53,17 @@ public class LoopServiceImpl implements LoopService {
     }
 
     @Override
-    public List<LoopPoint> findPointByStart_End(int cs_id, long start, long end) {
-        return loopMapper.findPointBySTART_EDN(cs_id,start,end);
+    public List<LoopPoint> findPointByStart_End(int cs_id, String startT, String endT) {
+        List<LoopPoint> loopPoints;
+        if(startT!=null&&endT!=null&&startT!=""&&endT!="") {
+            Long start=Long.parseLong(startT);
+            Long end=Long.parseLong(endT);
+            loopPoints = loopMapper.findPointBySTART_EDN(cs_id, start, end);
+        }
+        else{
+            loopPoints=loopMapper.findAllPoint(cs_id);
+        }
+        return loopPoints;
     }
 
 }

@@ -1,6 +1,6 @@
 package com.feidian.ChromosView.controller;
 
-import com.feidian.ChromosView.domain.Chromosome;
+import com.feidian.ChromosView.domain.ChromosomeT;
 import com.feidian.ChromosView.domain.Cultivar;
 import com.feidian.ChromosView.domain.Species;
 import com.feidian.ChromosView.exception.QueryException;
@@ -44,12 +44,12 @@ public class OptionController {
     }
     @GetMapping("/chromosome/all")
     ApiResponse findAllChromosome(){
-        List<Chromosome> allChromosome = cultivarService.findAllChromosome();
-        return ApiResponse.success(allChromosome);
+        List<ChromosomeT> allChromosomeT = cultivarService.findAllChromosome();
+        return ApiResponse.success(allChromosomeT);
     }
     @GetMapping("/chromosome/id/{CultivarID}")
     ApiResponse findChromosomeByID(@PathVariable(value = "CultivarID") Integer CultivarID) throws QueryException {
-        List<Chromosome> csByID = cultivarService.findCSByID(CultivarID);
+        List<ChromosomeT> csByID = cultivarService.findCSByID(CultivarID);
         if(csByID.isEmpty())
         {
             throw new QueryException("查询不到数据");

@@ -1,6 +1,6 @@
 package com.feidian.ChromosView.service.impl;
 
-import com.feidian.ChromosView.domain.Chromosome;
+import com.feidian.ChromosView.domain.ChromosomeT;
 import com.feidian.ChromosView.domain.Cultivar;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.CultivarMapper;
@@ -31,13 +31,13 @@ public class CultivarServiceImpl implements CultivarService {
     }
 
     @Override
-    public List<Chromosome> findAllChromosome() {
+    public List<ChromosomeT> findAllChromosome() {
         return chromosomeMapper.findAll();
     }
 
     @Override
-    public List<Chromosome> findCSByID(int id) {
-        List<Chromosome> byCultivarID = chromosomeMapper.findByCultivarID(id);
+    public List<ChromosomeT> findCSByID(int id) {
+        List<ChromosomeT> byCultivarID = chromosomeMapper.findByCultivarID(id);
         return byCultivarID;
     }
 }

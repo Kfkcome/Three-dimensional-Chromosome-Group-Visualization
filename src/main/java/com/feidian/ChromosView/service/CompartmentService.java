@@ -11,5 +11,5 @@ public interface CompartmentService {
     int addCS();
     int addPointFromFile(String path);
     List<CompartmentPoint> findPointByCS_ID(int id);
-    List<CompartmentPoint> findPointByEND_START(int cs_id,int start,int end);
+    List<CompartmentPoint> findPointByEND_START(int cs_id,String startT,String endT);
 }

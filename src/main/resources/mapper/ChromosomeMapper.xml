@@ -7,16 +7,16 @@
             (#{item.CS_NAME},#{item.CS_LENGTH},#{item.CULTIVAR_ID})
         </foreach>
     </insert>
-    <select id="findMaxLength" resultType="com.feidian.ChromosView.domain.Chromosome">
+    <select id="findMaxLength" resultType="com.feidian.ChromosView.domain.ChromosomeT">
         SELECT CS_ID, CS_NAME, CS_LENGTH, CULTIVAR_ID FROM biology.t_chromosome_raw where CULTIVAR_ID=#{CULTIVATE_ID} ORDER BY CS_LENGTH DESC LIMIT #{limit};
     </select>
-    <select id="findAll" resultType="com.feidian.ChromosView.domain.Chromosome">
+    <select id="findAll" resultType="com.feidian.ChromosView.domain.ChromosomeT">
         select CS_ID, CS_NAME, CS_LENGTH, CULTIVAR_ID FROM biology.t_chromosome;
     </select>
-    <select id="findByCultivarID" resultType="com.feidian.ChromosView.domain.Chromosome">
+    <select id="findByCultivarID" resultType="com.feidian.ChromosView.domain.ChromosomeT">
         select CS_ID, CS_NAME, CS_LENGTH, CULTIVAR_ID FROM biology.t_chromosome where CULTIVAR_ID=#{id};
     </select>
-    <select id="findByCultivarID_CSName" resultType="com.feidian.ChromosView.domain.Chromosome">
+    <select id="findByCultivarID_CSName" resultType="com.feidian.ChromosView.domain.ChromosomeT">
         select CS_ID, CS_NAME, CS_LENGTH, CULTIVAR_ID FROM biology.t_chromosome where CULTIVAR_ID=#{id} and CS_NAME=#{name};
     </select>
 </mapper>

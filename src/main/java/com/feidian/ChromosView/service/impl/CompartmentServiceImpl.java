@@ -92,7 +92,7 @@ public class CompartmentServiceImpl implements CompartmentService {
             String data;
             while ((data = bufferedReader.readLine()) != null) {
                 String[] split = data.split("\t");
-                Chromosome byCultivarIDCsName = chromosomeMapper.findByCultivarID_CSName(67, split[0].trim());
+                ChromosomeT byCultivarIDCsName = chromosomeMapper.findByCultivarID_CSName(67, split[0].trim());
                 compartmentPointArrayList.add(new CompartmentPointMB(1
                         ,byCultivarIDCsName.getCS_ID()
                         ,Long.parseLong(split[1]),Long.parseLong(split[2])
@@ -114,20 +114,18 @@ public class CompartmentServiceImpl implements CompartmentService {
     }
 
     @Override
-    public List<CompartmentPoint> findPointByEND_START(int cs_id, int start, int end) {
-        List<CompartmentPoint> compartmentENDStart = compartmentMapper.findCompartmentEND_START(cs_id, start, end);
+    public List<CompartmentPoint> findPointByEND_START(int cs_id, String startT, String endT) {
+        Integer end;
+        Integer start;
+        List<CompartmentPoint> compartmentENDStart;
+        if(startT!=null&&endT!=null&&endT!=""&&startT!="") {
+            end = Integer.parseInt(endT);
+            start=Integer.parseInt(startT);
+            compartmentENDStart = compartmentMapper.findCompartmentEND_START(cs_id, start, end);
+        }
+        else {
+            compartmentENDStart = compartmentMapper.findCompartmentID(cs_id);
+        }
         return compartmentENDStart;
     }
-//    public static void main(String[] args) {
-//        File file=new File("C:/Users/15858/Documents/WeChat Files/wxid_7x1dm3fi3js422/FileStorage/File/2023-06/Chr_ID");
-//        File[] files=file.listFiles();
-//        for (File file1 : files) {
-//            String name = file1.getName();
-//            //System.out.println(name);
-//            String[] split = name.split(".genome");
-//            System.out.println(split[0]);
-//        }
-//
-//
-//    }
 }

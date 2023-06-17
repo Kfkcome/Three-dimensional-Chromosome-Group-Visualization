@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Chromosome {
-    int CS_ID;
-    String CS_NAME;
-    long CS_LENGTH;
-    int CULTIVAR_ID;
+public class MatrixPoint {
+    int binX;
+    int binY;
+    int genomeX;
+    int genomeY;
+    float counts;
 }
