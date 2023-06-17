@@ -2,9 +2,11 @@ package com.feidian.ChromosView.service.impl;
 
 import com.feidian.ChromosView.domain.ChromosomeT;
 import com.feidian.ChromosView.domain.LoopPoint;
+import com.feidian.ChromosView.domain.LoopPointMB;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.LoopMapper;
 import com.feidian.ChromosView.service.LoopService;
+import com.feidian.ChromosView.utils.UnitConversion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class LoopServiceImpl implements LoopService {
     private final LoopMapper loopMapper;
     private final ChromosomeMapper chromosomeMapper;
+
     @Autowired
     public LoopServiceImpl(LoopMapper loopMapper, ChromosomeMapper chromosomeMapper) {
         this.loopMapper = loopMapper;
@@ -24,18 +27,18 @@ public class LoopServiceImpl implements LoopService {
 
     @Override
     public void insertDataFromFile(String path) {
-        File file=new File(path);
-        ArrayList<LoopPoint> arrayList=new ArrayList<>();
-        int i=0;
+        File file = new File(path);
+        ArrayList<LoopPoint> arrayList = new ArrayList<>();
+        int i = 0;
         try {
-            BufferedReader bufferedReader=new BufferedReader(new FileReader(file));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String s;
-            while((s = bufferedReader.readLine())!=null){
+            while ((s = bufferedReader.readLine()) != null) {
                 String[] split = s.split("\t");
                 ChromosomeT byCultivarIDCsName = chromosomeMapper.findByCultivarID_CSName(67, split[0].trim());
-                LoopPoint loopPoint=new LoopPoint(0,byCultivarIDCsName.getCS_ID(),Long.parseLong(split[1]),
-                        Long.parseLong(split[2]),Long.parseLong(split[4]),Long.parseLong(split[5]),Integer.parseInt(split[6])
-                        ,Double.parseDouble(split[7]));
+                LoopPoint loopPoint = new LoopPoint(0, byCultivarIDCsName.getCS_ID(), Long.parseLong(split[1]),
+                        Long.parseLong(split[2]), Long.parseLong(split[4]), Long.parseLong(split[5]), Integer.parseInt(split[6])
+                        , Double.parseDouble(split[7]));
                 arrayList.add(loopPoint);
                 i++;
             }
@@ -53,17 +56,17 @@ public class LoopServiceImpl implements LoopService {
     }
 
     @Override
-    public List<LoopPoint> findPointByStart_End(int cs_id, String startT, String endT) {
+    public List<LoopPointMB> findPointByStart_End(int cs_id, String startT, String endT) {
         List<LoopPoint> loopPoints;
-        if(startT!=null&&endT!=null&&startT!=""&&endT!="") {
-            Long start=Long.parseLong(startT);
-            Long end=Long.parseLong(endT);
+        if (startT != null && endT != null && startT != "" && endT != "") {
+            Long start = Long.parseLong(startT);
+            Long end = Long.parseLong(endT);
             loopPoints = loopMapper.findPointBySTART_EDN(cs_id, start, end);
+        } else {
+            loopPoints = loopMapper.findAllPoint(cs_id);
         }
-        else{
-            loopPoints=loopMapper.findAllPoint(cs_id);
-        }
-        return loopPoints;
+
+        return UnitConversion.convertLoop(loopPoints);
     }
 
 }

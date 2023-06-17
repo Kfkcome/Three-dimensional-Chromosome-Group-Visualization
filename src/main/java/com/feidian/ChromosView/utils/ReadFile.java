@@ -185,7 +185,7 @@ public class ReadFile {
             // just grab sparse data for a specific region
 
             // choose your setting for when the diagonal is in the region
-            boolean getDataUnderTheDiagonal = true;
+            boolean getDataUnderTheDiagonal = false;
 
             // our bounds will be binXStart, binYStart, binXEnd, binYEnd
             // these are in BIN coordinates, not genome coordinates

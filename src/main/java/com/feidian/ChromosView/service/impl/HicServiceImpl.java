@@ -43,8 +43,8 @@ public class HicServiceImpl implements HicService {
         List<MatrixPoint> object = (List<MatrixPoint>) cacheMapper.getObject("cache:");
         if (object != null && lastQuery.equals(nowQuery)) {
             Integer index = (Integer) cacheMapper.getObject("index:");
-            int last = 500 * (index + 1) - 1;
-            int front = 500 * index;
+            int last = 5000 * (index + 1) - 1;
+            int front = 5000 * index;
             if (front >= object.size()) {
                 //TODO: index越界异常
                 cacheMapper.deleteObject("cache:");
@@ -88,6 +88,6 @@ public class HicServiceImpl implements HicService {
         cacheMapper.addObject("last:", nowQuery);
         cacheMapper.addObject("cache:", matrixPoints);
         cacheMapper.addObject("index:", 1);
-        return matrixPoints.subList(0, 499);
+        return matrixPoints.subList(0, 4999);
     }
 }

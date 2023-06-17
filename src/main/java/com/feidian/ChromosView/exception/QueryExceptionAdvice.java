@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
 public class QueryExceptionAdvice {
-    @ExceptionHandler(value={QueryException.class})
+    @ExceptionHandler(value = {QueryException.class})
     @ResponseBody
-    public ApiResponse queryFail(QueryException queryException)
-    {
-        return ApiResponse.fail(ApiResponse.fail().getCode(), queryException.getMessage());
+    public ApiResponse queryFail(QueryException queryException) {
+        return ApiResponse.fail(202, queryException.getMessage());
     }
 
 }
