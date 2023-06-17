@@ -15,5 +15,6 @@ public interface ChromosomeMapper {
     List<ChromosomeT> findAll();
     List<ChromosomeT> findByCultivarID(@Param("id")int id);
     ChromosomeT findByCultivarID_CSName(@Param("id")int id, @Param("name") String name);
+    ChromosomeT findByCS_ID(@Param("cs_id")int cs_id);
 
 }

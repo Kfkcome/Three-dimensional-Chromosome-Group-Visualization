@@ -4,14 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MatrixPoint {
-    int binX;
-    int binY;
-    int genomeX;
-    int genomeY;
+public class MatrixPoint implements Serializable {
+    long binX;
+    long binY;
+    long genomeX;
+    long genomeY;
     float counts;
 }

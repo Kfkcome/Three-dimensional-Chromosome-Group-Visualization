@@ -57,8 +57,7 @@ public class ReadFile {
                 }
                 //获取每一行封装成对象
                 List<String> rowList = new ArrayList<String>();
-                for(int colNum=0;colNum<Row.getLastCellNum();colNum++)
-                {
+                for (int colNum = 0; colNum < Row.getLastCellNum(); colNum++) {
                     rowList.add(colNum, Row.getCell(colNum).toString());
                 }
                 aList.add(rowList);
@@ -66,7 +65,8 @@ public class ReadFile {
         }
         return aList;
     }
-    public static ArrayList<ArrayList<MatrixPoint>> readHICALL(File file){
+
+    public static ArrayList<MatrixPoint> readHICALL(File file, String CSName, String norms) {
         // do you want to cache portions of the file?
         // this uses more RAM, but if you want to repeatedly
         // query nearby regions, it can improve speed by a lot
@@ -76,25 +76,29 @@ public class ReadFile {
         // create a hic dataset object
         Dataset ds = HiCFileTools.extractDatasetForCLT(filename, false, useCache, false);
         // create a class to save the result
-        ArrayList<ArrayList<MatrixPoint>> matrixPoints=new ArrayList<>();
+        //ArrayList<ArrayList<MatrixPoint>> matrixPoints=new ArrayList<>();
+
         // pick the normalization we would like
-        // this line will check multiple possible norms
+        // this line will check multiple possible norms: {"KR", "SCALE", "VC", "VC_SQRT", "NONE" }
         // and pick whichever is available (in order of preference)
-        NormalizationType norm = NormalizationPicker.getFirstValidNormInThisOrder(ds, new String[]{"NONE","SCALE","KR","VC", "VC_SQRT" });
+        NormalizationType norm = NormalizationPicker.getFirstValidNormInThisOrder(ds, new String[]{norms});
         System.out.println("Norm being used: " + norm.getLabel());
 
         // let's set our resolution点之间的间隔
         int resolution = 5000;
         // let's grab the chromosomes
-        int count=0,count2=0;
+        int count = 0, count2 = 0;
         Chromosome[] chromosome = ds.getChromosomeHandler().getChromosomeArrayWithoutAllByAll();
         // now let's iterate on every chromosome (only intra-chromosomal regions for now)
+        ArrayList<MatrixPoint> matrixPoints1 = new ArrayList<>();
         for (Chromosome chromosomeT : chromosome) {
             System.out.println(chromosomeT.getName());
             System.out.println(chromosomeT.getLength());
-            ArrayList<MatrixPoint> matrixPoints1=new ArrayList<>();
+
+            //如果想要的染色与此条不是一条则跳过
+            if (!chromosomeT.getName().equals(CSName))
+                continue;
             count++;
-            //count2=0;
             Matrix matrix = ds.getMatrix(chromosomeT, chromosomeT);
             if (matrix == null) continue;
             MatrixZoomData zd = matrix.getZoomData(new HiCZoom(resolution));
@@ -124,21 +128,132 @@ public class ReadFile {
                         binX = record.getBinY();
                         binY = record.getBinX();
                         counts = record.getCounts();
-
                         genomeX = binX * resolution;
                         genomeY = binY * resolution;
-                        matrixPoints1.add(new MatrixPoint(binX,binY,genomeX,genomeY,counts));
-//                        System.out.println(genomeX + " " + genomeY + " " + counts);
+                        matrixPoints1.add(new MatrixPoint(binX, binY, genomeX, genomeY, counts));
+                        //System.out.println(genomeX + " " + genomeY + " " + counts);
                         // do task
                     }
                 }
             }
-        matrixPoints.add(matrixPoints1);
             System.out.println(1);
+            break;
         }
-            System.out.println(count+"条内的数量："+count2);
-        System.out.println("染色体数量"+count);
+        System.out.println(count + "条内的数量：" + count2);
+        System.out.println("染色体数量" + count);
         // to iterate over the whole genome
-        return matrixPoints;
+        return matrixPoints1;
     }
+
+    public static ArrayList<MatrixPoint> readHICByStart_End(File file, String
+            CSName, String norms, Long binXStart, Long binYStart, Long binXEnd, Long binYEnd) {
+        // do you want to cache portions of the file?
+        // this uses more RAM, but if you want to repeatedly
+        // query nearby regions, it can improve speed by a lot
+        boolean useCache = false;
+        String filename = file.getPath();
+
+        // create a hic dataset object
+        Dataset ds = HiCFileTools.extractDatasetForCLT(filename, false, useCache, false);
+
+        // pick the normalization we would like
+        // this line will check multiple possible norms
+        // and pick whichever is available (in order of preference)
+        NormalizationType norm = NormalizationPicker.getFirstValidNormInThisOrder(ds, new String[]{norms});
+        System.out.println("Norm being used: " + norm.getLabel());
+
+        //creat a set to save the result
+        ArrayList<MatrixPoint> matrixPointArrayList = new ArrayList<>();
+
+        // let's set our resolution
+        int resolution = 5000;
+
+        // let's grab the chromosomes
+        Chromosome[] chromosomes = ds.getChromosomeHandler().getChromosomeArrayWithoutAllByAll();
+
+        // now let's iterate on every chromosome (only intra-chromosomal regions for now)
+        for (Chromosome chromosome : chromosomes) {
+            if (!chromosome.getName().equals(CSName)) continue;
+            Matrix matrix = ds.getMatrix(chromosome, chromosome);
+            if (matrix == null) continue;
+            MatrixZoomData zd = matrix.getZoomData(new HiCZoom(resolution));
+            if (zd == null) continue;
+
+            // zd is now a data structure that contains pointers to the data
+            // *** Let's show 2 different ways to access data ***
+            // OPTION 2
+            // just grab sparse data for a specific region
+
+            // choose your setting for when the diagonal is in the region
+            boolean getDataUnderTheDiagonal = true;
+
+            // our bounds will be binXStart, binYStart, binXEnd, binYEnd
+            // these are in BIN coordinates, not genome coordinates
+            //int binXStart = 500, binYStart = 600, binXEnd = 1000, binYEnd = 1200;
+            List<Block> blocks = zd.getNormalizedBlocksOverlapping(binXStart, binYStart, binXEnd, binYEnd, norm, getDataUnderTheDiagonal);
+            for (Block b : blocks) {
+                if (b != null) {
+                    for (ContactRecord rec : b.getContactRecords()) {
+                        int binX = rec.getBinX();
+                        int binY = rec.getBinY();
+                        if (rec.getCounts() > 0) { // will skip NaNs
+                            // can choose to use the BIN coordinates
+
+                            // you could choose to use relative coordinates for the box given
+                            long relativeX = rec.getBinX() - binXStart;
+                            long relativeY = rec.getBinY() - binYStart;
+                            float counts = rec.getCounts();
+                            matrixPointArrayList.add(new MatrixPoint(binX, binY, relativeX, relativeY, counts));
+                        }
+                    }
+                }
+            }
+            break;
+        }
+        return matrixPointArrayList;
+
+    }
+
+    public static ArrayList<MatrixPoint> readHICByStart_End_CS_ID(File file, String CSName1, String CSName2, String norms, Long binXStart, Long binYStart, Long binXEnd, Long binYEnd) {
+        // do you want to cache portions of the file?
+        // this uses more RAM, but if you want to repeatedly
+        // query nearby regions, it can improve speed by a lot
+        boolean useCache = false;
+        String filename = "file.hic";
+
+        // create a hic dataset object
+        Dataset ds = HiCFileTools.extractDatasetForCLT(filename, false, useCache, false);
+
+        // pick the normalization we would like
+        // this line will check multiple possible norms
+        // and pick whichever is available (in order of preference)
+        NormalizationType norm = NormalizationPicker.getFirstValidNormInThisOrder(ds, new String[]{"KR", "SCALE", "VC", "VC_SQRT", "NONE"});
+        System.out.println("Norm being used: " + norm.getLabel());
+
+        // let's set our resolution
+        int resolution = 5000;
+
+        // let's grab the chromosomes
+        Chromosome[] chromosomes = ds.getChromosomeHandler().getChromosomeArrayWithoutAllByAll();
+
+        // now let's iterate on every chromosome (only intra-chromosomal regions for now)
+        // to iterate over the whole genome
+        for (int i = 0; i < chromosomes.length; i++) {
+            for (int j = i; i < chromosomes.length; i++) {
+                Matrix matrix = ds.getMatrix(chromosomes[i], chromosomes[j]);
+                if (matrix == null) continue;
+                MatrixZoomData zd = matrix.getZoomData(new HiCZoom(resolution));
+                if (zd == null) continue;
+
+                if (i == j) {
+                    // intra-chromosomal region
+
+                } else {
+                    // inter-chromosomal region
+                }
+            }
+        }
+        return null;
+    }
+
 }
