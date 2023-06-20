@@ -111,7 +111,6 @@ public class ReadFile {
                     continue;
                 System.out.println("  查询到染色体！");
                 System.out.println("长度" + chromosome[i].getLength() + "  " + chromosome[j].getLength());
-                count++;
                 Matrix matrix = ds.getMatrix(chromosome[i], chromosome[j]);
                 if (matrix == null) continue;
                 MatrixZoomData zd = matrix.getZoomData(new HiCZoom(resolution));
@@ -125,24 +124,25 @@ public class ReadFile {
                     count2++;
                     ContactRecord record = iterator.next();
                     // now do whatever you want with the contact record
-                    int binX = record.getBinX();
-                    int binY = record.getBinY();
+                    long binX = record.getBinX();
+                    long binY = record.getBinY();
                     float counts = record.getCounts();
                     // binX and binY are in BIN coordinates, not genome coordinates
                     // to switch, we can just multiply by the resolution
-                    int genomeX = binX * resolution;
-                    int genomeY = binY * resolution;
+                    long genomeX;
+                    long genomeY;
                     if (counts > 0) { // will skip NaNs
                         // do task
                         //System.out.println(genomeX + " " + genomeY + " " + counts);
                         // the iterator only iterates above the diagonal
                         // to also fill in data below the diagonal, flip it
-                        if (binX != binY) {
-                            binX = record.getBinY();
-                            binY = record.getBinX();
+                        if (record.getCounts() > 0 && binY >= 0 && binX >= 0) {
+                            binX = record.getBinX() * resolution;
+                            binY = record.getBinY() * resolution;
                             counts = record.getCounts();
                             genomeX = binX * resolution;
                             genomeY = binY * resolution;
+                            count++;
                             matrixPoints1.add(new MatrixPoint(binX, binY, genomeX, genomeY, counts));
                             //System.out.println(genomeX + " " + genomeY + " " + counts);
                             // do task
@@ -214,7 +214,6 @@ public class ReadFile {
 
                 // our bounds will be binXStart, binYStart, binXEnd, binYEnd
                 // these are in BIN coordinates, not genome coordinates
-                //int binXStart = 500, binYStart = 600, binXEnd = 1000, binYEnd = 1200;
                 List<Block> blocks = zd.getNormalizedBlocksOverlapping(binXStart, binYStart, binXEnd, binYEnd, norm, getDataUnderTheDiagonal);
                 for (Block b : blocks) {
                     if (b != null) {
@@ -225,10 +224,12 @@ public class ReadFile {
                                 // can choose to use the BIN coordinates
                                 count++;
                                 // you could choose to use relative coordinates for the box given
-                                long relativeX = rec.getBinX() - binXStart;
-                                long relativeY = rec.getBinY() - binYStart;
+                                long genomeX = rec.getBinX() * resolution - binXStart * resolution;
+                                long genomeY = rec.getBinY() * resolution - binYStart * resolution;
+                                binX = rec.getBinX() * resolution;
+                                binY = rec.getBinY() * resolution;
                                 float counts = rec.getCounts();
-                                matrixPointArrayList.add(new MatrixPoint(binX, binY, relativeX, relativeY, counts));
+                                matrixPointArrayList.add(new MatrixPoint(binX, binY, genomeX, genomeY, counts));
                             }
                         }
                     }
