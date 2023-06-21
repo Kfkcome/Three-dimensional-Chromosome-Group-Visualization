@@ -2,6 +2,7 @@ package com.feidian.ChromosView.controller;
 
 import com.feidian.ChromosView.domain.LoopPointMB;
 import com.feidian.ChromosView.exception.QueryException;
+import com.feidian.ChromosView.log.LogPrint;
 import com.feidian.ChromosView.service.LoopService;
 import com.feidian.ChromosView.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class LoopController {
 //        if(allPoint.isEmpty())throw new QueryException("查询失败");
 //        return ApiResponse.success(allPoint);
 //    }
+    @LogPrint
     @GetMapping("/cs_id/{cs_id}")
     public ApiResponse findPointByStart_End(@PathVariable int cs_id, @RequestParam(value = "end", required = false) String end, @RequestParam(value = "start", required = false) String start) throws QueryException {
         List<LoopPointMB> pointByStartEnd = loopService.findPointByStart_End(cs_id, start, end);

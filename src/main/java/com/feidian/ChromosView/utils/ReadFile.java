@@ -131,23 +131,23 @@ public class ReadFile {
                     // to switch, we can just multiply by the resolution
                     long genomeX;
                     long genomeY;
-                    if (counts > 0) { // will skip NaNs
-                        // do task
+                    // will skip NaNs
+                    // do task
+                    //System.out.println(genomeX + " " + genomeY + " " + counts);
+                    // the iterator only iterates above the diagonal
+                    // to also fill in data below the diagonal, flip it
+                    if (binY >= 0 && binX >= 0) {
+                        binX = record.getBinX() * resolution;
+                        binY = record.getBinY() * resolution;
+                        counts = record.getCounts();
+                        genomeX = binX * resolution;
+                        genomeY = binY * resolution;
+                        count++;
+                        matrixPoints1.add(new MatrixPoint(binX, binY, genomeX, genomeY, counts));
                         //System.out.println(genomeX + " " + genomeY + " " + counts);
-                        // the iterator only iterates above the diagonal
-                        // to also fill in data below the diagonal, flip it
-                        if (record.getCounts() > 0 && binY >= 0 && binX >= 0) {
-                            binX = record.getBinX() * resolution;
-                            binY = record.getBinY() * resolution;
-                            counts = record.getCounts();
-                            genomeX = binX * resolution;
-                            genomeY = binY * resolution;
-                            count++;
-                            matrixPoints1.add(new MatrixPoint(binX, binY, genomeX, genomeY, counts));
-                            //System.out.println(genomeX + " " + genomeY + " " + counts);
-                            // do task
-                        }
+                        // do task
                     }
+
                 }
                 if (count > 0) {
                     System.out.println("查询完毕 查询到：" + count + "条数据");
@@ -165,7 +165,7 @@ public class ReadFile {
         // do you want to cache portions of the file?
         // this uses more RAM, but if you want to repeatedly
         // query nearby regions, it can improve speed by a lot
-        boolean useCache = true;
+        boolean useCache = false;
         String filename = file.getPath();
 
         // create a hic dataset object
@@ -214,13 +214,14 @@ public class ReadFile {
 
                 // our bounds will be binXStart, binYStart, binXEnd, binYEnd
                 // these are in BIN coordinates, not genome coordinates
+
                 List<Block> blocks = zd.getNormalizedBlocksOverlapping(binXStart, binYStart, binXEnd, binYEnd, norm, getDataUnderTheDiagonal);
                 for (Block b : blocks) {
                     if (b != null) {
                         for (ContactRecord rec : b.getContactRecords()) {
                             int binX = rec.getBinX();
                             int binY = rec.getBinY();
-                            if (rec.getCounts() > 0) { // will skip NaNs
+                            if (checkInSpace(binX, binY, binXStart, binXEnd, binYStart, binYEnd)) { // will skip NaNs
                                 // can choose to use the BIN coordinates
                                 count++;
                                 // you could choose to use relative coordinates for the box given
@@ -246,74 +247,6 @@ public class ReadFile {
     private static boolean checkInSpace(int binX, int binY, Long binXStart, Long binXEnd, Long binYStart, Long binYEnd) {
         if (binX > binXEnd || binX < binXStart || binY > binYEnd || binY < binYStart) return false;
         return true;
-    }
-
-    public static List<MatrixPoint> readHICByStart_End_CS_ID(File file, String CSName1, String CSName2, String norms, Long binXStart, Long binYStart, Long binXEnd, Long binYEnd, String resolutionT) {
-        // do you want to cache portions of the file?
-        // this uses more RAM, but if you want to repeatedly
-        // query nearby regions, it can improve speed by a lot
-        boolean useCache = true;
-        String filename = file.getPath();
-
-        // create a hic dataset object
-        Dataset ds = HiCFileTools.extractDatasetForCLT(filename, false, useCache, false);
-
-        //create a list to save the result
-        List<MatrixPoint> matrixPoints = new ArrayList<>();
-        // pick the normalization we would like
-        // this line will check multiple possible norms
-        // and pick whichever is available (in order of preference)
-        NormalizationType norm = NormalizationPicker.getFirstValidNormInThisOrder(ds, new String[]{norms});
-        System.out.println("Norm being used: " + norm.getLabel());
-
-        // let's set our resolution
-        int resolution = convertResolution(resolutionT);
-
-        // let's grab the chromosomes
-        Chromosome[] chromosomes = ds.getChromosomeHandler().getChromosomeArrayWithoutAllByAll();
-
-        // now let's iterate on every chromosome (only intra-chromosomal regions for now)
-        // to iterate over the whole genome
-        for (int i = 0; i < chromosomes.length; i++) {
-            for (int j = i; i < chromosomes.length; i++) {
-                Matrix matrix = ds.getMatrix(chromosomes[i], chromosomes[j]);
-                if (matrix == null) continue;
-                MatrixZoomData zd = matrix.getZoomData(new HiCZoom(resolution));
-                if (zd == null) continue;
-                if (CSName1.equals(chromosomes[i].getName()) && CSName2.equals(chromosomes[j])) {
-
-                    // zd is now a data structure that contains pointers to the data
-                    // *** Let's show 2 different ways to access data ***
-                    // OPTION 2
-                    // just grab sparse data for a specific region
-                    // choose your setting for when the diagonal is in the region
-                    boolean getDataUnderTheDiagonal = true;
-                    // our bounds will be binXStart, binYStart, binXEnd, binYEnd
-                    // these are in BIN coordinates, not genome coordinates
-
-                    List<Block> blocks = zd.getNormalizedBlocksOverlapping(binXStart, binYStart, binXEnd, binYEnd, norm, getDataUnderTheDiagonal);
-                    for (Block b : blocks) {
-                        if (b != null) {
-                            for (ContactRecord rec : b.getContactRecords()) {
-                                int binX = rec.getBinX();
-                                int binY = rec.getBinY();
-                                if (rec.getCounts() > 0 && checkInSpace(binX, binY, binXStart, binXEnd, binYStart, binYEnd)) { // will skip NaNs
-                                    // can choose to use the BIN coordinates
-
-                                    // you could choose to use relative coordinates for the box given
-                                    long relativeX = rec.getBinX() - binXStart;
-                                    long relativeY = rec.getBinY() - binYStart;
-                                    float counts = rec.getCounts();
-                                    matrixPoints.add(new MatrixPoint(binX, binY, relativeX, relativeY, counts));
-                                }
-                            }
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-        return matrixPoints;
     }
 
 }

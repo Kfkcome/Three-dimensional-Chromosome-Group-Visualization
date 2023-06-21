@@ -2,6 +2,7 @@ package com.feidian.ChromosView.controller;
 
 import com.feidian.ChromosView.domain.UUID_matrixPoints;
 import com.feidian.ChromosView.exception.QueryException;
+import com.feidian.ChromosView.log.LogPrint;
 import com.feidian.ChromosView.service.HicService;
 import com.feidian.ChromosView.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ public class HICController {
         this.hicService = hicService;
     }
 
+    @LogPrint()
     @GetMapping("/cs_id1/{cs_id1}/cs_id2/{cs_id2}")
     public ApiResponse findHICPoint(String uuid, @PathVariable Integer cs_id1, @PathVariable Integer cs_id2, @RequestParam(value = "norms", required = false) String norms,
                                     @RequestParam(value = "binXStart", required = false) String binXStart, @RequestParam(value = "binYStart", required = false) String binYStart,

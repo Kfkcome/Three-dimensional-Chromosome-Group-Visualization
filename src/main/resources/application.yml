@@ -1,6 +1,7 @@
 server:
   port: 8082
 spring:
+
   datasource:
     url: jdbc:mysql://localhost:3306/biology?characterEncoding=utf-8&serverTimezone=UTC
     username: root
@@ -13,4 +14,4 @@ mybatis:
   #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 logging:
   level:
-    com.feidian.ChromosView: debug
+    com.feidian.ChromosView: info
