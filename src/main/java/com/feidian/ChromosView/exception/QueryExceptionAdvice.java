@@ -10,6 +10,8 @@ public class QueryExceptionAdvice {
     @ExceptionHandler(value = {QueryException.class})
     @ResponseBody
     public ApiResponse queryFail(QueryException queryException) {
+        if (queryException.getMessage().equals("uuid错误，无法查询到数据"))
+            return ApiResponse.fail(203, queryException.getMessage());
         return ApiResponse.fail(202, queryException.getMessage());
     }
 

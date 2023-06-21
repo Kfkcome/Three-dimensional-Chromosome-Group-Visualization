@@ -220,7 +220,7 @@ public class ReadFile {
                         for (ContactRecord rec : b.getContactRecords()) {
                             int binX = rec.getBinX();
                             int binY = rec.getBinY();
-                            if (rec.getCounts() > 0 && checkInSpace(binX, binY, binXStart, binXEnd, binYStart, binYEnd)) { // will skip NaNs
+                            if (rec.getCounts() > 0) { // will skip NaNs
                                 // can choose to use the BIN coordinates
                                 count++;
                                 // you could choose to use relative coordinates for the box given

@@ -13,54 +13,64 @@ public class ApiResponse<T> implements Serializable {
 
     private T data;
 
-    public ApiResponse(Integer code,String message){
+    public ApiResponse(Integer code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    public ApiResponse(Integer code,String message,T data){
-        this(code,message);
+    public ApiResponse(Integer code, String message, T data) {
+        this(code, message);
         this.data = data;
     }
 
-    public static <T> ApiResponse<T> success(){
-        return new ApiResponse<>(ResponseCode.SUCCESS.getCode(),ResponseCode.SUCCESS.getMessage());
+    public static <T> ApiResponse<T> success() {
+        return new ApiResponse<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage());
     }
 
-    public static <T> ApiResponse<T> success(T data){
-        return new ApiResponse<>(ResponseCode.SUCCESS.getCode(),ResponseCode.SUCCESS.getMessage(),data);
+    public static <T> ApiResponse<T> success(T data) {
+        return new ApiResponse<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), data);
     }
 
-    public static <T> ApiResponse<T> fail(){
-        return new ApiResponse<>(ResponseCode.FAILURE.getCode(),ResponseCode.FAILURE.getMessage());
+    public static <T> ApiResponse<T> success(Integer code, T data) {
+        return new ApiResponse<>(code, "查询一次就结束了", data);
     }
 
-    public static <T> ApiResponse<T> fail(Integer code,String message){
-        return new ApiResponse<>(code,message);
+    public static <T> ApiResponse<T> fail() {
+        return new ApiResponse<>(ResponseCode.FAILURE.getCode(), ResponseCode.FAILURE.getMessage());
     }
 
-    public static <T> ApiResponse<T> error(){
-        return new ApiResponse<>(ResponseCode.ERROR.getCode(),ResponseCode.ERROR.getMessage());
+    public static <T> ApiResponse<T> fail(Integer code, String message) {
+        return new ApiResponse<>(code, message);
     }
 
-    public void setCode(Integer code){
-        this.code = code;
+    public static <T> ApiResponse<T> error() {
+        return new ApiResponse<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
     }
-    public void setMessage(String message){
-        this.message = message;
-    }
-    public void setData(T data){
-        this.data = data;
-    }
-    public Integer getCode(){
+
+    public Integer getCode() {
         return this.code;
     }
-    public String getMessage(){
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
         return this.message;
     }
-    public T getData(){
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getData() {
         return this.data;
     }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
     @Override
     public String toString() {
         return (new StringJoiner(", ", ApiResponse.class.getSimpleName() + "[", "]"))
