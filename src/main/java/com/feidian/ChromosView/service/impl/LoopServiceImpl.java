@@ -69,4 +69,19 @@ public class LoopServiceImpl implements LoopService {
         return UnitConversion.convertLoop(loopPoints);
     }
 
+    @Override
+    public List<LoopPointMB> findPointByDoublePoint(int cs_id, String start1T, String end1T, String start2T, String end2T) {
+        List<LoopPoint> loopPoints;
+        if (start1T != null && end1T != null && start1T != "" && end1T != "" && start2T != null && end2T != null && start2T != "" && end2T != "") {
+            Long start1 = Long.parseLong(start1T);
+            Long end1 = Long.parseLong(end1T);
+            Long start2 = Long.parseLong(start2T);
+            Long end2 = Long.parseLong(end2T);
+            loopPoints = loopMapper.findPointByDoublePoint(cs_id, start1, end1, start2, end2);
+        } else {
+            loopPoints = loopMapper.findAllPoint(cs_id);
+        }
+        return UnitConversion.convertLoop(loopPoints);
+    }
+
 }

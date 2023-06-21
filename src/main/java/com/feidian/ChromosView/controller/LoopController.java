@@ -33,4 +33,12 @@ public class LoopController {
         if (pointByStartEnd.isEmpty()) throw new QueryException("查询失败");
         return ApiResponse.success(pointByStartEnd);
     }
+
+    @LogPrint
+    @GetMapping("/DoubleRange/cs_id/{cs_id}")
+    public ApiResponse findPointByDouble(@PathVariable int cs_id, String start1, String end1, String start2, String end2) throws QueryException {
+        List<LoopPointMB> pointByDoublePoint = loopService.findPointByDoublePoint(cs_id, start1, end1, start2, end2);
+        if (pointByDoublePoint.isEmpty()) throw new QueryException("查询失败");
+        return ApiResponse.success(pointByDoublePoint);
+    }
 }
