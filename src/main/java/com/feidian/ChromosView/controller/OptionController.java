@@ -30,21 +30,21 @@ public class OptionController {
 
     @LogPrint
     @GetMapping("/species")
-    ApiResponse findSpecies() {
+    ApiResponse<List<Species>> findSpecies() {
         List<Species> allSpecies = speciesService.findALLSpecies();
         return ApiResponse.success(allSpecies);
     }
 
     @LogPrint
     @GetMapping("/cultivar/all")
-    ApiResponse findCultivar() {
+    ApiResponse<List<Cultivar>> findCultivar() {
         List<Cultivar> allCultivar = cultivarService.findAllCultivar();
         return ApiResponse.success(allCultivar);
     }
 
     @LogPrint
     @GetMapping("/cultivar/id/{SpeciesID}")
-    ApiResponse findCultivarBySpeciesID(@PathVariable(value = "SpeciesID") Integer SpeciesID) throws QueryException {
+    ApiResponse<List<Cultivar>> findCultivarBySpeciesID(@PathVariable(value = "SpeciesID") Integer SpeciesID) throws QueryException {
         List<Cultivar> cultivarBySpeciesID = cultivarService.findCultivarBySpeciesID(SpeciesID);
         if (cultivarBySpeciesID.isEmpty()) {
             throw new QueryException("查询不到数据");
@@ -54,14 +54,14 @@ public class OptionController {
 
     @LogPrint
     @GetMapping("/chromosome/all")
-    ApiResponse findAllChromosome() {
+    ApiResponse<List<ChromosomeT>> findAllChromosome() {
         List<ChromosomeT> allChromosomeT = cultivarService.findAllChromosome();
         return ApiResponse.success(allChromosomeT);
     }
 
     @LogPrint
     @GetMapping("/chromosome/id/{CultivarID}")
-    ApiResponse findChromosomeByID(@PathVariable(value = "CultivarID") Integer CultivarID) throws QueryException {
+    ApiResponse<List<ChromosomeT>> findChromosomeByID(@PathVariable(value = "CultivarID") Integer CultivarID) throws QueryException {
         List<ChromosomeT> csByID = cultivarService.findCSByID(CultivarID);
         if (csByID.isEmpty()) {
             throw new QueryException("查询不到数据");

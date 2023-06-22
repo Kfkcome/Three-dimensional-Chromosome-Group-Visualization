@@ -35,7 +35,7 @@ public class CompartmentController {
 //    }
     @LogPrint
     @GetMapping("/cs_id/{cs_id}")
-    ApiResponse findPointBYStart_End(@PathVariable int cs_id, @RequestParam(name = "start", required = false) String start, @RequestParam(name = "end", required = false) String end) throws QueryException {
+    ApiResponse<ArrayList<CompartmentPointMB>> findPointBYStart_End(@PathVariable int cs_id, @RequestParam(name = "start", required = false) String start, @RequestParam(name = "end", required = false) String end) throws QueryException {
         List<CompartmentPoint> pointByENDStart = compartmentService.findPointByEND_START(cs_id, start, end);
         if (pointByENDStart.isEmpty()) {
             throw new QueryException("查询不到数据");
