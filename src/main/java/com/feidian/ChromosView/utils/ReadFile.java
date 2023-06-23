@@ -26,6 +26,8 @@ import java.util.List;
 
 
 public class ReadFile {
+
+
     public static List readExcel(File file) throws Exception {      //读取excel函数
         //获取文件名字
         String fileName = file.getName();
@@ -245,8 +247,7 @@ public class ReadFile {
     }
 
     private static boolean checkInSpace(int binX, int binY, Long binXStart, Long binXEnd, Long binYStart, Long binYEnd) {
-        if (binX > binXEnd || binX < binXStart || binY > binYEnd || binY < binYStart) return false;
-        return true;
+        return binX <= binXEnd && binX >= binXStart && binY <= binYEnd && binY >= binYStart;
     }
 
 }

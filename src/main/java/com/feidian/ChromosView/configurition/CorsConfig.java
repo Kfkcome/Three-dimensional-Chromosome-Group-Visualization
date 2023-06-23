@@ -1,4 +1,4 @@
-package com.music.configuration;
+package com.feidian.ChromosView.configurition;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
