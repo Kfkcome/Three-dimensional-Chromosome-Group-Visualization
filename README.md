@@ -9,7 +9,8 @@ Three-dimensional Chromosome Group Visualization
 2. A2_loop.txt
 3. A2_matrix.hic(使用straw包来解析)
 4. A2_TAD.bed
-其他的使用mysql数据存储
+5. A2_gene.gff3 （存储了染色体结构）
+除hic文件外其他文件全部转换到mysql数据库存储
 ## 依赖 
 ### java-straw
 [java-straw](https://github.com/sa501428/java-straw)
