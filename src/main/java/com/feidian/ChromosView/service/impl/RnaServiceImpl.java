@@ -2,6 +2,7 @@ package com.feidian.ChromosView.service.impl;
 
 import com.feidian.ChromosView.domain.RNA;
 import com.feidian.ChromosView.domain.RNA_STRUCTURE;
+import com.feidian.ChromosView.domain.RNA_STRUCTURE_T;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.RnaMapper;
 import com.feidian.ChromosView.service.RnaService;
@@ -99,6 +100,19 @@ public class RnaServiceImpl implements RnaService {
             rnaList = rnaMapper.selectRnaByCS_ID_START_END(cs_id, start, end);
         } else rnaList = rnaMapper.selectRnaByCS_ID(cs_id);
         return rnaList;
+    }
+
+    @Override
+    public List<RNA_STRUCTURE_T> findRnaByStartEND(List<RNA> rnaList) {
+        List<RNA_STRUCTURE_T> rnaStructureTs = new ArrayList<>();
+        for (RNA rna : rnaList) {
+            String mrnaName = rna.getMRNA_NAME();
+            List<RNA_STRUCTURE> rnaStructures = rnaMapper.selectRnaStructByID(rna.getMRNA_ID());
+            for (RNA_STRUCTURE rnaStructure : rnaStructures) {
+                rnaStructureTs.add(new RNA_STRUCTURE_T(mrnaName, rnaStructure));
+            }
+        }
+        return rnaStructureTs;
     }
 
 }
