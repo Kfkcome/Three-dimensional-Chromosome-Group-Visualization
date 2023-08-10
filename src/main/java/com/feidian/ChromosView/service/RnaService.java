@@ -11,7 +11,7 @@ import java.util.List;
 public interface RnaService {
     Integer insertRnaFromFile(String path);
 
-    List<RNA> findRnaByStartEND(int csId, String start, String end);
+    List<RNA> findRnaByStartEND(int csId, String start, String end, String singleLine);
 
     List<RNA_STRUCTURE_T> findRnaByStartEND(List<RNA> rnaList);
 

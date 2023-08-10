@@ -24,5 +24,10 @@ public interface RnaMapper {
     List<RNA> selectRnaByCS_ID_START_END(@Param("CS_ID") int cs_id, @Param("START_POINT") long startPoint
             , @Param("END_POINT") long endPoint);
 
+    List<RNA> selectRnaByCS_ID_START_END_One(@Param("CS_ID") int cs_id, @Param("START_POINT") long startPoint
+            , @Param("END_POINT") long endPoint);
+
     List<RNA> selectRnaByCS_ID(@Param("CS_ID") int cs_id);
+
+    List<RNA> selectRnaByCS_ID_One(@Param("CS_ID") int cs_id);
 }

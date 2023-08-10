@@ -13,12 +13,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.sql.DataSource;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
 class ChromosViewTests {
+    @Autowired
+    DataSource dataSource;
     @Autowired
     CompartmentService compartmentService;
     @Autowired
@@ -34,6 +39,25 @@ class ChromosViewTests {
 
     @Test
     void contextLoads() {
+        //查看默认的数据源
+        System.out.println(dataSource.getClass());
+
+        //获得数据库连接
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+        } catch (SQLException e) {
+
+
+        }
+        System.out.println(connection);
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

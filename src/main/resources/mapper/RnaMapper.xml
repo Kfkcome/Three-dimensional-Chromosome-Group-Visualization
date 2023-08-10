@@ -42,4 +42,18 @@
         select max(mRNA_ID)
         from biology.t_rna;
     </select>
+    <select id="selectRnaByCS_ID_START_END_One" resultType="com.feidian.ChromosView.domain.RNA">
+        select CS_ID, mRNA_ID, mRNA_NAME, START_POINT, END_POINT, DIRECTION
+        from biology.t_rna
+        where CS_ID = #{CS_ID}
+          and START_POINT >= #{START_POINT}
+          and END_POINT &lt;= #{END_POINT}
+          and mRNA_NAME regexp '.1$';
+    </select>
+    <select id="selectRnaByCS_ID_One" resultType="com.feidian.ChromosView.domain.RNA">
+        select *
+        from biology.t_rna
+        where CS_ID = #{CS_ID}
+          and mRNA_NAME regexp '.1$';
+    </select>
 </mapper>

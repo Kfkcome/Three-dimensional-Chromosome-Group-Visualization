@@ -1,9 +1,6 @@
 package com.feidian.ChromosView.utils;
 
-import com.feidian.ChromosView.domain.CompartmentPoint;
-import com.feidian.ChromosView.domain.CompartmentPointMB;
-import com.feidian.ChromosView.domain.LoopPoint;
-import com.feidian.ChromosView.domain.LoopPointMB;
+import com.feidian.ChromosView.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,5 +22,13 @@ public class UnitConversion {
             loopPointMBS.add(loopPointMB);
         }
         return loopPointMBS;
+    }
+
+    public static List<RNA_T> convertRNA(List<RNA> rnaList) {
+        List<RNA_T> rnaTs = new ArrayList<>();
+        for (RNA rna : rnaList) {
+            rnaTs.add(new RNA_T(rna));
+        }
+        return rnaTs;
     }
 }

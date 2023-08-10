@@ -86,7 +86,7 @@ public class LogPrintAspect {
         long startTime = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
         // 打印出参
-        log.info("Response Args  : {}", result.getClass());
+        log.info("Response Args  : {}", JSONObject.toJSONString(result));
         // 执行耗时
         log.info("Time-Consuming : {} ms", System.currentTimeMillis() - startTime);
         return result;

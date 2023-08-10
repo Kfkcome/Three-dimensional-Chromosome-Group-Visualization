@@ -3,7 +3,7 @@
 <mapper namespace="com.feidian.ChromosView.mapper.LoopMapper">
 
     <insert id="insertFromFile">
-        insert into biology.t_loop(CS_ID, START_POINT1, END_POINT1, STRAT_POINT2, END_POINT2, IC_NUM, FDR_VALUE)values
+        insert into biology.t_loop(CS_ID, START_POINT1, END_POINT1, START_POINT2, END_POINT2, IC_NUM, FDR_VALUE)values
         <foreach collection="list" separator="," item="item">
             (#{item.CS_ID},#{item.START_POINT1},#{item.END_POINT1},#{item.START_POINT2},#{item.END_POINT2},#{item.IC_NUM},#{item.FDR_VALUE})
         </foreach>
@@ -13,7 +13,7 @@
                CS_ID,
                START_POINT1,
                END_POINT1,
-               STRAT_POINT2,
+               START_POINT2,
                END_POINT2,
                IC_NUM,
                FDR_VALUE
@@ -25,14 +25,14 @@
                CS_ID,
                START_POINT1,
                END_POINT1,
-               STRAT_POINT2,
+               START_POINT2,
                END_POINT2,
                IC_NUM,
                FDR_VALUE
         from biology.t_loop
         where CS_ID = #{cs_id}
+          and START_POINT2 &gt;= #{start}
           and START_POINT1 &gt;= #{start}
-          and STRAT_POINT2 &gt;= #{start}
           and END_POINT1 &lt;= #{end}
           and END_POINT2 &lt;= #{end};
     </select>
@@ -41,7 +41,7 @@
                CS_ID,
                START_POINT1,
                END_POINT1,
-               STRAT_POINT2,
+               START_POINT2,
                END_POINT2,
                IC_NUM,
                FDR_VALUE
@@ -49,9 +49,9 @@
         where CS_ID = #{cs_id}
           and (
                 (START_POINT1 >= #{start1} and END_POINT1 &lt;= #{end1})
-                or (STRAT_POINT2 >= #{start1} and END_POINT2 &lt;= #{end1})
+                or (START_POINT2 >= #{start1} and END_POINT2 &lt;= #{end1})
                 or (START_POINT1 >= #{start2} and END_POINT1 &lt;= #{end2})
-                or (STRAT_POINT2 >= #{start2} and END_POINT2 &lt;= #{end2}))
+                or (START_POINT2 >= #{start2} and END_POINT2 &lt;= #{end2}))
     </select>
 
 </mapper>

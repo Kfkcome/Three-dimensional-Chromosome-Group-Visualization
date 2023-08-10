@@ -39,7 +39,7 @@ public class RnaServiceImpl implements RnaService {
     @Override
     public Integer insertRnaFromFile(String path) {
         Map<String, Integer> saveExonNum = new HashMap<>();
-        Map<String, Integer> saveRnaId = new HashMap<>();//因为一个品种中的名称唯一所以可以用来存id，避免查询花费大量实际
+        Map<String, Integer> saveRnaId = new HashMap<>();//因为一个品种中的名称唯一所以可以用来存id，避免查询花费大量时间
         ArrayList<RNA> rnaArrayList = new ArrayList<>();
         ArrayList<RNA_STRUCTURE> rnaStructures = new ArrayList<>();
 
@@ -92,13 +92,21 @@ public class RnaServiceImpl implements RnaService {
     }
 
     @Override
-    public List<RNA> findRnaByStartEND(int cs_id, String startT, String endT) {
+    public List<RNA> findRnaByStartEND(int cs_id, String startT, String endT, String singleLine) {
         List<RNA> rnaList;
-        if (startT != null && !startT.equals("") && endT != null && !endT.equals("")) {
-            long start = Long.parseLong(startT);
-            long end = Long.parseLong(endT);
-            rnaList = rnaMapper.selectRnaByCS_ID_START_END(cs_id, start, end);
-        } else rnaList = rnaMapper.selectRnaByCS_ID(cs_id);
+        if (singleLine != null && singleLine.equals("1")) {
+            if (startT != null && !startT.equals("") && endT != null && !endT.equals("")) {
+                long start = Long.parseLong(startT);
+                long end = Long.parseLong(endT);
+                rnaList = rnaMapper.selectRnaByCS_ID_START_END_One(cs_id, start, end);
+            } else rnaList = rnaMapper.selectRnaByCS_ID_One(cs_id);
+        } else {
+            if (startT != null && !startT.equals("") && endT != null && !endT.equals("")) {
+                long start = Long.parseLong(startT);
+                long end = Long.parseLong(endT);
+                rnaList = rnaMapper.selectRnaByCS_ID_START_END(cs_id, start, end);
+            } else rnaList = rnaMapper.selectRnaByCS_ID(cs_id);
+        }
         return rnaList;
     }
 

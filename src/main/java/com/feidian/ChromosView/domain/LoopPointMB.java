@@ -16,8 +16,8 @@ public class LoopPointMB {
     double FDR_VALUE;
 
     public LoopPointMB(LoopPoint loopPoint) {
-        this.END_POINT = (loopPoint.END_POINT1 + loopPoint.END_POINT2) / 2.0 / 10000.0;
-        this.START_POINT = (loopPoint.START_POINT1 + loopPoint.getSTART_POINT2()) / 2.0 / 10000.0;
+        this.END_POINT = (loopPoint.END_POINT1 + loopPoint.END_POINT2) / 2.0 / 1000000.0;
+        this.START_POINT = (loopPoint.START_POINT1 + loopPoint.getSTART_POINT2()) / 2.0 / 1000000.0;
         this.IC_ID = loopPoint.getCS_ID();
         this.IC_NUM = loopPoint.getIC_NUM();
         this.CS_ID = loopPoint.CS_ID;

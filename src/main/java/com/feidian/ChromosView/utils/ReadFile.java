@@ -103,7 +103,7 @@ public class ReadFile {
 
 
         // now let's iterate on every chromosome (only intra-chromosomal regions for now)
-        ArrayList<MatrixPoint> matrixPoints1 = new ArrayList<>();
+        ArrayList<MatrixPoint> matrixPoints1 = new ArrayList<MatrixPoint>();
         endloop:
         for (int i = 0; i < chromosome.length; i++) {
             for (int j = 0; j < chromosome.length; j++) {
@@ -145,7 +145,7 @@ public class ReadFile {
                         genomeX = binX * resolution;
                         genomeY = binY * resolution;
                         count++;
-                        matrixPoints1.add(new MatrixPoint(binX, binY, genomeX, genomeY, counts));
+                        matrixPoints1.add(new MatrixPoint(binX / 1000000.0, binY / 1000000.0, genomeX, genomeY, counts));
                         //System.out.println(genomeX + " " + genomeY + " " + counts);
                         // do task
                     }
@@ -232,7 +232,7 @@ public class ReadFile {
                                 binX = rec.getBinX() * resolution;
                                 binY = rec.getBinY() * resolution;
                                 float counts = rec.getCounts();
-                                matrixPointArrayList.add(new MatrixPoint(binX, binY, genomeX, genomeY, counts));
+                                matrixPointArrayList.add(new MatrixPoint(binX / 1000000.0, binY / 1000000.0, genomeX, genomeY, counts));
                             }
                         }
                     }
