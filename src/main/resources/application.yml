@@ -2,9 +2,9 @@ server:
   port: 8082
 spring:
   datasource:
-    url: jdbc:mysql://123.57.186.69:3306/biology?characterEncoding=utf-8&serverTimezone=UTC
+    url: jdbc:mysql://122.205.95.110:3366/biology?characterEncoding=utf-8&serverTimezone=UTC
     username: root
-    password: no.tt@cpm956
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource #切换数据源
     initialSize: 5

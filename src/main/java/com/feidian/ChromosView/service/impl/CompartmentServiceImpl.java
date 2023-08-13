@@ -108,23 +108,23 @@ public class CompartmentServiceImpl implements CompartmentService {
     }
 
     @Override
-    public List<CompartmentPoint> findPointByCS_ID(int id) {
-        List<CompartmentPoint> compartment = compartmentMapper.findCompartmentID(id);
+    public List<CompartmentPoint> findPointByCS_ID(int id,int tissue_id,int software_id) {
+        List<CompartmentPoint> compartment = compartmentMapper.findCompartmentID(id,tissue_id,software_id);
         return compartment;
     }
 
     @Override
-    public List<CompartmentPoint> findPointByEND_START(int cs_id, String startT, String endT) {
+    public List<CompartmentPoint> findPointByEND_START(int cs_id, String startT, String endT,int tissue_id,int software_id) {
         Integer end;
         Integer start;
         List<CompartmentPoint> compartmentENDStart;
         if(startT!=null&&endT!=null&&endT!=""&&startT!="") {
             end = Integer.parseInt(endT);
             start=Integer.parseInt(startT);
-            compartmentENDStart = compartmentMapper.findCompartmentEND_START(cs_id, start, end);
+            compartmentENDStart = compartmentMapper.findCompartmentEND_START(cs_id, start, end,tissue_id,software_id);
         }
         else {
-            compartmentENDStart = compartmentMapper.findCompartmentID(cs_id);
+            compartmentENDStart = compartmentMapper.findCompartmentID(cs_id,tissue_id,software_id);
         }
         return compartmentENDStart;
     }

@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface CompartmentMapper {
     int insertFromFile(List<CompartmentPointMB> compartmentPoints);
-    List<CompartmentPoint> findCompartmentID(@Param("cs_id") int cs_id);
+    List<CompartmentPoint> findCompartmentID(@Param("cs_id") int cs_id,@Param("tissue_id")int tissue_id,@Param("software_id")int software_id);
     List<CompartmentPoint> findCompartmentEND_START(@Param("cs_id")int cs_id
-            ,@Param("start")int start,@Param("end")int end);
+            ,@Param("start")int start,@Param("end")int end,@Param("tissue_id")int tissue_id,@Param("software_id")int software_id);
 }

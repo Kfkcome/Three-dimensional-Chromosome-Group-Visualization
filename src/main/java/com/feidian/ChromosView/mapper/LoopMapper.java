@@ -14,8 +14,9 @@ public interface LoopMapper {
 
     List<LoopPoint> findAllPoint(@Param("cs_id") int cs_id);
 
-    List<LoopPoint> findPointBySTART_EDN(@Param("cs_id") int cs_id, @Param("start") long start, @Param("end") long end);
+    List<LoopPoint> findPointBySTART_EDN(@Param("cs_id") int cs_id, @Param("start") long start, @Param("end") long end,@Param("tissue_id") int tissue_id,@Param("software_id") int software_id);
 
     List<LoopPoint> findPointByDoublePoint(@Param("cs_id") int cs_id, @Param("start1") long start1,
-                                           @Param("end1") long end1, @Param("start2") long start2, @Param("end2") long end2);
+                                           @Param("end1") long end1, @Param("start2") long start2, @Param("end2") long end2,
+                                           @Param("tissue_id") int tissue_id,@Param("software_id") int software_id);
 }

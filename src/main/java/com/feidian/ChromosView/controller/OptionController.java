@@ -1,8 +1,6 @@
 package com.feidian.ChromosView.controller;
 
-import com.feidian.ChromosView.domain.ChromosomeT;
-import com.feidian.ChromosView.domain.Cultivar;
-import com.feidian.ChromosView.domain.Species;
+import com.feidian.ChromosView.domain.*;
 import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.log.LogPrint;
 import com.feidian.ChromosView.service.CultivarService;
@@ -67,5 +65,14 @@ public class OptionController {
             throw new QueryException("查询不到数据");
         }
         return ApiResponse.success(csByID);
+    }
+
+    @GetMapping("/tissue/{CultivarID}")
+    ApiResponse<List<Tissue>> findTissueByCultivar(@PathVariable Integer CultivarID) {
+        return ApiResponse.success(cultivarService.findTissueByID(CultivarID));
+    }
+    @GetMapping("/software/all")
+    ApiResponse<List<Software>>findAllSoftware(){
+        return ApiResponse.success(cultivarService.findAllSoftware());
     }
 }

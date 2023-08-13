@@ -1,6 +1,7 @@
 package com.feidian.ChromosView.mapper;
 
 import com.feidian.ChromosView.domain.ChromosomeT;
+import com.feidian.ChromosView.domain.Tissue;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -16,5 +17,6 @@ public interface ChromosomeMapper {
     List<ChromosomeT> findByCultivarID(@Param("id")int id);
     ChromosomeT findByCultivarID_CSName(@Param("id")int id, @Param("name") String name);
     ChromosomeT findByCS_ID(@Param("cs_id")int cs_id);
+
 
 }

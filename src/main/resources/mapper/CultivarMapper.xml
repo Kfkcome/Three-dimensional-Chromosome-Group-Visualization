@@ -17,4 +17,17 @@
     <select id="findBCLABySpeciesID" resultType="com.feidian.ChromosView.domain.Cultivar">
         select cultivar_id, cultivar_name, species_id, cs_num from biology.t_cultivar where SPECIES_ID=#{SPECIES_ID};
     </select>
+    <select id="findTissueByCultivarID" resultType="com.feidian.ChromosView.domain.Tissue_Cultivar">
+        select *
+        from biology.t_tissue_cultivar
+        where CULTIVAR_ID=#{CULTIVAR_ID};
+    </select>
+    <select id="findTissueByID" resultType="com.feidian.ChromosView.domain.Tissue">
+        select *
+        from biology.t_tissue
+        where TISSUE_ID=#{TISSUE_ID};
+    </select>
+    <select id="findAllSoftware" resultType="com.feidian.ChromosView.domain.Software">
+        select * from biology.t_software;
+    </select>
 </mapper>

@@ -34,9 +34,10 @@ public class CompartmentController {
 //        return ApiResponse.success(convert);
 //    }
     @LogPrint
-    @GetMapping("/cs_id/{cs_id}")
-    ApiResponse<ArrayList<CompartmentPointMB>> findPointBYStart_End(@PathVariable int cs_id, @RequestParam(name = "start", required = false) String start, @RequestParam(name = "end", required = false) String end) throws QueryException {
-        List<CompartmentPoint> pointByENDStart = compartmentService.findPointByEND_START(cs_id, start, end);
+    @GetMapping("/cs_id/{cs_id}/tissue_id/{tissue_id}/software/{software_id}")
+    ApiResponse<ArrayList<CompartmentPointMB>> findPointBYStart_End(@PathVariable int cs_id, @RequestParam(name = "start", required = false) String start, @RequestParam(name = "end", required = false) String end,
+                                                                    @PathVariable Integer tissue_id, @PathVariable Integer software_id) throws QueryException {
+        List<CompartmentPoint> pointByENDStart = compartmentService.findPointByEND_START(cs_id, start, end,tissue_id,software_id);
         if (pointByENDStart.isEmpty()) {
             throw new QueryException("查询不到数据");
         }
