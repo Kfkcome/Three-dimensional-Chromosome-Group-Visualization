@@ -45,6 +45,9 @@ public class CultivarServiceImpl implements CultivarService {
     public List<Tissue> findTissueByID(int CultivarID) {
         List<Tissue_Cultivar> tissueByCultivarID = cultivarMapper.findTissueByCultivarID(CultivarID);
         ArrayList<Tissue> tissues = new ArrayList<>();
+        if(tissueByCultivarID.isEmpty()){
+            return null;
+        }
         for (Tissue_Cultivar tissueCultivar : tissueByCultivarID) {
             tissues.add(cultivarMapper.findTissueByID(tissueCultivar.getTISSUE_ID()));
         }

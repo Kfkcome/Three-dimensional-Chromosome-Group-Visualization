@@ -69,7 +69,11 @@ public class OptionController {
 
     @GetMapping("/tissue/{CultivarID}")
     ApiResponse<List<Tissue>> findTissueByCultivar(@PathVariable Integer CultivarID) {
-        return ApiResponse.success(cultivarService.findTissueByID(CultivarID));
+        List<Tissue> tissueByID = cultivarService.findTissueByID(CultivarID);
+        if (tissueByID == null) {
+            return ApiResponse.fail(202,"查询不到数据");
+        }
+        return ApiResponse.success(tissueByID);
     }
     @GetMapping("/software/all")
     ApiResponse<List<Software>>findAllSoftware(){
