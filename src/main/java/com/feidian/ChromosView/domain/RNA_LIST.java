@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RNA_LIST {
-    List<RNA_T> rnaList;
-    List<RNA_STRUCTURE_T> rnaStructureTs;
+    List<List<RNA_T>> rnaList;
+    List<List<RNA_STRUCTURE_T>> rnaStructureTs;
 }
