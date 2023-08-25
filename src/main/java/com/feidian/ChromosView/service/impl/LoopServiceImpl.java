@@ -56,12 +56,12 @@ public class LoopServiceImpl implements LoopService {
     }
 
     @Override
-    public List<LoopPointMB> findPointByStart_End(int cs_id, String startT, String endT,int tissue_id,int software_id) {
+    public List<LoopPointMB> findPointByStart_End(int cs_id, String startT, String endT, int tissue_id, int software_id) {
         List<LoopPoint> loopPoints;
         if (startT != null && endT != null && startT != "" && endT != "") {
             Long start = Long.parseLong(startT);
             Long end = Long.parseLong(endT);
-            loopPoints = loopMapper.findPointBySTART_EDN(cs_id, start, end,tissue_id,software_id);
+            loopPoints = loopMapper.findPointBySTART_EDN(cs_id, start, end, tissue_id, software_id);
         } else {
             loopPoints = loopMapper.findAllPoint(cs_id);
         }
@@ -70,18 +70,18 @@ public class LoopServiceImpl implements LoopService {
     }
 
     @Override
-    public List<LoopPointMB> findPointByDoublePoint(int cs_id, String start1T, String end1T, String start2T, String end2T,int tissue_id,int software_id) {
+    public List<LoopPoint> findPointByDoublePoint(int cs_id, String start1T, String end1T, String start2T, String end2T, int tissue_id, int software_id) {
         List<LoopPoint> loopPoints;
         if (start1T != null && end1T != null && start1T != "" && end1T != "" && start2T != null && end2T != null && start2T != "" && end2T != "") {
             Long start1 = Long.parseLong(start1T);
             Long end1 = Long.parseLong(end1T);
             Long start2 = Long.parseLong(start2T);
             Long end2 = Long.parseLong(end2T);
-            loopPoints = loopMapper.findPointByDoublePoint(cs_id, start1, end1, start2, end2,tissue_id,software_id);
+            loopPoints = loopMapper.findPointByDoublePoint(cs_id, start1, end1, start2, end2, tissue_id, software_id);
         } else {
             loopPoints = loopMapper.findAllPoint(cs_id);
         }
-        return UnitConversion.convertLoop(loopPoints);
+        return loopPoints;
     }
 
 }

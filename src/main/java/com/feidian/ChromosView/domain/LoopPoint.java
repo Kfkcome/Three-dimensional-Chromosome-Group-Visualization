@@ -16,4 +16,9 @@ public class LoopPoint {
     long END_POINT2;
     int IC_NUM;
     double FDR_VALUE;
+
+    public String toString(String CS_Name) {
+        return CS_Name + "\t" + START_POINT1 + "\t" + END_POINT1 + "\t" + CS_Name + "\t" + START_POINT2
+                + "\t" + END_POINT2 + "\t" + IC_NUM + "\t" + FDR_VALUE + "\n";
+    }
 }

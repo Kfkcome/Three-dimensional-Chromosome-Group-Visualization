@@ -13,4 +13,8 @@ public class CompartmentPoint {
     long START_POINT;
     long END_POINT;
     double VALUE;
+
+    public String toString() {
+        return START_POINT + "\t" + END_POINT + "\t" + VALUE + "\n";
+    }
 }

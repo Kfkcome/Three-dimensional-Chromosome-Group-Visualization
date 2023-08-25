@@ -1,23 +1,30 @@
 package com.feidian.ChromosView.service.impl;
 
-import com.feidian.ChromosView.domain.CompartmentPointMB;
-import com.feidian.ChromosView.domain.LoopPointMB;
+import com.feidian.ChromosView.domain.CompartmentPoint;
+import com.feidian.ChromosView.domain.LoopPoint;
+import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.service.FileService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class FileServiceImpl implements FileService {
+    private final ChromosomeMapper chromosomeMapper;
+
+    @Autowired
+    public FileServiceImpl(ChromosomeMapper chromosomeMapper) {
+        this.chromosomeMapper = chromosomeMapper;
+    }
+
     @Override
-    public void getCompartmentFile(HttpServletResponse response, ArrayList<CompartmentPointMB> compartmentPointMBS) {
-        // 读到流中
-        //response.reset();
-        //TODO：修复使用原坐标数据而不是使用相对坐标
+    public void getCompartmentFile(HttpServletResponse response, List<CompartmentPoint> compartmentPointS) {
         response.setContentType("application/octet-stream");
         String filename = "compartment.txt";
         try {
@@ -31,12 +38,12 @@ public class FileServiceImpl implements FileService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        String CS_name = chromosomeMapper.findByCS_ID(compartmentPointS.get(1).getCS_ID()).getCS_NAME();
         try {
-            outputStream.write(("ID"+"\t"+"CS_ID"+"\t"+"START_POINT"+'\t'+"END_POINT"+'\t'+"VALUE"+"\n").getBytes());
-            for (CompartmentPointMB compartmentPointMB : compartmentPointMBS) {
-                byte[] bytes = compartmentPointMB.toString().getBytes();
-
-                    outputStream.write(bytes);
+            outputStream.write(("ChromosomeName" + "\t" + "START" + '\t' + "END" + '\t' + "VALUE" + "\n").getBytes());
+            for (CompartmentPoint compartmentPoint : compartmentPointS) {
+                byte[] bytes = (CS_name + "\t" + compartmentPoint.toString()).getBytes();
+                outputStream.write(bytes);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -44,9 +51,8 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void getLoopFile(HttpServletResponse response,List<LoopPointMB> loopPointMBS) {
+    public void getLoopFile(HttpServletResponse response, List<LoopPoint> loopPointS) {
         //response.reset();
-        // TODO：修复使用原坐标数据而不是使用相对坐标
         response.setContentType("application/octet-stream");
         String filename = "loop.txt";
         try {
@@ -60,10 +66,12 @@ public class FileServiceImpl implements FileService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        String CS_name = chromosomeMapper.findByCS_ID(loopPointS.get(1).getCS_ID()).getCS_NAME();
         try {
-            outputStream.write(("IC_ID"+"\t"+"CS_ID"+"\t"+"START_POINT"+"\t"+"END_POINT"+"\t"+"IC_NUM"+"\t"+"FDR_VALUE"+"\n").getBytes());
-            for (LoopPointMB loopPointMB : loopPointMBS) {
-                byte[] bytes = loopPointMB.toString().getBytes();
+            outputStream.write(("ChromosomeName" + "\t" + "Start" + "\t" + "End" + "\t" + "ChromosomeName" + "\t" + "Start"
+                    + "\t" + "End" + "\t" + "IC_NUM" + "\t" + "FDR_Value" + "\n").getBytes());
+            for (LoopPoint loopPoint : loopPointS) {
+                byte[] bytes = loopPoint.toString(CS_name).getBytes();
                 outputStream.write(bytes);
             }
         } catch (IOException e) {
