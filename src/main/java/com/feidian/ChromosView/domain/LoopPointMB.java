@@ -23,9 +23,9 @@ public class LoopPointMB {
         this.CS_ID = loopPoint.CS_ID;
         this.FDR_VALUE = loopPoint.getFDR_VALUE();
     }
-    //TODO: 修复是使用染色体名称而不是染色体id
-    public String toString(){
-        String temp=IC_ID+"\t"+CS_ID+"\t"+START_POINT+"\t"+END_POINT+"\t"+IC_NUM+"\t"+FDR_VALUE+"\n";
+
+    public String toString() {
+        String temp = IC_ID + "\t" + CS_ID + "\t" + START_POINT + "\t" + END_POINT + "\t" + IC_NUM + "\t" + FDR_VALUE + "\n";
         return temp;
     }
 

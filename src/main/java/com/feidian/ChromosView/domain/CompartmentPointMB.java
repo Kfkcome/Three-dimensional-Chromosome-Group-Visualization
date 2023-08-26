@@ -21,11 +21,6 @@ public class CompartmentPointMB {
         this.END_POINT = compartmentPoint.getEND_POINT() / 1000000.0;
         this.START_POINT = compartmentPoint.getSTART_POINT() / 1000000.0;
     }
-    //TODO:修复使用染色体名称而不是染色体id
-    public String toString(){
-        String temp=ID+"\t"+CS_ID+"\t"+START_POINT+"\t"+END_POINT+"\t"+VALUE+"\n";
-        return temp;
-    }
 
 
 }

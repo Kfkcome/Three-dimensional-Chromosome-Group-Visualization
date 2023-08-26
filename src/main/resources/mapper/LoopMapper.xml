@@ -35,8 +35,8 @@
           and START_POINT1 &gt;= #{start}
           and END_POINT1 &lt;= #{end}
           and END_POINT2 &lt;= #{end}
-          and SOFTWARE_ID=#{software_id}
-          and TISSUE_ID=#{tissue_id};
+          and SOFTWARE_ID = #{software_id}
+          and TISSUE_ID = #{tissue_id};
     </select>
     <select id="findPointByDoublePoint" resultType="com.feidian.ChromosView.domain.LoopPoint">
         select IC_ID,
@@ -50,11 +50,17 @@
         from biology.t_loop
         where CS_ID = #{cs_id}
           and (
-                (START_POINT1 >= #{start1} and END_POINT1 &lt;= #{end1})
-                or (START_POINT2 >= #{start1} and END_POINT2 &lt;= #{end1})
-                or (START_POINT1 >= #{start2} and END_POINT1 &lt;= #{end2})
-                or (START_POINT2 >= #{start2} and END_POINT2 &lt;= #{end2}))
-        and TISSUE_ID=#{tissue_id} and SOFTWARE_ID=#{software_id};
+                (START_POINT1 >= #{start1} and END_POINT1 &lt;= #{end1} and START_POINT2 >= #{start1} and
+                 END_POINT2 &lt;= #{end1})
+                or (START_POINT1 >= #{start2} and END_POINT1 &lt;= #{end2} and START_POINT2 >= #{start2} and
+                    END_POINT2 &lt;= #{end2})
+                or (START_POINT1 >= #{start1} and END_POINT1 &lt;= #{end1} and START_POINT2 >= #{start2} and
+                    END_POINT2 &lt;= #{end2})
+                or (START_POINT1 >= #{start2} and END_POINT1 &lt;= #{end2} and START_POINT2 >= #{start1} and
+                    END_POINT2 &lt;= #{end1})
+            )
+          and TISSUE_ID = #{tissue_id}
+          and SOFTWARE_ID = #{software_id};
     </select>
 
 </mapper>
