@@ -3,13 +3,14 @@ package com.feidian.ChromosView.controller;
 import com.feidian.ChromosView.domain.CompartmentPoint;
 import com.feidian.ChromosView.domain.CompartmentPointMB;
 import com.feidian.ChromosView.exception.QueryException;
-import com.feidian.ChromosView.log.LogPrint;
+import com.feidian.ChromosView.aop.LogPrint;
 import com.feidian.ChromosView.service.CompartmentService;
 import com.feidian.ChromosView.service.FileService;
 import com.feidian.ChromosView.utils.ApiResponse;
 import com.feidian.ChromosView.utils.UnitConversion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;

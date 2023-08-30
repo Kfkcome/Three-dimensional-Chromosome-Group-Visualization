@@ -1,7 +1,7 @@
-package com.feidian.ChromosView.log;
+package com.feidian.ChromosView.aop;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +29,7 @@ public class LogPrintAspect {
     /**
      * 以自定义 @LogPrint 注解为切点
      */
-    @Pointcut("@annotation(com.feidian.ChromosView.log.LogPrint)")
+    @Pointcut("@annotation(com.feidian.ChromosView.aop.LogPrint)")
     public void logPrint() {
     }
 

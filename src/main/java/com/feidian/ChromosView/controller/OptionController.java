@@ -2,7 +2,7 @@ package com.feidian.ChromosView.controller;
 
 import com.feidian.ChromosView.domain.*;
 import com.feidian.ChromosView.exception.QueryException;
-import com.feidian.ChromosView.log.LogPrint;
+import com.feidian.ChromosView.aop.LogPrint;
 import com.feidian.ChromosView.service.CultivarService;
 import com.feidian.ChromosView.service.SpeciesService;
 import com.feidian.ChromosView.utils.ApiResponse;

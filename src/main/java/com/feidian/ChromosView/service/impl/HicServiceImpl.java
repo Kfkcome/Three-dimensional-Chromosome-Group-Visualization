@@ -1,10 +1,12 @@
 package com.feidian.ChromosView.service.impl;
 
 import com.feidian.ChromosView.domain.*;
+import com.feidian.ChromosView.domain.redis.RedisCache;
 import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.service.HicService;
 import com.feidian.ChromosView.utils.ReadFile;
+import com.feidian.ChromosView.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,14 @@ import java.util.UUID;
 public class HicServiceImpl implements HicService {
     private final ChromosomeMapper chromosomeMapper;
     private final CacheMapper cacheMapper;
+    private final RedisUtil redisUtil;
+
 
     @Autowired
-    public HicServiceImpl(ChromosomeMapper chromosomeMapper, CacheMapper cacheMapper) {
+    public HicServiceImpl(ChromosomeMapper chromosomeMapper, CacheMapper cacheMapper, RedisUtil redisUtil) {
         this.chromosomeMapper = chromosomeMapper;
         this.cacheMapper = cacheMapper;
+        this.redisUtil = redisUtil;
     }
 
 
@@ -35,6 +40,8 @@ public class HicServiceImpl implements HicService {
     }
 
     void addToCache(String uuid, LastQuery nowQuery, List<MatrixPoint> matrixPoints) {
+        redisUtil.deleteObject(uuid+"cache");
+        redisUtil.deleteObject(uuid+"cache");
         cacheMapper.deleteObject(uuid + "cache:");
         cacheMapper.deleteObject(uuid + "index:");
         cacheMapper.deleteObject(uuid + "last:");
@@ -78,11 +85,11 @@ public class HicServiceImpl implements HicService {
         System.out.println("直接查询");
         ChromosomeT byCSId = chromosomeMapper.findByCS_ID(cs_id1);
         ChromosomeT byCSId2 = chromosomeMapper.findByCS_ID(cs_id2);
-        String CSName1 = byCSId.getCS_NAME().split("A2.")[1];
-        String CSName2 = byCSId2.getCS_NAME().split("A2.")[1];
+        String CSName1 = byCSId.getCS_NAME();
+        String CSName2 = byCSId2.getCS_NAME();
         System.out.println("要查找的染色体的名字" + CSName1 + " " + CSName2);
         Long binXS, binXE, binYS, binYE;
-        File file = new File("D:/DNA/A2_matrix.hic");
+        File file = new File("/home/new/fsdownload/Arabidopsis-thaliana_Col-0_Root.hic");
         List<MatrixPoint> matrixPoints = new ArrayList<>();
         if (norms == null || norms.equals("NONE"))
             norms = "SCALE";

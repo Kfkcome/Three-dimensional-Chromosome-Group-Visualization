@@ -1,4 +1,4 @@
-package com.feidian.ChromosView.log;
+package com.feidian.ChromosView.aop;
 
 
 import java.lang.annotation.*;

@@ -1,7 +1,7 @@
 package com.feidian.ChromosView.controller;
 
 import com.feidian.ChromosView.domain.*;
-import com.feidian.ChromosView.log.LogPrint;
+import com.feidian.ChromosView.aop.LogPrint;
 import com.feidian.ChromosView.service.RnaService;
 import com.feidian.ChromosView.utils.ApiResponse;
 import com.feidian.ChromosView.utils.UnitConversion;
