@@ -132,6 +132,12 @@ public final class RedisUtil {
         return count == null ? 0 : count;
     }
 
+    public <T> long setCacheList(final String key, final List<T> dataList,Long time,TimeUnit timeUnit) {
+        Long count = redisTemplate.opsForList().rightPushAll(key, dataList);
+        redisTemplate.expire(key,time,timeUnit);
+        return count == null ? 0 : count;
+    }
+
     /**
      * 获得缓存的list对象
      *

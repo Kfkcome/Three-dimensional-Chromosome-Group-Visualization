@@ -6,6 +6,12 @@ spring:
     port: 6379
     password: 123456
     database: 0
+    connect-timeout: 200000
+    lettuce:
+      pool:
+        max-active: 30
+        max-idle: 30
+
   datasource:
     url: jdbc:mysql://122.205.95.110:3366/biology?characterEncoding=utf-8&serverTimezone=UTC
     username: root
