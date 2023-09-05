@@ -10,5 +10,9 @@
     <select id="findByName" resultType="java.lang.Integer">
         select SPECIES_ID from biology.t_species where SPECIES_NAME=#{name};
     </select>
+    <select id="findById" resultType="com.feidian.ChromosView.domain.Species">
+        select *
+        from biology.t_species where SPECIES_ID=#{species_id};;
+    </select>
 
 </mapper>

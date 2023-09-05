@@ -3,13 +3,18 @@ package com.feidian.ChromosView.service.impl;
 import com.feidian.ChromosView.domain.*;
 import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
+import com.feidian.ChromosView.mapper.CultivarMapper;
+import com.feidian.ChromosView.mapper.SpeciesMapper;
 import com.feidian.ChromosView.service.HicService;
 import com.feidian.ChromosView.utils.ReadFile;
 import com.feidian.ChromosView.utils.RedisUtil;
+import org.apache.ibatis.javassist.ClassPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,13 +23,17 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class HicServiceImpl implements HicService {
     private final ChromosomeMapper chromosomeMapper;
+    private final CultivarMapper cultivarMapper;
     private final RedisUtil redisUtil;
+    private final SpeciesMapper speciesMapper;
 
 
     @Autowired
-    public HicServiceImpl(ChromosomeMapper chromosomeMapper, RedisUtil redisUtil) {
+    public HicServiceImpl(ChromosomeMapper chromosomeMapper, CultivarMapper cultivarMapper, RedisUtil redisUtil, SpeciesMapper speciesMapper) {
         this.chromosomeMapper = chromosomeMapper;
+        this.cultivarMapper = cultivarMapper;
         this.redisUtil = redisUtil;
+        this.speciesMapper = speciesMapper;
     }
 
 
@@ -67,7 +76,7 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
-    public UUID_matrixPoints findByCS_ID(String uuid, int cs_id1, int cs_id2, String norms, String binXStart, String binYStart, String binXEnd, String binYEnd, String resolution) throws QueryException {
+    public UUID_matrixPoints findByCS_ID(String uuid, int cs_id1, int cs_id2, String norms, String binXStart, String binYStart, String binXEnd, String binYEnd, String resolution,Integer tissue_id) throws QueryException, FileNotFoundException {
         LastQuery nowQuery = new LastQuery(cs_id1, cs_id2, norms, binXStart, binYStart, binXEnd, binYEnd, resolution);
         LastQuery lastQuery = redisUtil.getCacheObject(uuid + "last:");
         List<MatrixPoint> object =redisUtil.getCacheList(uuid + "cache:");
@@ -99,12 +108,19 @@ public class HicServiceImpl implements HicService {
         byCSId.getCULTIVAR_ID();
         byCSId2.getCULTIVAR_ID();
         String CSName2 = byCSId2.getCS_NAME();
+        Cultivar cultivar=cultivarMapper.findOneByTissueId(byCSId.getCULTIVAR_ID());
+        Species species = speciesMapper.findById(cultivar.getSPECIES_ID());
+        Tissue tissue= cultivarMapper.findTissueByID(tissue_id);
         System.out.println("要查找的染色体的名字" + CSName1 + " " + CSName2);
+
         Long binXS, binXE, binYS, binYE;
-        File file = new File("/home/new/fsdownload/Arabidopsis-thaliana_Col-0_Root.hic");
+        String file_name=species.getSPECIES_NAME()+"_"+cultivar.getCULTIVAR_NAME()+"_"+tissue.getTISSUE_NAME();
+        File file = new File("./"+file_name+"/"+file_name+".hic");
+        if(!file.exists()){
+            throw new FileNotFoundException(file.getPath());
+        }
         List<MatrixPoint> matrixPoints = new ArrayList<>();
         if (norms == null || norms.equals("NONE"))
-            norms = "SCALE";
         if (!checkNorms(norms))
             return new UUID_matrixPoints(matrixPoints, index, 0, uuid);
         if (binXStart != null && binYStart != null && binXEnd != null && binYEnd != null) {
@@ -115,7 +131,6 @@ public class HicServiceImpl implements HicService {
                 binYE = Long.parseLong(binYEnd);
             } catch (NumberFormatException numberFormatException) {
                 matrixPoints = ReadFile.readHICALL(file, CSName1, CSName2, norms, resolution);
-                //TODO:不够5000条的判断
                 if (matrixPoints.size() >= 5000) {
                     addToCache(uuid, nowQuery, matrixPoints);
                     return new UUID_matrixPoints(matrixPoints.subList(0, 4999), 0, matrixPoints.size() / 5000, uuid);

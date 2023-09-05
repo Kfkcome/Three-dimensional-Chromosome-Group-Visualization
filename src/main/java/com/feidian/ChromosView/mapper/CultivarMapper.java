@@ -15,10 +15,12 @@ import java.util.List;
 public interface CultivarMapper {
     int addCultivar(Cultivar cultivar);
     List<Cultivar> findAll();
+    Cultivar findOneByTissueId(@Param("cultivar_id")int cultivar_id);
     List<Cultivar> findBCLABySpeciesID(@Param("SPECIES_ID") int SPECIES_ID);
     int findByName_SpeciesID(Cultivar cultivar);
     Integer updateCSNum(@Param("CS_NUM") int CS_NUM,@Param("CULTIVAR_ID") int CULTIVAR_ID);
     List<Tissue_Cultivar> findTissueByCultivarID(int CULTIVAR_ID);
     Tissue findTissueByID(int TISSUE_ID);
     List<Software> findAllSoftware();
+
 }

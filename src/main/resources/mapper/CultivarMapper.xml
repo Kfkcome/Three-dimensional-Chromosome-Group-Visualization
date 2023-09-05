@@ -30,4 +30,7 @@
     <select id="findAllSoftware" resultType="com.feidian.ChromosView.domain.Software">
         select * from biology.t_software;
     </select>
+    <select id="findOneByTissueId" resultType="com.feidian.ChromosView.domain.Cultivar">
+        select * from biology.t_cultivar where CULTIVAR_ID=#{cultivar_id};
+    </select>
 </mapper>
