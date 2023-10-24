@@ -28,11 +28,8 @@ import juicebox.MainWindow;
 import juicebox.data.ChromosomeHandler;
 import juicebox.data.basics.Chromosome;
 import juicebox.gui.SuperAdapter;
-import juicebox.mapcolorui.HeatmapClickListener;
 import org.jetbrains.annotations.NotNull;
 
-import javax.imageio.ImageIO;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -42,41 +39,63 @@ import java.util.List;
 public class GenerateHeatmap {
     SuperAdapter superAdapter;
 
-    GenerateHeatmap() {
-        superAdapter = MainWindow.superAdapter;
+    public GenerateHeatmap() {
+
     }
 
-    public static void main(String[] args) {
-        long startTime = System.currentTimeMillis();
+    public BufferedImage generateFullHeatMap(String path, String chromosome1_name) {
         MainWindow.initApplication();//初始化程序
         MainWindow.getInstance();
-        GenerateHeatmap generateHeatmap = new GenerateHeatmap();
-        BufferedImage temp = new BufferedImage(1057, 578, BufferedImage.TYPE_INT_ARGB);
-        List<String> fileNames = getFileNames("/home/new/fsdownload/Glycine-max_SoyC02_Leaf/Glycine-max_SoyC02_Leaf.hic");
+        superAdapter = MainWindow.superAdapter;
+        BufferedImage temp = new BufferedImage(1057, 1057, BufferedImage.TYPE_INT_ARGB);
+        List<String> fileNames = getFileNames(path);
         try {
-            generateHeatmap.superAdapter.unsafeLoad(fileNames, false, false);//加载hic文件
-            for (int i = 1; i < 10; i++) {
-                SuperAdapter superAdapter1 = generateHeatmap.superAdapter;
-                ChromosomeHandler chromosomeHandler = superAdapter1.getHiC().getChromosomeHandler();
-                Chromosome chr1 = chromosomeHandler.getChromosomeFromIndex(i);
-                Chromosome chr2 = chr1;
-                superAdapter1.unsafeSetSelectedChromosomes(chr1, chr2);
-                generateHeatmap.superAdapter.getHeatmapPanel().setBounds(0, 0, 1057, 578);//设置窗口大小，设置图片的大小
-                HeatmapClickListener clickListener = generateHeatmap.superAdapter.getMainViewPanel().getHeatmapPanel().getClickListener();
-                superAdapter1.getMainViewPanel().getResolutionSlider().setResolutionLocked(true);//锁定分辨率
-                //模拟鼠标双击
-                clickListener.mouseClicked(new MouseEvent(superAdapter1.getHeatmapPanel(), 1, (long) 1, 1, 1, 1, 10, false, 1));
-                generateHeatmap.superAdapter.getHeatmapPanel().paint(temp.getGraphics());
-                File outputFile = new File("/home/new/test" + i + ".png");
-                ImageIO.write(temp, "png", outputFile);
-            }
+            superAdapter.unsafeLoad(fileNames, false, false);
+            ChromosomeHandler chromosomeHandler = superAdapter.getHiC().getChromosomeHandler();
+            Chromosome chr1 = chromosomeHandler.getChromosomeFromName(chromosome1_name);
+            superAdapter.unsafeSetSelectedChromosomes(chr1, chr1);
+            superAdapter.getHeatmapPanel().setBounds(0, 0, 1057, 1057);
+            superAdapter.getHeatmapPanel().paint(temp.getGraphics());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        MainWindow.getInstance().dispose();
-        long endTime = System.currentTimeMillis(); //获取结束时间
-        System.out.println("程序运行时间： " + (endTime - startTime) + "ms");
-        System.exit(0);
+        return temp;
+    }
+
+    public static void main(String[] args) {
+        BufferedImage image = new GenerateHeatmap().generateFullHeatMap("/home/new/fsdownload/Glycine-max_SoyC02_Leaf/Glycine-max_SoyC02_Leaf.hic", "SoyC02.Chr01");
+
+//        long startTime = System.currentTimeMillis();
+//        MainWindow.initApplication();//初始化程序
+//        MainWindow.getInstance();
+//        GenerateHeatmap generateHeatmap = new GenerateHeatmap();
+//        generateHeatmap.superAdapter = MainWindow.superAdapter;
+//        BufferedImage temp = new BufferedImage(1057, 578, BufferedImage.TYPE_INT_ARGB);
+//        List<String> fileNames = getFileNames("/home/new/fsdownload/Glycine-max_SoyC02_Leaf/Glycine-max_SoyC02_Leaf.hic");
+//        try {
+//            generateHeatmap.superAdapter.unsafeLoad(fileNames, false, false);//加载hic文件
+//            for (int i = 1; i < 10; i++) {
+//                SuperAdapter superAdapter1 = generateHeatmap.superAdapter;
+//                ChromosomeHandler chromosomeHandler = superAdapter1.getHiC().getChromosomeHandler();
+//                Chromosome chr1 = chromosomeHandler.getChromosomeFromIndex(i);
+//                Chromosome chr2 = chr1;
+//                superAdapter1.unsafeSetSelectedChromosomes(chr1, chr2);
+//                generateHeatmap.superAdapter.getHeatmapPanel().setBounds(0, 0, 1057, 578);//设置窗口大小，设置图片的大小
+//                HeatmapClickListener clickListener = generateHeatmap.superAdapter.getMainViewPanel().getHeatmapPanel().getClickListener();
+//                superAdapter1.getMainViewPanel().getResolutionSlider().setResolutionLocked(true);//锁定分辨率
+//                //模拟鼠标双击
+//                clickListener.mouseClicked(new MouseEvent(superAdapter1.getHeatmapPanel(), 1, (long) 1, 1, 1, 1, 10, false, 1));
+//                generateHeatmap.superAdapter.getHeatmapPanel().paint(temp.getGraphics());
+//                File outputFile = new File("/home/new/test" + i + ".png");
+//                ImageIO.write(temp, "png", outputFile);
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+////        MainWindow.getInstance().dispose();
+//        long endTime = System.currentTimeMillis(); //获取结束时间
+//        System.out.println("程序运行时间： " + (endTime - startTime) + "ms");
+//        System.exit(0);
     }
 
     @NotNull

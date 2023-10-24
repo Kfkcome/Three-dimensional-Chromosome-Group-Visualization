@@ -101,7 +101,8 @@ public class MainWindow extends JFrame {
             try {
                 theInstance = createMainWindow();
             } catch (Exception e) {
-                System.err.println("Error creating main window " + e.getLocalizedMessage());
+                throw e;
+                //System.err.println("Error creating main window " + e.getLocalizedMessage());
             }
         }
         return theInstance;

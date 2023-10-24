@@ -6,6 +6,7 @@ import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.CultivarMapper;
 import com.feidian.ChromosView.mapper.SpeciesMapper;
 import com.feidian.ChromosView.service.CompartmentService;
+import com.feidian.ChromosView.service.impl.HicServiceImpl;
 import com.feidian.ChromosView.service.impl.LoopServiceImpl;
 import com.feidian.ChromosView.service.impl.RnaServiceImpl;
 import com.feidian.ChromosView.utils.ReadFile;
@@ -18,6 +19,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,8 @@ class ChromosViewTests {
     LoopServiceImpl loopService;
     @Autowired
     RnaServiceImpl rnaService;
+    @Autowired
+    HicServiceImpl hicService;
     @Resource
     private RedisTemplate redisTemplate;
 
@@ -47,20 +51,29 @@ class ChromosViewTests {
     private RedisUtil redisUtil;
     @Autowired
     private RedisCache redisCache;
+
     @Test
     public void testRedis() {
 //        redisCache.setCacheObject("name4","test");
 //        String name3 = redisCache.getCacheObject("name3");
 //        System.out.println(name3);
         System.out.println(redisUtil.getCacheObject("name3").toString());
-        List<Integer> arrayList=new ArrayList();
+        List<Integer> arrayList = new ArrayList();
         arrayList.add(1);
         arrayList.add(2);
     }
+
     @Test
-    public void ReadHic(){
+    public void ReadHic() {
         ArrayList<MatrixPoint> matrixPoints = ReadFile.readHICALL(new File("/home/new/fsdownload/Arabidopsis-thaliana_Col-0_Root.hic"), "Chr1", "Chr2", "KR", "10000");
         System.out.println(matrixPoints);
+    }
+
+    @Test
+    public void PaintHeatMap() {
+        System.setProperty("java.awt.headless", "false");
+        BufferedImage image = hicService.generateMap(1, 1);
+        hicService.writeTOFile(image);
     }
 
 //    @Test

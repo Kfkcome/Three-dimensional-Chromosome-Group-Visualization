@@ -1,5 +1,6 @@
 package com.feidian.ChromosView.service.impl;
 
+import GenerateMyHeatMap.GenerateHeatmap;
 import com.feidian.ChromosView.domain.*;
 import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
@@ -8,16 +9,19 @@ import com.feidian.ChromosView.mapper.SpeciesMapper;
 import com.feidian.ChromosView.service.HicService;
 import com.feidian.ChromosView.utils.ReadFile;
 import com.feidian.ChromosView.utils.RedisUtil;
-import org.apache.ibatis.javassist.ClassPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -26,6 +30,7 @@ public class HicServiceImpl implements HicService {
     private final CultivarMapper cultivarMapper;
     private final RedisUtil redisUtil;
     private final SpeciesMapper speciesMapper;
+    private final ExecutorService threadExecutor = Executors.newFixedThreadPool(3);
 
 
     @Autowired
@@ -48,38 +53,38 @@ public class HicServiceImpl implements HicService {
 
     void addToCache(String uuid, LastQuery nowQuery, List<MatrixPoint> matrixPoints) {
         removeFromCache(uuid);
-        redisUtil.setCacheObject(uuid + "last:", nowQuery,10L, TimeUnit.MINUTES);
+        redisUtil.setCacheObject(uuid + "last:", nowQuery, 10L, TimeUnit.MINUTES);
 
-        int  num=500000;
-        if(matrixPoints.size()<=num){
-            redisUtil.setCacheList(uuid + "cache:", matrixPoints,10L,TimeUnit.MINUTES);
-        }else{
-            int start=0;
-            int end=num;
-            for(int i=0;i< matrixPoints.size()/num+1;i++){
-                if(end>=matrixPoints.size()){
-                    end=matrixPoints.size()-1;
+        int num = 500000;
+        if (matrixPoints.size() <= num) {
+            redisUtil.setCacheList(uuid + "cache:", matrixPoints, 10L, TimeUnit.MINUTES);
+        } else {
+            int start = 0;
+            int end = num;
+            for (int i = 0; i < matrixPoints.size() / num + 1; i++) {
+                if (end >= matrixPoints.size()) {
+                    end = matrixPoints.size() - 1;
                 }
                 List<MatrixPoint> list = matrixPoints.subList(start, end);
-                redisUtil.setCacheList(uuid + "cache:", list,10L,TimeUnit.MINUTES);
-                start=end;
-                end+=num;
+                redisUtil.setCacheList(uuid + "cache:", list, 10L, TimeUnit.MINUTES);
+                start = end;
+                end += num;
             }
         }
-        redisUtil.setCacheObject(uuid + "index:", 1,10L,TimeUnit.MINUTES);
+        redisUtil.setCacheObject(uuid + "index:", 1, 10L, TimeUnit.MINUTES);
     }
 
     void removeFromCache(String uuid) {
-        redisUtil.deleteObject(uuid+"cache");
-        redisUtil.deleteObject(uuid+"cache");
-        redisUtil.deleteObject(uuid+"last");
+        redisUtil.deleteObject(uuid + "cache");
+        redisUtil.deleteObject(uuid + "cache");
+        redisUtil.deleteObject(uuid + "last");
     }
 
     @Override
-    public UUID_matrixPoints findByCS_ID(String uuid, int cs_id1, int cs_id2, String norms, String binXStart, String binYStart, String binXEnd, String binYEnd, String resolution,Integer tissue_id) throws QueryException, FileNotFoundException {
+    public UUID_matrixPoints findByCS_ID(String uuid, int cs_id1, int cs_id2, String norms, String binXStart, String binYStart, String binXEnd, String binYEnd, String resolution, Integer tissue_id) throws QueryException, FileNotFoundException {
         LastQuery nowQuery = new LastQuery(cs_id1, cs_id2, norms, binXStart, binYStart, binXEnd, binYEnd, resolution);
         LastQuery lastQuery = redisUtil.getCacheObject(uuid + "last:");
-        List<MatrixPoint> object =redisUtil.getCacheList(uuid + "cache:");
+        List<MatrixPoint> object = redisUtil.getCacheList(uuid + "cache:");
         Integer index = redisUtil.getCacheObject(uuid + "index:");
         //从缓存中读取数据
         if (object != null && nowQuery.equals(lastQuery)) {
@@ -108,21 +113,21 @@ public class HicServiceImpl implements HicService {
         byCSId.getCULTIVAR_ID();
         byCSId2.getCULTIVAR_ID();
         String CSName2 = byCSId2.getCS_NAME();
-        Cultivar cultivar=cultivarMapper.findOneByTissueId(byCSId.getCULTIVAR_ID());
+        Cultivar cultivar = cultivarMapper.findOneByTissueId(byCSId.getCULTIVAR_ID());
         Species species = speciesMapper.findById(cultivar.getSPECIES_ID());
-        Tissue tissue= cultivarMapper.findTissueByID(tissue_id);
+        Tissue tissue = cultivarMapper.findTissueByID(tissue_id);
         System.out.println("要查找的染色体的名字" + CSName1 + " " + CSName2);
 
         Long binXS, binXE, binYS, binYE;
-        String file_name=species.getSPECIES_NAME()+"_"+cultivar.getCULTIVAR_NAME()+"_"+tissue.getTISSUE_NAME();
-        File file = new File("./"+file_name+"/"+file_name+".hic");
-        if(!file.exists()){
+        String file_name = species.getSPECIES_NAME() + "_" + cultivar.getCULTIVAR_NAME() + "_" + tissue.getTISSUE_NAME();
+        File file = new File("./" + file_name + "/" + file_name + ".hic");
+        if (!file.exists()) {
             throw new FileNotFoundException(file.getPath());
         }
         List<MatrixPoint> matrixPoints = new ArrayList<>();
         if (norms == null || norms.equals("NONE"))
-        if (!checkNorms(norms))
-            return new UUID_matrixPoints(matrixPoints, index, 0, uuid);
+            if (!checkNorms(norms))
+                return new UUID_matrixPoints(matrixPoints, index, 0, uuid);
         if (binXStart != null && binYStart != null && binXEnd != null && binYEnd != null) {
             try {
                 binXS = Long.parseLong(binXStart);
@@ -147,4 +152,23 @@ public class HicServiceImpl implements HicService {
             return new UUID_matrixPoints(matrixPoints.subList(0, 4999), 0, matrixPoints.size() / 5000, uuid);
         } else return new UUID_matrixPoints(matrixPoints, 0, 0, "none");
     }
+
+    @Override
+    public BufferedImage generateMap(int cs_id, Integer tissue_id) {
+        String csName = chromosomeMapper.findByCS_ID(cs_id).getCS_NAME();
+//        String csName = "SoyC02.Chr02";
+        BufferedImage image = new GenerateHeatmap().generateFullHeatMap("/home/new/fsdownload/Glycine-max_SoyC02_Leaf/Glycine-max_SoyC02_Leaf.hic", csName);
+        return image;
+    }
+
+    public void writeTOFile(BufferedImage bufferedImage) {
+        File outputFile = new File("/home/new/test_new" + ".png");
+        try {
+            ImageIO.write(bufferedImage, "png", outputFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
