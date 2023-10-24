@@ -44,6 +44,7 @@ public class GenerateHeatmap {
     }
 
     public BufferedImage generateFullHeatMap(String path, String chromosome1_name) {
+        System.setProperty("java.awt.headless", "false");
         MainWindow.initApplication();//初始化程序
         MainWindow.getInstance();
         superAdapter = MainWindow.superAdapter;

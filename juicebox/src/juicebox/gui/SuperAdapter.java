@@ -416,7 +416,8 @@ public class SuperAdapter {
 
         if ((!control) && newFilesToBeLoaded.toString().equals(currentlyLoadedMainFiles)) {
             if (!restore) {
-                JOptionPane.showMessageDialog(mainWindow, "File(s) already loaded");
+//                JOptionPane.showMessageDialog(mainWindow, "File(s) already loaded");
+                System.out.println("File(s) already loaded");
             }
             return false;
         }
@@ -917,7 +918,7 @@ public class SuperAdapter {
         updateMiniAnnotationsLayerPanel();
         updateMainLayersPanel();
     }
-   
+
     public int moveDownIndex(AnnotationLayerHandler handler) {
         int currIndex = annotationLayerHandlers.indexOf(handler);
         int n = annotationLayerHandlers.size();

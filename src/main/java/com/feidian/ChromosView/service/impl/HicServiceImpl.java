@@ -13,10 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -154,11 +153,19 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
-    public BufferedImage generateMap(int cs_id, Integer tissue_id) {
+    public Boolean generateMap(int cs_id, Integer tissue_id, HttpServletResponse response) {//todo:实现对物种的搜索
         String csName = chromosomeMapper.findByCS_ID(cs_id).getCS_NAME();
 //        String csName = "SoyC02.Chr02";
+        //todo:实现对hic文件路径的搜索和拼接
         BufferedImage image = new GenerateHeatmap().generateFullHeatMap("/home/new/fsdownload/Glycine-max_SoyC02_Leaf/Glycine-max_SoyC02_Leaf.hic", csName);
-        return image;
+        try {
+            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+            ImageIO.write(image, "png", outputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+            //todo:实现生成图片的异常处理
+        }
+        return true;
     }
 
     public void writeTOFile(BufferedImage bufferedImage) {

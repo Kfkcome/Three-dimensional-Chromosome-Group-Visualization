@@ -19,7 +19,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,12 +68,11 @@ class ChromosViewTests {
         System.out.println(matrixPoints);
     }
 
-    @Test
-    public void PaintHeatMap() {
-        System.setProperty("java.awt.headless", "false");
-        BufferedImage image = hicService.generateMap(1, 1);
-        hicService.writeTOFile(image);
-    }
+//    @Test
+//    public void PaintHeatMap() {
+//        System.setProperty("java.awt.headless", "false");
+//        hicService.generateMap(514, 1,null);
+//    }
 
 //    @Test
 //    void contextLoads() {
