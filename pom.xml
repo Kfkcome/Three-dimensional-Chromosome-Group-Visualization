@@ -5,12 +5,9 @@
     <groupId>com.feidian</groupId>
     <artifactId>ChromosView</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <name>ChromosomeOrganizationVisualization</name>
     <description>ChromosomeOrganizationVisualization</description>
-    <modules>
-        <module>juicebox</module>
-    </modules>
     <properties>
         <java.version>1.8</java.version>
         <springboot.version>2.7.5</springboot.version>
