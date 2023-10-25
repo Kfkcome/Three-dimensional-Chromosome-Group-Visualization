@@ -28,8 +28,6 @@ import htsjdk.samtools.seekablestream.SeekableHTTPStream;
 import htsjdk.samtools.seekablestream.SeekableStream;
 import htsjdk.tribble.util.LittleEndianInputStream;
 import juicebox.HiCGlobals;
-import juicebox.gui.SuperAdapter;
-import org.broad.igv.ui.util.MessageUtils;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -41,8 +39,8 @@ import java.util.List;
 
 /**
  * @author jrobinso
- *         Date: 12/22/12
- *         Time: 1:06 PM
+ * Date: 12/22/12
+ * Time: 1:06 PM
  */
 public class DatasetReaderFactory {
 
@@ -67,7 +65,7 @@ public class DatasetReaderFactory {
     private static DatasetReaderV2 getReaderForFile(String file) throws IOException {
         String magicString = getMagicString(file);
 
-        if(magicString != null) {
+        if (magicString != null) {
             if (magicString.equals("HIC")) {
                 return new DatasetReaderV2(file);
             } else {
@@ -93,9 +91,13 @@ public class DatasetReaderFactory {
                 dis = new LittleEndianInputStream(new FileInputStream(path));
             } catch (Exception e2) {
                 if (HiCGlobals.guiIsCurrentlyActive) {
-                    SuperAdapter.showMessageDialog("File could not be found\n(" + path + ")");
+                    System.out.println("File could not be found\n(" + path + ")");
+                    throw new IOException(e2.getMessage());
+//                    SuperAdapter.showMessageDialog("File could not be found\n(" + path + ")");
+
                 } else {
-                    MessageUtils.showErrorMessage("File could not be found\n(" + path + ")", e2);
+                    System.out.println("File could not be found\n(" + path + ")");
+                    throw new IOException(e2.getMessage());
                 }
             }
         } finally {

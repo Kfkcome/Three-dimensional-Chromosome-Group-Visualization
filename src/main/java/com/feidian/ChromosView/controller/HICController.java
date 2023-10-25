@@ -2,6 +2,7 @@ package com.feidian.ChromosView.controller;
 
 import com.feidian.ChromosView.aop.LogPrint;
 import com.feidian.ChromosView.domain.UUID_matrixPoints;
+import com.feidian.ChromosView.exception.HicFileNotFoundException;
 import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.service.HicService;
 import com.feidian.ChromosView.utils.ApiResponse;
@@ -36,9 +37,9 @@ public class HICController {
     }
 
     @LogPrint
-    @GetMapping("/cs_id/{cs_id}/tissue_id/{tissue_id}")
-    public ApiResponse<String> generateHeatMap(@PathVariable Integer cs_id, @PathVariable Integer tissue_id, HttpServletResponse httpServletResponse) {
-        if (hicService.generateMap(cs_id, tissue_id, httpServletResponse))
+    @GetMapping("/generateHeatmap")
+    public ApiResponse<String> generateHeatMap(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome, HttpServletResponse httpServletResponse) throws HicFileNotFoundException {
+        if (hicService.generateMap(species, cultivar, tissue, chromosome, httpServletResponse))
             return ApiResponse.success("Generate heatmap successfully!");
         return ApiResponse.fail(505, "Failed to generate the heatmap");
     }

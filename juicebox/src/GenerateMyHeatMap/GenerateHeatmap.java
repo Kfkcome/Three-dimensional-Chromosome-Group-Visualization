@@ -43,7 +43,7 @@ public class GenerateHeatmap {
 
     }
 
-    public BufferedImage generateFullHeatMap(String path, String chromosome1_name) {
+    public BufferedImage generateFullHeatMap(String path, String chromosome1_name) throws IOException {
         System.setProperty("java.awt.headless", "false");
         MainWindow.initApplication();//初始化程序
         MainWindow.getInstance();
@@ -58,13 +58,13 @@ public class GenerateHeatmap {
             superAdapter.getHeatmapPanel().setBounds(0, 0, 1057, 1057);
             superAdapter.getHeatmapPanel().paint(temp.getGraphics());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IOException(e);
         }
         return temp;
     }
 
     public static void main(String[] args) {
-        BufferedImage image = new GenerateHeatmap().generateFullHeatMap("/home/new/fsdownload/Glycine-max_SoyC02_Leaf/Glycine-max_SoyC02_Leaf.hic", "SoyC02.Chr01");
+//        BufferedImage image = new GenerateHeatmap().generateFullHeatMap("/home/new/fsdownload/Glycine-max_SoyC02_Leaf/Glycine-max_SoyC02_Leaf.hic", "SoyC02.Chr01");
 
 //        long startTime = System.currentTimeMillis();
 //        MainWindow.initApplication();//初始化程序

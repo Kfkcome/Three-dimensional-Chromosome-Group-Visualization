@@ -2,6 +2,7 @@ package com.feidian.ChromosView.service.impl;
 
 import GenerateMyHeatMap.GenerateHeatmap;
 import com.feidian.ChromosView.domain.*;
+import com.feidian.ChromosView.exception.HicFileNotFoundException;
 import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.CultivarMapper;
@@ -19,8 +20,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -29,7 +28,10 @@ public class HicServiceImpl implements HicService {
     private final CultivarMapper cultivarMapper;
     private final RedisUtil redisUtil;
     private final SpeciesMapper speciesMapper;
-    private final ExecutorService threadExecutor = Executors.newFixedThreadPool(3);
+
+    private String uniteFileName(String species, String cultivar, String tissue) {
+        return species + "_" + cultivar + "_" + tissue;
+    }
 
 
     @Autowired
@@ -153,11 +155,17 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
-    public Boolean generateMap(int cs_id, Integer tissue_id, HttpServletResponse response) {//todo:实现对物种的搜索
-        String csName = chromosomeMapper.findByCS_ID(cs_id).getCS_NAME();
+    public Boolean generateMap(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) throws HicFileNotFoundException {//todo:实现对物种的搜索
+//        String csName = chromosomeMapper.findByCS_ID(cs_id).getCS_NAME();
 //        String csName = "SoyC02.Chr02";
-        //todo:实现对hic文件路径的搜索和拼接
-        BufferedImage image = new GenerateHeatmap().generateFullHeatMap("/home/new/fsdownload/Glycine-max_SoyC02_Leaf/Glycine-max_SoyC02_Leaf.hic", csName);
+        String fileName = uniteFileName(species, cultivar, tissue);
+        String path = fileName + "/" + fileName + ".hic";
+        BufferedImage image;
+        try {
+            image = new GenerateHeatmap().generateFullHeatMap(path, chromosome);
+        } catch (IOException e) {
+            throw new HicFileNotFoundException(e.getMessage());
+        }
         try {
             OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
             ImageIO.write(image, "png", outputStream);
