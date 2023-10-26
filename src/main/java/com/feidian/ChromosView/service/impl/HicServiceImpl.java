@@ -163,7 +163,7 @@ public class HicServiceImpl implements HicService {
         BufferedImage image;
         try {
             image = new GenerateHeatmap().generateFullHeatMap(path, chromosome);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new HicFileNotFoundException(e.getMessage());
         }
         try {

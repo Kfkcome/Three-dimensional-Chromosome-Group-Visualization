@@ -24,9 +24,9 @@
 
 package juicebox.tools.utils.juicer.apa;
 
+import jheatchart.HeatChart;
 import juicebox.tools.utils.common.MatrixTools;
 import org.apache.commons.math.linear.RealMatrix;
-import org.tc33.jheatchart.HeatChart;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -68,9 +68,9 @@ class APAPlotter {
     /**
      * Method for plotting apa data
      *
-     * @param dataOriginal       for heat map
-     * @param axesRange  initial values and increments to annotate axes [x0, dx, y0, dy]
-     * @param outputFile where image will saved
+     * @param dataOriginal for heat map
+     * @param axesRange    initial values and increments to annotate axes [x0, dx, y0, dy]
+     * @param outputFile   where image will saved
      */
     public static void plot(RealMatrix dataOriginal, int[] axesRange, File outputFile,
                             String title, int currentRegionWidth,

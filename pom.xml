@@ -17,7 +17,9 @@
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
         <fastjson.version>2.0.23</fastjson.version>
     </properties>
+
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -143,6 +145,11 @@
             <version>2.0.0</version>
         </dependency>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.11</version>
+        </dependency>
+        <dependency>
             <groupId>com.juice</groupId>
             <artifactId>juicebox</artifactId>
             <version>0.0.1-SNAPSHOT</version>
@@ -159,8 +166,16 @@
 
     </dependencies>
 
+
     <build>
+        <resources>
+            <resource>
+                <directory>juicebox/lib</directory>
+                <targetPath>BOOT-INF/lib/</targetPath>
+            </resource>
+        </resources>
         <plugins>
+
             <plugin>
 
                 <groupId>org.springframework.boot</groupId>

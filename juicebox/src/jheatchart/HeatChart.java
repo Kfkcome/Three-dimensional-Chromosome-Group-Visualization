@@ -22,7 +22,7 @@
  *  THE SOFTWARE.
  */
 
-package org.tc33.jheatchart;
+package jheatchart;
 
 import juicebox.HiCGlobals;
 
@@ -39,10 +39,9 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- *
  * From https://github.com/tc33/jheatchart
  * Tom Castle
- *
+ * <p>
  * The <code>HeatChart</code> class describes a chart which can display
  * 3-dimensions of values - x,y and z, where x and y are the usual 2-dimensional
  * axis and z is portrayed by colour intensity. Heat charts are sometimes known
