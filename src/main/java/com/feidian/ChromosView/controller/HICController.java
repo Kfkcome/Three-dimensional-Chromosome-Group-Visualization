@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/hic")
@@ -47,12 +48,22 @@ public class HICController {
 
     @LogPrint
     @GetMapping("/getHeatMapPoint")
-    public ApiResponse<HicMapPoint> getHeatMapPoint(@RequestParam(value = "x") int x, @RequestParam(value = "y") int y) {
-        String point = hicService.getPoint(x, y);
+    public ApiResponse<HicMapPoint> getHeatMapPoint(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome, @RequestParam(value = "x") int x, @RequestParam(value = "y") int y) throws HicFileNotFoundException {
+        String point = hicService.getPoint(species, cultivar, tissue, chromosome, x, y);
         if (point.isEmpty()) {
             return ApiResponse.error(400, "请先选择染色体并生成HIC图");
         }
         return ApiResponse.success(new HicMapPoint(point));
+    }
+
+    @LogPrint
+    @GetMapping("/getNormalizationType")
+    public ApiResponse<List<String>> getNormalizationType(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome) throws HicFileNotFoundException {
+        List<String> normalizationType = hicService.getNormalizationType(species, cultivar, tissue, chromosome);
+        if (normalizationType.isEmpty()) {
+            return ApiResponse.error(400, "请先选择染色体并生成HIC图");
+        }
+        return ApiResponse.success(normalizationType);
     }
 
 }

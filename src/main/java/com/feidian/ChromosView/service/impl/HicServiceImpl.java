@@ -157,15 +157,33 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
-    public String getPoint(int x, int y) {
-        //TODO:检测是否是同一张图，这样获取的点的数据才对
-        String s = generateHeatmap.getPointData(x, y);
-        System.out.println(s);
+    public String getPoint(String species, String cultivar, String tissue, String chromosome, int x, int y) throws HicFileNotFoundException {
+        String fileName = uniteFileName(species, cultivar, tissue);
+        String path = fileName + "/" + fileName + ".hic";
+        String s;
+        try {
+            s = generateHeatmap.getPointData(path, chromosome, x, y);
+            System.out.println(s);
+        } catch (Exception e) {
+            throw new HicFileNotFoundException(e.getMessage());
+        }
         return s;
     }
 
     @Override
-    public Boolean generateMap(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) throws HicFileNotFoundException {//todo:实现对物种的搜索
+    public ArrayList<String> getNormalizationType(String species, String cultivar, String tissue, String chromosome) throws HicFileNotFoundException {
+        String fileName = uniteFileName(species, cultivar, tissue);
+        String path = fileName + "/" + fileName + ".hic";
+        try {
+            return generateHeatmap.getNormalizationType(path, chromosome);
+        } catch (Exception e) {
+            throw new HicFileNotFoundException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Boolean generateMap(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) throws HicFileNotFoundException {
+        //todo:实现对物种的搜索
 //        String csName = chromosomeMapper.findByCS_ID(cs_id).getCS_NAME();
 //        String csName = "SoyC02.Chr02";
         String fileName = uniteFileName(species, cultivar, tissue);

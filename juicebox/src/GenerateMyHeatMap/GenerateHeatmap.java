@@ -30,6 +30,7 @@ import juicebox.data.basics.Chromosome;
 import juicebox.gui.SuperAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -38,32 +39,47 @@ import java.util.List;
 
 public class GenerateHeatmap {
     SuperAdapter superAdapter;
+    String current_path;
+    String current_chromosome;
 
     public GenerateHeatmap() {
-        //superAdapter = MainWindow.superAdapter;
-    }
-
-    public BufferedImage generateFullHeatMap(String path, String chromosome1_name) throws IOException {
         System.setProperty("java.awt.headless", "false");
         MainWindow.initApplication();//初始化程序
         MainWindow.getInstance();
         superAdapter = MainWindow.superAdapter;
-        BufferedImage temp = new BufferedImage(1057, 1057, BufferedImage.TYPE_INT_ARGB);
+    }
+
+    private boolean setSpeciesCultivarChromosome(String path, String chromosome1_name) throws IOException {
+        if (path.equals(current_path) && chromosome1_name.equals(current_chromosome)) {
+            return false;
+        }
+        current_path = path;
+        current_chromosome = chromosome1_name;
         List<String> fileNames = getFileNames(path);
         try {
             superAdapter.unsafeLoad(fileNames, false, false);
-            ChromosomeHandler chromosomeHandler = superAdapter.getHiC().getChromosomeHandler();
-            Chromosome chr1 = chromosomeHandler.getChromosomeFromName(chromosome1_name);
-            superAdapter.unsafeSetSelectedChromosomes(chr1, chr1);
-            superAdapter.getHeatmapPanel().setBounds(0, 0, 1057, 1057);
-            superAdapter.getHeatmapPanel().paint(temp.getGraphics());
         } catch (IOException e) {
             throw new IOException(e);
         }
+        ChromosomeHandler chromosomeHandler = superAdapter.getHiC().getChromosomeHandler();
+        Chromosome chr1 = chromosomeHandler.getChromosomeFromName(chromosome1_name);
+        superAdapter.unsafeSetSelectedChromosomes(chr1, chr1);
+        return true;
+    }
+
+    public BufferedImage generateFullHeatMap(String path, String chromosome1_name) throws IOException {
+//        System.setProperty("java.awt.headless", "false");
+//        MainWindow.initApplication();//初始化程序
+//        MainWindow.getInstance();
+        superAdapter = MainWindow.superAdapter;
+        BufferedImage temp = new BufferedImage(1057, 1057, BufferedImage.TYPE_INT_ARGB);
+        setSpeciesCultivarChromosome(path, chromosome1_name);
+        superAdapter.getHeatmapPanel().setBounds(0, 0, 1057, 1057);
+        superAdapter.getHeatmapPanel().paint(temp.getGraphics());
         return temp;
     }
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
 //        BufferedImage image = new GenerateHeatmap().generateFullHeatMap("/home/new/fsdownload/Glycine-max_SoyC02_Leaf/Glycine-max_SoyC02_Leaf.hic", "SoyC02.Chr01");
 
 //        long startTime = System.currentTimeMillis();
@@ -97,7 +113,7 @@ public class GenerateHeatmap {
 //        long endTime = System.currentTimeMillis(); //获取结束时间
 //        System.out.println("程序运行时间： " + (endTime - startTime) + "ms");
 //        System.exit(0);
-    }
+//    }
 
     @NotNull
     private static List<String> getFileNames(String path) {
@@ -106,18 +122,60 @@ public class GenerateHeatmap {
         List<File> files = new ArrayList<>();
         List<String> fileNames = new ArrayList<>();
         files.add(hicFile);
-        if (files != null && files.size() > 0) {
-            for (File f : files) {
-                fileNames.add(f.getAbsolutePath());
-            }
+        for (File f : files) {
+            fileNames.add(f.getAbsolutePath());
         }
         return fileNames;
     }
 
-    public String getPointData(int x, int y) {
+
+    /**
+     * 功能描述：获取点的数据
+     *
+     * @param x 横坐标
+     * @param y 纵坐标
+     * @return {@link String }
+     * @author new
+     * @date 2023/11/09
+     */
+    public String getPointData(String path, String chromosome1_name, int x, int y) throws IOException {
+        setSpeciesCultivarChromosome(path, chromosome1_name);//检测时候是当前的图片，如果不是的话就更新
         if (superAdapter == null) {
-            return "";
+            return "";//没有传入文件是无法获取数据的
         }
         return superAdapter.getHeatmapPanel().getMouseHandler().toolTipText(x, y);
+    }
+
+    /**
+     * 功能描述：设置标准化类型
+     *
+     * @param type 标准化类型
+     * @return boolean
+     * @author new
+     * @date 2023/11/09
+     */
+    private boolean setNormalizationType(String path, String chromosome1_name, String type) throws IOException {
+        setSpeciesCultivarChromosome(path, chromosome1_name);
+        JComboBox<String> observedNormalizationComboBox = superAdapter.getMainViewPanel().getObservedNormalizationComboBox();
+        observedNormalizationComboBox.setSelectedItem(type);
+        return true;
+    }
+
+
+    /**
+     * 功能描述：获取所有标准化类型
+     *
+     * @return {@link ArrayList }<{@link String }>
+     * @author new
+     * @date 2023/11/09
+     */
+    public ArrayList<String> getNormalizationType(String path, String chromosome1_name) throws IOException {
+        ArrayList<String> strings = new ArrayList<>();
+        setSpeciesCultivarChromosome(path, chromosome1_name);
+        JComboBox<String> observedNormalizationComboBox = superAdapter.getMainViewPanel().getObservedNormalizationComboBox();
+        for (int i = 0; i < observedNormalizationComboBox.getItemCount(); i++) {
+            strings.add(observedNormalizationComboBox.getItemAt(i));
+        }
+        return strings;
     }
 }
