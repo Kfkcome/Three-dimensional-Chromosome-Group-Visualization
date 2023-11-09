@@ -1540,7 +1540,7 @@ public class HeatmapMouseHandler extends MouseAdapter {
         return null;
     }
 
-    private String toolTipText(int x, int y) {
+    public String toolTipText(int x, int y) {
         // Update popup text
         final MatrixZoomData zd;
         HiCGridAxis xGridAxis, yGridAxis;

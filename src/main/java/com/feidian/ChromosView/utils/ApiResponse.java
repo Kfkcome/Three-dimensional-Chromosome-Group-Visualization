@@ -47,6 +47,10 @@ public class ApiResponse<T> implements Serializable {
         return new ApiResponse<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
     }
 
+    public static <T> ApiResponse<T> error(Integer code, String message) {
+        return new ApiResponse<>(code, message);
+    }
+
     public Integer getCode() {
         return this.code;
     }

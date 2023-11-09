@@ -11,4 +11,6 @@ public interface HicService {
     Boolean generateMap(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) throws HicFileNotFoundException;
 
     UUID_matrixPoints findByCS_ID(String uuid, int cs_id1, int cs_id2, String norms, String binXStart, String binYStart, String binXEnd, String binYEnd, String resolution, Integer tissue_id) throws QueryException, FileNotFoundException;
+
+    String getPoint(int x, int y);
 }

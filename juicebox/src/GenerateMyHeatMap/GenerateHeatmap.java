@@ -40,7 +40,7 @@ public class GenerateHeatmap {
     SuperAdapter superAdapter;
 
     public GenerateHeatmap() {
-
+        //superAdapter = MainWindow.superAdapter;
     }
 
     public BufferedImage generateFullHeatMap(String path, String chromosome1_name) throws IOException {
@@ -112,5 +112,12 @@ public class GenerateHeatmap {
             }
         }
         return fileNames;
+    }
+
+    public String getPointData(int x, int y) {
+        if (superAdapter == null) {
+            return "";
+        }
+        return superAdapter.getHeatmapPanel().getMouseHandler().toolTipText(x, y);
     }
 }

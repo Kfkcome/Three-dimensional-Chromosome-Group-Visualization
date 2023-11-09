@@ -58,6 +58,11 @@ public class HeatmapPanel extends JComponent {
     private final SuperAdapter superAdapter;
     private final ColorScaleHandler colorScaleHandler = new ColorScaleHandler();
     private final GeneralTileManager tileManager = new GeneralTileManager(colorScaleHandler);
+
+    public HeatmapMouseHandler getMouseHandler() {
+        return mouseHandler;
+    }
+
     private final HeatmapMouseHandler mouseHandler;
     private boolean showGridLines = true;
 

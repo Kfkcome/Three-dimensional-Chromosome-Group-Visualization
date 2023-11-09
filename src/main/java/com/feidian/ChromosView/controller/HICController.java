@@ -1,6 +1,7 @@
 package com.feidian.ChromosView.controller;
 
 import com.feidian.ChromosView.aop.LogPrint;
+import com.feidian.ChromosView.domain.HicMapPoint;
 import com.feidian.ChromosView.domain.UUID_matrixPoints;
 import com.feidian.ChromosView.exception.HicFileNotFoundException;
 import com.feidian.ChromosView.exception.QueryException;
@@ -43,4 +44,15 @@ public class HICController {
             return ApiResponse.success("Generate heatmap successfully!");
         return ApiResponse.fail(505, "Failed to generate the heatmap");
     }
+
+    @LogPrint
+    @GetMapping("/getHeatMapPoint")
+    public ApiResponse<HicMapPoint> getHeatMapPoint(@RequestParam(value = "x") int x, @RequestParam(value = "y") int y) {
+        String point = hicService.getPoint(x, y);
+        if (point.isEmpty()) {
+            return ApiResponse.error(400, "请先选择染色体并生成HIC图");
+        }
+        return ApiResponse.success(new HicMapPoint(point));
+    }
+
 }

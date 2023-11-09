@@ -64,8 +64,15 @@ class ChromosViewTests {
 
 //    @Test
 //    public void PaintHeatMap() {
-//        System.setProperty("java.awt.headless", "false");
-//        hicService.generateMap(514, 1,null);
+//        try {
+//            hicService.generateMap(
+//                    "Glycine-max", "SoyC02",
+//                    "Leaf",
+//                    "SoyC02.Chr01", null);
+//
+//        } catch (Exception e) {
+//            System.out.println(hicService.getPoint(2, 2));
+//        }
 //    }
 
 //    @Test

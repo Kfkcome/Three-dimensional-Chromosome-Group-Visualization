@@ -28,6 +28,7 @@ public class HicServiceImpl implements HicService {
     private final CultivarMapper cultivarMapper;
     private final RedisUtil redisUtil;
     private final SpeciesMapper speciesMapper;
+    private final GenerateHeatmap generateHeatmap;
 
     private String uniteFileName(String species, String cultivar, String tissue) {
         return species + "_" + cultivar + "_" + tissue;
@@ -40,6 +41,7 @@ public class HicServiceImpl implements HicService {
         this.cultivarMapper = cultivarMapper;
         this.redisUtil = redisUtil;
         this.speciesMapper = speciesMapper;
+        this.generateHeatmap = new GenerateHeatmap();
     }
 
 
@@ -155,6 +157,14 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
+    public String getPoint(int x, int y) {
+        //TODO:检测是否是同一张图，这样获取的点的数据才对
+        String s = generateHeatmap.getPointData(x, y);
+        System.out.println(s);
+        return s;
+    }
+
+    @Override
     public Boolean generateMap(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) throws HicFileNotFoundException {//todo:实现对物种的搜索
 //        String csName = chromosomeMapper.findByCS_ID(cs_id).getCS_NAME();
 //        String csName = "SoyC02.Chr02";
@@ -162,7 +172,7 @@ public class HicServiceImpl implements HicService {
         String path = fileName + "/" + fileName + ".hic";
         BufferedImage image;
         try {
-            image = new GenerateHeatmap().generateFullHeatMap(path, chromosome);
+            image = generateHeatmap.generateFullHeatMap(path, chromosome);
         } catch (Exception e) {
             throw new HicFileNotFoundException(e.getMessage());
         }
