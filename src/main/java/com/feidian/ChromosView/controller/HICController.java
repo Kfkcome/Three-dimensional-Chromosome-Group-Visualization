@@ -40,8 +40,10 @@ public class HICController {
 
     @LogPrint
     @GetMapping("/generateHeatmap")
-    public ApiResponse<String> generateHeatMap(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome, HttpServletResponse httpServletResponse) throws HicFileNotFoundException {
-        if (hicService.generateMap(species, cultivar, tissue, chromosome, httpServletResponse))
+    public ApiResponse<String> generateHeatMap(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome,
+                                               @RequestParam(value = "DisplayOption", required = false) String displayOption, @RequestParam(value = "NormalizationType", required = false) String normalizationType,
+                                               HttpServletResponse httpServletResponse) throws HicFileNotFoundException {
+        if (hicService.generateMap(species, cultivar, tissue, chromosome, displayOption, normalizationType, httpServletResponse))
             return ApiResponse.success("Generate heatmap successfully!");
         return ApiResponse.fail(505, "Failed to generate the heatmap");
     }
@@ -60,6 +62,16 @@ public class HICController {
     @GetMapping("/getNormalizationType")
     public ApiResponse<List<String>> getNormalizationType(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome) throws HicFileNotFoundException {
         List<String> normalizationType = hicService.getNormalizationType(species, cultivar, tissue, chromosome);
+        if (normalizationType.isEmpty()) {
+            return ApiResponse.error(400, "请先选择染色体并生成HIC图");
+        }
+        return ApiResponse.success(normalizationType);
+    }
+
+    @LogPrint
+    @GetMapping("/getDisplayOption")
+    public ApiResponse<List<String>> getDisplayOption(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome) throws HicFileNotFoundException {
+        List<String> normalizationType = hicService.getDisplayOption(species, cultivar, tissue, chromosome);
         if (normalizationType.isEmpty()) {
             return ApiResponse.error(400, "请先选择染色体并生成HIC图");
         }

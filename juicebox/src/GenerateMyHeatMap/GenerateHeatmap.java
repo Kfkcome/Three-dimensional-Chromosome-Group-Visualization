@@ -28,6 +28,7 @@ import juicebox.MainWindow;
 import juicebox.data.ChromosomeHandler;
 import juicebox.data.basics.Chromosome;
 import juicebox.gui.SuperAdapter;
+import juicebox.windowui.MatrixType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -49,6 +50,15 @@ public class GenerateHeatmap {
         superAdapter = MainWindow.superAdapter;
     }
 
+    /**
+     * 功能描述：
+     *
+     * @param path             文件路径
+     * @param chromosome1_name 染色体名字
+     * @return boolean
+     * @author new
+     * @date 2023/11/13
+     */
     private boolean setSpeciesCultivarChromosome(String path, String chromosome1_name) throws IOException {
         if (path.equals(current_path) && chromosome1_name.equals(current_chromosome)) {
             return false;
@@ -67,15 +77,18 @@ public class GenerateHeatmap {
         return true;
     }
 
-    public BufferedImage generateFullHeatMap(String path, String chromosome1_name) throws IOException {
-//        System.setProperty("java.awt.headless", "false");
-//        MainWindow.initApplication();//初始化程序
-//        MainWindow.getInstance();
+    public BufferedImage generateFullHeatMap(String path, String chromosome1_name, String displayOption, String normalizationType) throws IOException {
         superAdapter = MainWindow.superAdapter;
         BufferedImage temp = new BufferedImage(1057, 1057, BufferedImage.TYPE_INT_ARGB);
         setSpeciesCultivarChromosome(path, chromosome1_name);
+        setNormalizationType(normalizationType);
+        setDisplayOption(displayOption);
         superAdapter.getHeatmapPanel().setBounds(0, 0, 1057, 1057);
         superAdapter.getHeatmapPanel().paint(temp.getGraphics());
+        String selectedItem = (String) superAdapter.getMainViewPanel().getObservedNormalizationComboBox().getSelectedItem();
+        String selectedItem1 = (String) superAdapter.getMainViewPanel().getDisplayOptionComboBox().getSelectedItem().toString();
+        System.out.println("当前选择的标准化类型为：" + selectedItem + "\n" +
+                "当前选择的显示类型是：" + selectedItem1);
         return temp;
     }
 
@@ -150,17 +163,30 @@ public class GenerateHeatmap {
      * 功能描述：设置标准化类型
      *
      * @param type 标准化类型
-     * @return boolean
      * @author new
      * @date 2023/11/09
      */
-    private boolean setNormalizationType(String path, String chromosome1_name, String type) throws IOException {
-        setSpeciesCultivarChromosome(path, chromosome1_name);
+    private void setNormalizationType(String type) {
         JComboBox<String> observedNormalizationComboBox = superAdapter.getMainViewPanel().getObservedNormalizationComboBox();
         observedNormalizationComboBox.setSelectedItem(type);
-        return true;
     }
 
+    /**
+     * 功能描述：获取显示类型的选项
+     *
+     * @param type 显示类型
+     * @author new
+     * @date 2023/11/13
+     */
+    public void setDisplayOption(String type) {
+        JComboBox<MatrixType> displayOptionComboBox = superAdapter.getMainViewPanel().getDisplayOptionComboBox();
+        for (int i = 0; i < displayOptionComboBox.getItemCount(); i++) {
+            if (displayOptionComboBox.getItemAt(i).toString().equals(type)) {
+                displayOptionComboBox.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
 
     /**
      * 功能描述：获取所有标准化类型
@@ -178,4 +204,24 @@ public class GenerateHeatmap {
         }
         return strings;
     }
+
+    /**
+     * 功能描述：获取显示选项
+     *
+     * @param path             路径
+     * @param chromosome1_name 染色体名字
+     * @return {@link ArrayList }<{@link String }>
+     * @author new
+     * @date 2023/11/13
+     */
+    public ArrayList<String> getDisplayOption(String path, String chromosome1_name) throws IOException {
+        ArrayList<String> strings = new ArrayList<>();
+        setSpeciesCultivarChromosome(path, chromosome1_name);
+        JComboBox<MatrixType> displayOptionComboBox = superAdapter.getMainViewPanel().getDisplayOptionComboBox();
+        for (int i = 0; i < displayOptionComboBox.getItemCount(); i++) {
+            strings.add(displayOptionComboBox.getItemAt(i).toString());
+        }
+        return strings;
+    }
+
 }
