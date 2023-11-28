@@ -122,6 +122,14 @@ public class MainViewPanel {
         return menuBar;
     }
 
+    public TrackPanel getTrackPanelX() {
+        return trackPanelX;
+    }
+
+    public TrackPanel getTrackPanelY() {
+        return trackPanelY;
+    }
+
     public void initializeMainView(final SuperAdapter superAdapter, Container contentPane, Dimension screenSize, int taskBarHeight) {
 
         Dimension bigPanelDim = new Dimension((int) (screenSize.width * .85),
@@ -688,19 +696,19 @@ public class MainViewPanel {
     }
 
     private void chrBox1ActionPerformed(ActionEvent e) {
-      if (chrBox1.getSelectedIndex() == 0) {
-        chrBox2.setSelectedIndex(0);
-      } else if (HiCGlobals.isAssemblyMatCheck && chrBox1.getSelectedIndex() == (chrBox1.getItemCount() - 1)) {
-        chrBox2.setSelectedIndex(chrBox1.getItemCount() - 1);
-      }
+        if (chrBox1.getSelectedIndex() == 0) {
+            chrBox2.setSelectedIndex(0);
+        } else if (HiCGlobals.isAssemblyMatCheck && chrBox1.getSelectedIndex() == (chrBox1.getItemCount() - 1)) {
+            chrBox2.setSelectedIndex(chrBox1.getItemCount() - 1);
+        }
     }
 
     private void chrBox2ActionPerformed(ActionEvent e) {
-      if (chrBox2.getSelectedIndex() == 0) {
-        chrBox1.setSelectedIndex(0);
-      } else if (HiCGlobals.isAssemblyMatCheck && chrBox2.getSelectedIndex() == (chrBox1.getItemCount() - 1)) {
-        chrBox1.setSelectedIndex(chrBox1.getItemCount() - 1);
-      }
+        if (chrBox2.getSelectedIndex() == 0) {
+            chrBox1.setSelectedIndex(0);
+        } else if (HiCGlobals.isAssemblyMatCheck && chrBox2.getSelectedIndex() == (chrBox1.getItemCount() - 1)) {
+            chrBox1.setSelectedIndex(chrBox1.getItemCount() - 1);
+        }
     }
 
     public boolean setResolutionSliderVisible(boolean state, SuperAdapter superAdapter) {

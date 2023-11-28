@@ -29,7 +29,6 @@ import juicebox.HiCGlobals;
 import juicebox.gui.SuperAdapter;
 import juicebox.windowui.NormalizationType;
 import org.broad.igv.ui.color.ColorUtilities;
-import org.broad.igv.ui.util.FileDialogUtils;
 import org.broad.igv.ui.util.LinkCheckBox;
 import org.broad.igv.util.ResourceLocator;
 import org.w3c.dom.Document;
@@ -236,14 +235,15 @@ public class ResourceTree {
         dialog.pack();
 
         dialog.setLocationRelativeTo(parent);
-        dialog.setVisible(true);
+        okButton.doClick();
+//        dialog.setVisible(true);
 
     }
 
-    public boolean addLocalButtonActionPerformed(final SuperAdapter superAdapter) {
+    public boolean addLocalButtonActionPerformed(final SuperAdapter superAdapter, File[] oneDfiles) {
         boolean localFilesAdded = false;
 
-        File[] oneDfiles = FileDialogUtils.chooseMultiple("Choose 1D Annotation file", openAnnotationPath, null);
+//        File[] oneDfiles = FileDialogUtils.chooseMultiple("Choose 1D Annotation file", openAnnotationPath, null);
 
         if (oneDfiles != null && oneDfiles.length > 0) {
             for (File file : oneDfiles) {
@@ -267,9 +267,10 @@ public class ResourceTree {
 
                 if (containsDuplicate(treeNode)) {
                     if (HiCGlobals.guiIsCurrentlyActive) {
-                        int dialogResult = JOptionPane.showConfirmDialog(superAdapter.getMainWindow(),
-                                file.getName() + " is already loaded. Would you like to overwrite it?", "Warning",
-                                JOptionPane.YES_NO_OPTION);
+//                        int dialogResult = JOptionPane.showConfirmDialog(superAdapter.getMainWindow(),
+//                                file.getName() + " is already loaded. Would you like to overwrite it?", "Warning",
+//                                JOptionPane.YES_NO_OPTION);
+                        int dialogResult = JOptionPane.YES_OPTION;
                         if (dialogResult == JOptionPane.YES_OPTION) {
                             removeChildNodeFromAddedNodes(treeNode);
                             removeChildNodeFromFeatureRoot(treeNode);
@@ -639,8 +640,8 @@ public class ResourceTree {
                 }
             } catch (Exception ignored) {
             }
-            }
         }
+    }
 
 
     /**
@@ -836,8 +837,8 @@ public class ResourceTree {
         }
 
         /*
-        * Uncheck a node unless rule prevent this behavior.
-        */
+         * Uncheck a node unless rule prevent this behavior.
+         */
 
         static boolean hasSelectedDescendants(TreeNode treeNode) {
 
@@ -927,9 +928,9 @@ public class ResourceTree {
 
 
                     /*
-                    * Now we have to check or uncheck the descendants and
-                    * ancestors depending on what we did above.
-                    */
+                     * Now we have to check or uncheck the descendants and
+                     * ancestors depending on what we did above.
+                     */
 
                     boolean checkRelatives = isChecked;
 
@@ -972,7 +973,7 @@ public class ResourceTree {
             if (doesNotHaveSelectedChildren(treeNode)) {
                 resource.setSelected(false);
             } else {
-    
+
                 // If node has selected children and has disabled descendants we
                 // must not unselect
                 // No disabled descendants so we can uncheck at will

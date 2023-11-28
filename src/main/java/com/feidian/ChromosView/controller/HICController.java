@@ -43,6 +43,10 @@ public class HICController {
     public ApiResponse<String> generateHeatMap(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome,
                                                @RequestParam(value = "DisplayOption", required = false) String displayOption, @RequestParam(value = "NormalizationType", required = false) String normalizationType,
                                                HttpServletResponse httpServletResponse) throws HicFileNotFoundException {
+        if (normalizationType.equals("Balanced11")) {
+            normalizationType = "Balanced++";
+            //由于++会被替换成空格所以约定用11替代++
+        }
         if (hicService.generateMap(species, cultivar, tissue, chromosome, displayOption, normalizationType, httpServletResponse))
             return ApiResponse.success("Generate heatmap successfully!");
         return ApiResponse.fail(505, "Failed to generate the heatmap");

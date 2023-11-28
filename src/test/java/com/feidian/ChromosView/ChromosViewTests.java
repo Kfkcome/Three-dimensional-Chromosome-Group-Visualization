@@ -46,6 +46,33 @@ class ChromosViewTests {
     private RedisCache redisCache;
 
 //    @Test
+//    public void testGenerate() {
+//        GenerateHeatmap generateHeatmap = new GenerateHeatmap();
+//        BufferedImage image = null;
+//        try {
+//            File outputFile = null;
+//
+//            image = generateHeatmap.generateGeneStruct("/home/new/fsdownload/Gossypium-hirsutum_TM-1_Leaf.hic", "/home/new/桌面/gene.bed.gz", "Ghir_A02");
+//            outputFile = new File("/home/new/test_new" + "gene1" + ".png");
+//            ImageIO.write(image, "png", outputFile);
+//
+//
+//            image = generateHeatmap.generateGeneStruct("/home/new/fsdownload/Gossypium-hirsutum_TM-1_Leaf.hic", "/home/new/桌面/gene.bed.gz", "Ghir_A01");
+//            outputFile = new File("/home/new/test_new" + "gene2" + ".png");
+//            ImageIO.write(image, "png", outputFile);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//    @Test
+//    public void testGeneStruct() {
+//        try {
+//            rnaService.generateRnaStruct("", "", "", "", null);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//    @Test
 //    public void testRedis() {
 ////        redisCache.setCacheObject("name4","test");
 ////        String name3 = redisCache.getCacheObject("name3");

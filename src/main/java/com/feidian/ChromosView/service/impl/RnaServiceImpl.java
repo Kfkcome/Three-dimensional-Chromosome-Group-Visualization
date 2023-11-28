@@ -1,18 +1,20 @@
 package com.feidian.ChromosView.service.impl;
 
+import GenerateMyHeatMap.GenerateHeatmap;
 import com.feidian.ChromosView.domain.RNA;
 import com.feidian.ChromosView.domain.RNA_STRUCTURE;
 import com.feidian.ChromosView.domain.RNA_STRUCTURE_T;
+import com.feidian.ChromosView.exception.HicFileNotFoundException;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.RnaMapper;
 import com.feidian.ChromosView.service.RnaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +24,13 @@ import java.util.Map;
 public class RnaServiceImpl implements RnaService {
     private final RnaMapper rnaMapper;
     private final ChromosomeMapper chromosomeMapper;
+    private final GenerateHeatmap generateHeatmap;
 
     @Autowired
     public RnaServiceImpl(RnaMapper rnaMapper, ChromosomeMapper chromosomeMapper) {
         this.rnaMapper = rnaMapper;
         this.chromosomeMapper = chromosomeMapper;
+        generateHeatmap = new GenerateHeatmap();
     }
 
     private int checkDirection(String s) {
@@ -123,4 +127,35 @@ public class RnaServiceImpl implements RnaService {
         return rnaStructureTs;
     }
 
+    @Override
+    public Boolean generateRnaStruct(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) throws HicFileNotFoundException {
+        Boolean generateSuccess = true;
+
+        BufferedImage image = null;
+        try {
+            image = generateHeatmap.generateGeneStruct("./Gossypium-hirsutum_TM-1_Leaf.hic", "./gene.bed.gz", chromosome);
+        } catch (IOException e) {
+            throw new HicFileNotFoundException(e.getMessage());
+        }
+        if (image == null) {
+            return false;
+        }
+        try {
+            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+            ImageIO.write(image, "png", outputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+            //todo:实现生成图片的异常处理
+        }
+        return generateSuccess;
+    }
+
+    public void writeToFile(BufferedImage bufferedImage, String name) {
+        File outputFile = new File("/home/new/test_new" + name + ".png");
+        try {
+            ImageIO.write(bufferedImage, "png", outputFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
