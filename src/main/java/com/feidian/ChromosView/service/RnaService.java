@@ -20,4 +20,6 @@ public interface RnaService {
 
     Boolean generateRnaStruct(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) throws IOException, HicFileNotFoundException;
 
+    String getPointData(String species, String cultivar, String tissue, String chromosome, int x, int y);
+
 }

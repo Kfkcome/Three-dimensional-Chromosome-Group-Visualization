@@ -391,6 +391,9 @@ public class TrackPanel extends JPanel {
     }
 
 
+    public Collection<Pair<Rectangle, HiCTrack>> getTrackRectangles() {
+        return trackRectangles;
+    }
 //    @Override
 //    public String getToolTipText(MouseEvent event) {
 //        return tooltipText(event.getX(), event.getY());

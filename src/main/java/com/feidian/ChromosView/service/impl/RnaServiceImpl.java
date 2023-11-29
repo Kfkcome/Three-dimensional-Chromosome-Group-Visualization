@@ -150,6 +150,17 @@ public class RnaServiceImpl implements RnaService {
         return generateSuccess;
     }
 
+    @Override
+    public String getPointData(String species, String cultivar, String tissue, String chromosome, int x, int y) {
+        String data = null;
+        try {
+            data = generateHeatmap.getGenePointData("./Gossypium-hirsutum_TM-1_Leaf.hic", "./gene.bed.gz", chromosome, x, y);
+        } catch (IOException e) {
+            //TODO：处理找不到点的异常
+        }
+        return data;
+    }
+
     public void writeToFile(BufferedImage bufferedImage, String name) {
         File outputFile = new File("/home/new/test_new" + name + ".png");
         try {

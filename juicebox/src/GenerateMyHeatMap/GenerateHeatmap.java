@@ -29,16 +29,21 @@ import juicebox.MainWindow;
 import juicebox.data.ChromosomeHandler;
 import juicebox.data.basics.Chromosome;
 import juicebox.gui.SuperAdapter;
+import juicebox.track.HiCTrack;
 import juicebox.track.ResourceTree;
+import juicebox.track.TrackPanel;
 import juicebox.windowui.MatrixType;
+import org.broad.igv.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class GenerateHeatmap {
@@ -342,6 +347,51 @@ public class GenerateHeatmap {
             strings.add(displayOptionComboBox.getItemAt(i).toString());
         }
         return strings;
+    }
+
+    /**
+     * 功能描述：获取基因结构图的点
+     *
+     * @param path
+     * @param gene_path
+     * @param chromosome1_name
+     * @param x
+     * @param y
+     * @return {@link String }
+     * @author new
+     * @date 2023/11/29
+     */
+    public String getGenePointData(String path, String gene_path, String chromosome1_name, int x, int y) throws IOException {
+        //FIXME:修复只能在画图后才能获取点的数据
+        superAdapter = MainWindow.superAdapter;
+        BufferedImage temp = new BufferedImage(1502, 25, BufferedImage.TYPE_INT_ARGB);
+        //加载hic文件
+        loadHicFile(path);
+
+        //加载染色体注释文件
+        setGeneStructAnnotation(gene_path);
+
+        //选择染色体
+        if (!setChromosome(chromosome1_name)) {
+            return null;
+            //TODO:添加找不到染色体异常
+        }
+
+        superAdapter.getHeatmapPanel().setSize(1502, 1502);
+        superAdapter.getMainWindow().setSize(3000, 3000);
+        //画制基因结构图
+        //TODO:修复不用画图也能获取到点的数据
+        superAdapter.getMainViewPanel().getTrackPanelX().paint(temp.getGraphics());
+
+        Collection<Pair<Rectangle, HiCTrack>> trackRectangles = superAdapter.getMainViewPanel().getTrackPanelX().getTrackRectangles();
+        String toolTipText = null;
+        for (Pair<Rectangle, HiCTrack> trackRectangle : trackRectangles) {
+            HiCTrack second = trackRectangle.getSecond();
+            toolTipText = second.getToolTipText(x, y, TrackPanel.Orientation.X);
+        }
+
+        return toolTipText;
+
     }
 
 }

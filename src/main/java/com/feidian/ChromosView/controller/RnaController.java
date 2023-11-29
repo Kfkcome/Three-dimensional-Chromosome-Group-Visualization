@@ -1,10 +1,7 @@
 package com.feidian.ChromosView.controller;
 
 import com.feidian.ChromosView.aop.LogPrint;
-import com.feidian.ChromosView.domain.RNA;
-import com.feidian.ChromosView.domain.RNA_LIST;
-import com.feidian.ChromosView.domain.RNA_STRUCTURE_T;
-import com.feidian.ChromosView.domain.RNA_T;
+import com.feidian.ChromosView.domain.*;
 import com.feidian.ChromosView.exception.HicFileNotFoundException;
 import com.feidian.ChromosView.service.RnaService;
 import com.feidian.ChromosView.utils.ApiResponse;
@@ -78,5 +75,16 @@ public class RnaController {
         if (rnaService.generateRnaStruct(species, cultivar, tissue, chromosome, httpServletResponse))
             return ApiResponse.success("Generate gene struct successfully!");
         return ApiResponse.fail(505, "Failed to generate the gene struct map");
+    }
+
+    @LogPrint
+    @GetMapping("/RnaStructPoint")
+    public ApiResponse<GeneStructPoint> getRnaStructPoint(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar,
+                                                          @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome, @RequestParam(value = "x") int x, @RequestParam(value = "y") int y) {
+        String pointData = rnaService.getPointData(species, cultivar, tissue, chromosome, x, y);
+        if (pointData == null || pointData.isEmpty()) {
+            return ApiResponse.error(400, "找不到数据");
+        }
+        return ApiResponse.success(new GeneStructPoint(pointData));
     }
 }
