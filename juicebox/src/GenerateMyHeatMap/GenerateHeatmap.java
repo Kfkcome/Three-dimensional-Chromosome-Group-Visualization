@@ -141,20 +141,20 @@ public class GenerateHeatmap {
      * 功能描述：生成基因结构注释的图
      *
      * @param path
-     * @param gene_path
+     * @param annotation_path
      * @param chromosome1_name
      * @return {@link BufferedImage }
      * @author new
      * @date 2023/11/27
      */
-    public BufferedImage generateGeneStruct(String path, String gene_path, String chromosome1_name) throws IOException {
+    public BufferedImage generateAnnotation1D(String path, String annotation_path, String chromosome1_name) throws IOException {
         superAdapter = MainWindow.superAdapter;
         BufferedImage temp = new BufferedImage(1502, 25, BufferedImage.TYPE_INT_ARGB);
         //加载hic文件
         loadHicFile(path);
 
         //加载染色体注释文件
-        setGeneStructAnnotation(gene_path);
+        setAnnotation1D(annotation_path);
 
         //选择染色体
         if (!setChromosome(chromosome1_name)) {
@@ -177,7 +177,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/28
      */
-    public void setGeneStructAnnotation(String path) {
+    public void setAnnotation1D(String path) {
 
 //        if (path.equals(current_gene_path)) {
 //            return;
@@ -196,7 +196,6 @@ public class GenerateHeatmap {
         }
 
     }
-
 
 //    public static void main(String[] args) {
 //        BufferedImage image = new GenerateHeatmap().generateFullHeatMap("/home/new/fsdownload/Glycine-max_SoyC02_Leaf/Glycine-max_SoyC02_Leaf.hic", "SoyC02.Chr01");
@@ -369,7 +368,7 @@ public class GenerateHeatmap {
         loadHicFile(path);
 
         //加载染色体注释文件
-        setGeneStructAnnotation(gene_path);
+        setAnnotation1D(gene_path);
 
         //选择染色体
         if (!setChromosome(chromosome1_name)) {

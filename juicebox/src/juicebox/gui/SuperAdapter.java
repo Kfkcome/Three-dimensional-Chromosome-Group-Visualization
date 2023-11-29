@@ -414,19 +414,19 @@ public class SuperAdapter {
             allFilesAreHiC &= file.endsWith(".hic");
         }
 
-        if ((!control) && newFilesToBeLoaded.toString().equals(currentlyLoadedMainFiles)) {
-            if (!restore) {
+//        if ((!control) && newFilesToBeLoaded.toString().equals(currentlyLoadedMainFiles)) {
+//            if (!restore) {
+////                JOptionPane.showMessageDialog(mainWindow, "File(s) already loaded");
+//                System.out.println("File(s) already loaded");
+//            }
+//            return false;
+//        }
+//        if (control && newFilesToBeLoaded.toString().equals(currentlyLoadedControlFiles)) {
+//            if (!restore) {
 //                JOptionPane.showMessageDialog(mainWindow, "File(s) already loaded");
-                System.out.println("File(s) already loaded");
-            }
-            return false;
-        }
-        if (control && newFilesToBeLoaded.toString().equals(currentlyLoadedControlFiles)) {
-            if (!restore) {
-                JOptionPane.showMessageDialog(mainWindow, "File(s) already loaded");
-            }
-            return false;
-        }
+//            }
+//            return false;
+//        }
 
         if (allFilesAreHiC) {
             mainViewPanel.setIgnoreUpdateThumbnail(true);

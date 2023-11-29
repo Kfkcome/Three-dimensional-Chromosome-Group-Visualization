@@ -1,16 +1,15 @@
 package com.feidian.ChromosView.controller;
 
+import com.feidian.ChromosView.aop.LogPrint;
 import com.feidian.ChromosView.domain.CompartmentPoint;
 import com.feidian.ChromosView.domain.CompartmentPointMB;
 import com.feidian.ChromosView.exception.QueryException;
-import com.feidian.ChromosView.aop.LogPrint;
 import com.feidian.ChromosView.service.CompartmentService;
 import com.feidian.ChromosView.service.FileService;
 import com.feidian.ChromosView.utils.ApiResponse;
 import com.feidian.ChromosView.utils.UnitConversion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -49,5 +48,15 @@ public class CompartmentController {
             throw new QueryException("查询不到数据");
         }
         fileService.getCompartmentFile(response, pointByENDStart);
+    }
+
+    @LogPrint
+    @GetMapping("/generate")
+    ApiResponse<String> generateCompartment(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome,
+                                            HttpServletResponse httpServletResponse) {
+        if (compartmentService.generateCompartment(species, cultivar, tissue, chromosome, httpServletResponse)) {
+            return ApiResponse.success("Generate Compartment successfully!");
+        }
+        return ApiResponse.fail(505, "Failed to generate the compartment");
     }
 }

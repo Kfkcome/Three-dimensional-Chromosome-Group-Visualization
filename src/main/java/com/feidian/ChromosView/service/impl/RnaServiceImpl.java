@@ -131,9 +131,9 @@ public class RnaServiceImpl implements RnaService {
     public Boolean generateRnaStruct(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) throws HicFileNotFoundException {
         Boolean generateSuccess = true;
 
-        BufferedImage image = null;
+        BufferedImage image;
         try {
-            image = generateHeatmap.generateGeneStruct("./Gossypium-hirsutum_TM-1_Leaf.hic", "./gene.bed.gz", chromosome);
+            image = generateHeatmap.generateAnnotation1D("./Gossypium-hirsutum_TM-1_Leaf.hic", "./gene.bed.gz", chromosome);
         } catch (IOException e) {
             throw new HicFileNotFoundException(e.getMessage());
         }
