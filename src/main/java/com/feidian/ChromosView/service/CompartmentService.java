@@ -17,4 +17,7 @@ public interface CompartmentService {
     List<CompartmentPoint> findPointByEND_START(int cs_id, String startT, String endT, int tissue_id, int software_id);
 
     Boolean generateCompartment(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response);
+
+    String getPointData(String species, String cultivar, String tissue, String chromosome, int x, int y);
+
 }

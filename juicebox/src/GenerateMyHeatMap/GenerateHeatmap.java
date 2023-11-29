@@ -360,7 +360,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/29
      */
-    public String getGenePointData(String path, String gene_path, String chromosome1_name, int x, int y) throws IOException {
+    public String getAnnotation1DData(String path, String gene_path, String chromosome1_name, int x, int y) throws IOException {
         //FIXME:修复只能在画图后才能获取点的数据
         superAdapter = MainWindow.superAdapter;
         BufferedImage temp = new BufferedImage(1502, 25, BufferedImage.TYPE_INT_ARGB);

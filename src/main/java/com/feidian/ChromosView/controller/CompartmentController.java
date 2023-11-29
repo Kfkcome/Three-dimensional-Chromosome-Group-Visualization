@@ -2,6 +2,7 @@ package com.feidian.ChromosView.controller;
 
 import com.feidian.ChromosView.aop.LogPrint;
 import com.feidian.ChromosView.domain.CompartmentPoint;
+import com.feidian.ChromosView.domain.CompartmentPointData;
 import com.feidian.ChromosView.domain.CompartmentPointMB;
 import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.service.CompartmentService;
@@ -58,5 +59,16 @@ public class CompartmentController {
             return ApiResponse.success("Generate Compartment successfully!");
         }
         return ApiResponse.fail(505, "Failed to generate the compartment");
+    }
+
+    @LogPrint
+    @GetMapping("/point")
+    public ApiResponse<CompartmentPointData> getRnaStructPoint(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar,
+                                                               @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome, @RequestParam(value = "x") int x, @RequestParam(value = "y") int y) {
+        String pointData = compartmentService.getPointData(species, cultivar, tissue, chromosome, x, y);
+        if (pointData == null || pointData.isEmpty()) {
+            return ApiResponse.error(400, "找不到数据");
+        }
+        return ApiResponse.success(new CompartmentPointData(pointData));
     }
 }

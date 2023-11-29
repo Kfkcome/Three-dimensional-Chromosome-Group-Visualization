@@ -154,7 +154,7 @@ public class RnaServiceImpl implements RnaService {
     public String getPointData(String species, String cultivar, String tissue, String chromosome, int x, int y) {
         String data = null;
         try {
-            data = generateHeatmap.getGenePointData("./Gossypium-hirsutum_TM-1_Leaf.hic", "./gene.bed.gz", chromosome, x, y);
+            data = generateHeatmap.getAnnotation1DData("./Gossypium-hirsutum_TM-1_Leaf.hic", "./gene.bed.gz", chromosome, x, y);
         } catch (IOException e) {
             //TODO：处理找不到点的异常
         }

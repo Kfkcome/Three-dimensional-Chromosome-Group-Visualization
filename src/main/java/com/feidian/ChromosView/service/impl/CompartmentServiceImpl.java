@@ -158,4 +158,15 @@ public class CompartmentServiceImpl implements CompartmentService {
         return true;
     }
 
+    @Override
+    public String getPointData(String species, String cultivar, String tissue, String chromosome, int x, int y) {
+        String data = null;
+        try {
+            data = generateHeatmap.getAnnotation1DData("./Gossypium-hirsutum_TM-1_Leaf.hic", "./Compartment.bw", chromosome, x, y);
+        } catch (IOException e) {
+            //TODO：处理找不到点的异常
+        }
+        return data;
+    }
+
 }
