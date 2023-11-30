@@ -47,17 +47,24 @@ import java.util.Collection;
 import java.util.List;
 
 public class GenerateHeatmap {
+
+    private static final GenerateHeatmap instance = new GenerateHeatmap();
     public static SuperAdapter superAdapter;
     public static String current_hic_path;
 
     public static String current_gene_path;//基因结构注释文件
     String current_chromosome;
 
-    public GenerateHeatmap() {
+    private GenerateHeatmap() {
         System.setProperty("java.awt.headless", "false");
         MainWindow.initApplication();//初始化程序
         MainWindow.getInstance();
         superAdapter = MainWindow.superAdapter;
+    }
+
+    // 公共静态方法，提供全局访问点
+    public static GenerateHeatmap getInstance() {
+        return instance;
     }
 
     /**
@@ -68,7 +75,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/13
      */
-    private boolean loadHicFile(String path) throws IOException {
+    private synchronized boolean loadHicFile(String path) throws IOException {
 //        if (path.equals(current_hic_path)) {
 //            return false;
 //        }
@@ -118,7 +125,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/27
      */
-    public BufferedImage generateFullHeatMap(String path, String chromosome1_name, String displayOption, String normalizationType) throws IOException {
+    public synchronized BufferedImage generateFullHeatMap(String path, String chromosome1_name, String displayOption, String normalizationType) throws IOException {
         superAdapter = MainWindow.superAdapter;
         BufferedImage temp = new BufferedImage(1502, 1502, BufferedImage.TYPE_INT_ARGB);
         loadHicFile(path);//加载hic文件
@@ -147,7 +154,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/27
      */
-    public BufferedImage generateAnnotation1D(String path, String annotation_path, String chromosome1_name) throws IOException {
+    public synchronized BufferedImage generateAnnotation1D(String path, String annotation_path, String chromosome1_name) throws IOException {
         superAdapter = MainWindow.superAdapter;
         BufferedImage temp = new BufferedImage(1502, 25, BufferedImage.TYPE_INT_ARGB);
         //加载hic文件
@@ -177,7 +184,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/28
      */
-    public void setAnnotation1D(String path) {
+    public synchronized void setAnnotation1D(String path) {
 
 //        if (path.equals(current_gene_path)) {
 //            return;
@@ -234,7 +241,7 @@ public class GenerateHeatmap {
 //    }
 
     @NotNull
-    private static List<String> getFileNames(String path) {
+    private synchronized static List<String> getFileNames(String path) {
 //        File hicFile=new File("/home/new/fsdownload/Arabidopsis-thaliana_Col-0_Root/Arabidopsis-thaliana_Col-0_Root.hic");
         File hicFile = new File(path);
         List<File> files = new ArrayList<>();
@@ -256,7 +263,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/09
      */
-    public String getPointData(String path, String chromosome1_name, int x, int y) throws IOException {
+    public synchronized String getPointData(String path, String chromosome1_name, int x, int y) throws IOException {
         loadHicFile(path);
         setChromosome(chromosome1_name);//检测时候是当前的图片，如果不是的话就更新
         superAdapter.getHeatmapPanel().setSize(1502, 1502);
@@ -275,7 +282,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/09
      */
-    private void setNormalizationType(String type) {
+    private synchronized void setNormalizationType(String type) {
         if (type.isEmpty()) {
             type = "None";
         }
@@ -297,7 +304,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/13
      */
-    public void setDisplayOption(String type) {
+    public synchronized void setDisplayOption(String type) {
         if (type.isEmpty()) {
             type = "Observed";
         }
@@ -317,7 +324,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/09
      */
-    public ArrayList<String> getNormalizationType(String path, String chromosome1_name) throws IOException {
+    public synchronized ArrayList<String> getNormalizationType(String path, String chromosome1_name) throws IOException {
         ArrayList<String> strings = new ArrayList<>();
         loadHicFile(path);
         setChromosome(chromosome1_name);
@@ -337,7 +344,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/13
      */
-    public ArrayList<String> getDisplayOption(String path, String chromosome1_name) throws IOException {
+    public synchronized ArrayList<String> getDisplayOption(String path, String chromosome1_name) throws IOException {
         ArrayList<String> strings = new ArrayList<>();
         loadHicFile(path);
         setChromosome(chromosome1_name);
@@ -360,7 +367,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/29
      */
-    public String getAnnotation1DData(String path, String gene_path, String chromosome1_name, int x, int y) throws IOException {
+    public synchronized String getAnnotation1DData(String path, String gene_path, String chromosome1_name, int x, int y) throws IOException {
         //FIXME:修复只能在画图后才能获取点的数据
         superAdapter = MainWindow.superAdapter;
         BufferedImage temp = new BufferedImage(1502, 25, BufferedImage.TYPE_INT_ARGB);

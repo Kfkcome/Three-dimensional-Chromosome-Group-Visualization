@@ -41,7 +41,7 @@ public class HicServiceImpl implements HicService {
         this.cultivarMapper = cultivarMapper;
         this.redisUtil = redisUtil;
         this.speciesMapper = speciesMapper;
-        this.generateHeatmap = new GenerateHeatmap();
+        this.generateHeatmap = GenerateHeatmap.getInstance();
     }
 
 

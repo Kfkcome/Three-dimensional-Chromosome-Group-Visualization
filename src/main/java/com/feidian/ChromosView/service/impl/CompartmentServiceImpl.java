@@ -31,7 +31,7 @@ public class CompartmentServiceImpl implements CompartmentService {
         this.cultivarMapper = cultivarMapper;
         this.chromosomeMapper = chromosomeMapper;
         this.compartmentMapper = compartmentMapper;
-        generateHeatmap = new GenerateHeatmap();
+        generateHeatmap = GenerateHeatmap.getInstance();
     }
 
     public int addSpecies_Chromosome_raw() {

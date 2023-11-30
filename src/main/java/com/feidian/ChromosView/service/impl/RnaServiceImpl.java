@@ -30,7 +30,7 @@ public class RnaServiceImpl implements RnaService {
     public RnaServiceImpl(RnaMapper rnaMapper, ChromosomeMapper chromosomeMapper) {
         this.rnaMapper = rnaMapper;
         this.chromosomeMapper = chromosomeMapper;
-        generateHeatmap = new GenerateHeatmap();
+        generateHeatmap = GenerateHeatmap.getInstance();
     }
 
     private int checkDirection(String s) {

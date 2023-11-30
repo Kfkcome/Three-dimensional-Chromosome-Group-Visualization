@@ -238,11 +238,11 @@ public class LoadAction extends AbstractAction {
         ArrayList<String> resourses = new ArrayList<>();
         File jarFile = new File(LoadAction.class.getProtectionDomain().getCodeSource()
                 .getLocation().getPath());
-        if(jarFile.isFile()) {  // Run with JAR file
+        if (jarFile.isFile()) {  // Run with JAR file
             System.out.println("Within JAR");
             final JarFile jar = new JarFile(jarFile);
             final Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
-            while(entries.hasMoreElements()) {
+            while (entries.hasMoreElements()) {
                 String name = entries.nextElement().getName();
                 if (name.startsWith(resourses_path + "/tracksMenu") &&
                         name.endsWith(".xml")) { //filter according to the path
@@ -273,7 +273,6 @@ public class LoadAction extends AbstractAction {
     }
 
 
-
     private List<ResourceLocator> unsafeLoadNodes(String xmlFile) {
 
         // TODO MSS
@@ -282,9 +281,9 @@ public class LoadAction extends AbstractAction {
         try {
             if (resourceTree == null) {
                 Document masterDocument = createMasterDocument(xmlFile, parentFrame);
-                if (masterDocument == null){
+                if (masterDocument == null) {
                     ArrayList<String> avaliable_resourses = getAvaliableXmlResourses();
-                    if (avaliable_resourses.size()>0) {
+                    if (avaliable_resourses.size() > 0) {
                         String[] options = new String[avaliable_resourses.size()];
                         options = avaliable_resourses.toArray(options);
                         String selected_option = (String) JOptionPane.showInputDialog(
@@ -310,7 +309,7 @@ public class LoadAction extends AbstractAction {
             }
         } catch (Exception e) {
             System.err.println("Could not load from server" + e.getLocalizedMessage());
-            SuperAdapter.showMessageDialog("Could not load from server: " + e.getMessage());
+//            SuperAdapter.showMessageDialog("Could not load from server: " + e.getMessage());
             return null;
         }
 
