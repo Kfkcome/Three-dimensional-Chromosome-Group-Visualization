@@ -35,7 +35,6 @@ import juicebox.gui.SuperAdapter;
 import juicebox.track.feature.AnnotationLayerHandler;
 import juicebox.windowui.JBTreeCellRenderer;
 import juicebox.windowui.LoadDialog;
-import org.broad.igv.ui.util.FileDialogUtils;
 import org.broad.igv.util.ResourceLocator;
 
 import javax.swing.*;
@@ -55,6 +54,19 @@ import java.util.Map;
 public class Load2DAnnotationsDialog extends JDialog implements TreeSelectionListener {
 
     private static final long serialVersionUID = 9000048;
+
+    public static void setCustomAddedFeatures(DefaultMutableTreeNode customAddedFeatures) {
+        Load2DAnnotationsDialog.customAddedFeatures = customAddedFeatures;
+    }
+
+    public static DefaultMutableTreeNode getCustomAddedFeatures() {
+        return customAddedFeatures;
+    }
+
+    public Map<String, MutableTreeNode> getLoadedAnnotationsMap() {
+        return loadedAnnotationsMap;
+    }
+
     private static DefaultMutableTreeNode customAddedFeatures = null;
     private final String[] searchHighlightColors = {"#ff0000", "#00ff00", "#0000ff", "#ff00ff", "#00ffff", "#ff9900", "#ff66ff", "#ffff00"};
     private final JTree tree;
@@ -222,7 +234,18 @@ public class Load2DAnnotationsDialog extends JDialog implements TreeSelectionLis
         });
     }
 
-    public void addLocalButtonActionPerformed(final Component parentComponent) {
+
+    public JTree getTree() {
+        return tree;
+    }
+
+
+    public JButton getOpenButton() {
+        return openButton;
+    }
+
+
+    public void addLocalButtonActionPerformed(final Component parentComponent, File[] twoDfiles) {
         // Get the main window
 
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
@@ -230,7 +253,7 @@ public class Load2DAnnotationsDialog extends JDialog implements TreeSelectionLis
 
         boolean localFilesAdded = false;
 
-        File[] twoDfiles = FileDialogUtils.chooseMultiple("Choose 2D Annotation file", openAnnotationPath, null);
+//        twoDfiles = FileDialogUtils.chooseMultiple("Choose 2D Annotation file", openAnnotationPath, null);
 
         if (twoDfiles != null && twoDfiles.length > 0) {
             for (File file : twoDfiles) {
@@ -250,9 +273,10 @@ public class Load2DAnnotationsDialog extends JDialog implements TreeSelectionLis
 
                 if (loadedAnnotationsMap.containsKey(path)) {
                     if (HiCGlobals.guiIsCurrentlyActive) {
-                        int dialogResult = JOptionPane.showConfirmDialog(parentComponent,
-                                file.getName() + " is already loaded. Would you like to overwrite it?", "Warning",
-                                JOptionPane.YES_NO_OPTION);
+//                        int dialogResult = JOptionPane.showConfirmDialog(parentComponent,
+//                                file.getName() + " is already loaded. Would you like to overwrite it?", "Warning",
+//                                JOptionPane.YES_NO_OPTION);
+                        int dialogResult = JOptionPane.YES_OPTION;
                         if (dialogResult == JOptionPane.YES_OPTION) {
                             customAddedFeatures.remove(loadedAnnotationsMap.get(path));
                             loadedAnnotationsMap.remove(path);
@@ -271,7 +295,7 @@ public class Load2DAnnotationsDialog extends JDialog implements TreeSelectionLis
             model.reload(root);
             expandTree();
         }
-        Load2DAnnotationsDialog.this.setVisible(localFilesAdded);
+//        Load2DAnnotationsDialog.this.setVisible(localFilesAdded);
     }
 
     private void expandTree() {
@@ -392,9 +416,9 @@ public class Load2DAnnotationsDialog extends JDialog implements TreeSelectionLis
     public void valueChanged(TreeSelectionEvent e) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                 tree.getLastSelectedPathComponent();
-    
+
         if (node == null) return;
-    
+
         openButton.setEnabled(node.isLeaf());
     }
 

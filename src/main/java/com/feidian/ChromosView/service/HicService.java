@@ -11,6 +11,8 @@ import java.util.ArrayList;
 public interface HicService {
     Boolean generateMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, HttpServletResponse response) throws HicFileNotFoundException;
 
+    Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Boolean loop, Boolean tad, HttpServletResponse response);
+
     UUID_matrixPoints findByCS_ID(String uuid, int cs_id1, int cs_id2, String norms, String binXStart, String binYStart, String binXEnd, String binYEnd, String resolution, Integer tissue_id) throws QueryException, FileNotFoundException;
 
     String getPoint(String species, String cultivar, String tissue, String chromosome, int x, int y) throws HicFileNotFoundException;

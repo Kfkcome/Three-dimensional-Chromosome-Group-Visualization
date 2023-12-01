@@ -416,8 +416,7 @@ public class SuperAdapter {
 
 //        if ((!control) && newFilesToBeLoaded.toString().equals(currentlyLoadedMainFiles)) {
 //            if (!restore) {
-////                JOptionPane.showMessageDialog(mainWindow, "File(s) already loaded");
-//                System.out.println("File(s) already loaded");
+//                JOptionPane.showMessageDialog(mainWindow, "File(s) already loaded");
 //            }
 //            return false;
 //        }
@@ -910,7 +909,7 @@ public class SuperAdapter {
         return returnCode;
     }
 
-    private void resetAnnotationLayers() {
+    public void resetAnnotationLayers() {
         annotationLayerHandlers.clear();
         // currently must have at least 1 layer
         getActiveLayerHandler().getAnnotationLayer().resetCounter();

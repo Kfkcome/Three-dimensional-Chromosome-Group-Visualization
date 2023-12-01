@@ -104,8 +104,6 @@ public class HeatmapPanel extends JComponent {
     protected void paintComponent(Graphics g1) {
         Graphics2D g = (Graphics2D) g1;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        if (g.getClipBounds() == null)
-            g.setClip(10000, 10000, 4048, 4048);
         Rectangle clipBounds = g.getClipBounds();
         g.clearRect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
 
@@ -184,10 +182,9 @@ public class HeatmapPanel extends JComponent {
             int centerY = (int) ((screenHeight / scaleFactor) / 2);
 
             Graphics2D g2 = (Graphics2D) g.create();
-//            mouseHandler.clearFeaturePairs();
+            mouseHandler.clearFeaturePairs();
 
-            final boolean activelyEditingAssembly = false;
-//            final boolean activelyEditingAssembly = mouseHandler.getIsActivelyEditingAssembly();
+            final boolean activelyEditingAssembly = mouseHandler.getIsActivelyEditingAssembly();
             List<AnnotationLayerHandler> handlers;
             if (activelyEditingAssembly) {
                 // Only look at assembly layers if we're in assembly mode
@@ -207,20 +204,19 @@ public class HeatmapPanel extends JComponent {
                 }
 
                 loops.addAll(cLoopsReflected);
-//                mouseHandler.addAllFeatures(handler, loops, zd,
-//                        binOriginX, binOriginY, scaleFactor, activelyEditingAssembly);
+                mouseHandler.addAllFeatures(handler, loops, zd,
+                        binOriginX, binOriginY, scaleFactor, activelyEditingAssembly);
 
-//                final List<Feature2D> highlightedFeatures = mouseHandler.getHighlightedFeature();
-//                final boolean showFeatureHighlight = mouseHandler.getShouldShowHighlight();
+                final List<Feature2D> highlightedFeatures = mouseHandler.getHighlightedFeature();
+                final boolean showFeatureHighlight = mouseHandler.getShouldShowHighlight();
 
-//                FeatureRenderer.render(g2, handler, loops, zd, binOriginX, binOriginY, scaleFactor,
-//                        highlightedFeatures, showFeatureHighlight, this.getWidth(), this.getHeight());
+                FeatureRenderer.render(g2, handler, loops, zd, binOriginX, binOriginY, scaleFactor,
+                        highlightedFeatures, showFeatureHighlight, this.getWidth(), this.getHeight());
                 FeatureRenderer.render(g2, handler, loops, zd, binOriginX, binOriginY, scaleFactor,
                         null, false, this.getWidth(), this.getHeight());
             }
             mouseHandler.renderMouseAnnotations(g2);
             g2.dispose();
-            // TODO: 抓紧是实现画图功能的分离
         }
     }
 

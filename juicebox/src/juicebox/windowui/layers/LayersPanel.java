@@ -119,6 +119,16 @@ public class LayersPanel extends JDialog {
         });
     }
 
+
+    public static Load2DAnnotationsDialog getLoad2DAnnotationsDialog() {
+        return load2DAnnotationsDialog;
+    }
+
+    public static void setLoad2DAnnotationsDialog(Load2DAnnotationsDialog load2DAnnotationsDialog) {
+        LayersPanel.load2DAnnotationsDialog = load2DAnnotationsDialog;
+    }
+
+
     public LoadEncodeAction getEncodeAction() {
         return encodeAction;
     }
@@ -292,7 +302,7 @@ public class LayersPanel extends JDialog {
                 if (load2DAnnotationsDialog == null) {
                     load2DAnnotationsDialog = new Load2DAnnotationsDialog(LayersPanel.this, superAdapter);
                 }
-                load2DAnnotationsDialog.addLocalButtonActionPerformed(LayersPanel.this);
+                load2DAnnotationsDialog.addLocalButtonActionPerformed(LayersPanel.this, new File[]{new File("/home/new/桌面/TAD.bedpe")});
             }
         });
 
