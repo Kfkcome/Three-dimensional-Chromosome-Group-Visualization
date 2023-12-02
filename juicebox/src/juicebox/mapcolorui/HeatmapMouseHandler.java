@@ -71,6 +71,11 @@ public class HeatmapMouseHandler extends MouseAdapter {
     private final SuperAdapter superAdapter;
     private final HeatmapPanel parent;
     private final List<Feature2D> selectedFeatures = new ArrayList<>();
+
+    public List<Feature2DGuiContainer> getAllFeaturePairs() {
+        return allFeaturePairs;
+    }
+
     private final List<Feature2DGuiContainer> allFeaturePairs = new ArrayList<>();
     private final List<Feature2DGuiContainer> allMainFeaturePairs = new ArrayList<>();
     private final List<Feature2DGuiContainer> allEditFeaturePairs = new ArrayList<>();

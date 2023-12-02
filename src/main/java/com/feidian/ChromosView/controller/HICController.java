@@ -1,6 +1,7 @@
 package com.feidian.ChromosView.controller;
 
 import com.feidian.ChromosView.aop.LogPrint;
+import com.feidian.ChromosView.domain.Annotation2DPoint;
 import com.feidian.ChromosView.domain.HicMapPoint;
 import com.feidian.ChromosView.domain.UUID_matrixPoints;
 import com.feidian.ChromosView.exception.HicFileNotFoundException;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -75,6 +78,18 @@ public class HICController {
             return ApiResponse.error(400, "请先选择染色体并生成HIC图");
         }
         return ApiResponse.success(new HicMapPoint(point));
+    }
+
+    @LogPrint
+    @GetMapping("/getAnnotationPoint")
+    public ApiResponse<Annotation2DPoint> getAnnotationPoint(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome,
+                                                             @RequestParam(value = "loop") Boolean loop, @RequestParam("tad") Boolean tad,
+                                                             int x, int y, HttpServletResponse httpServletResponse) throws IOException {
+        ArrayList<String> annotation2DPoint = hicService.getAnnotation2DPoint(species, cultivar, tissue, chromosome, loop, tad, x, y);
+        if (annotation2DPoint.isEmpty()) {
+            return ApiResponse.fail(505, "found nothing");
+        }
+        return ApiResponse.success(new Annotation2DPoint(annotation2DPoint));
     }
 
     @LogPrint

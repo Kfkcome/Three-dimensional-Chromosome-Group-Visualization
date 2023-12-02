@@ -32,6 +32,7 @@ import juicebox.gui.SuperAdapter;
 import juicebox.track.HiCTrack;
 import juicebox.track.ResourceTree;
 import juicebox.track.TrackPanel;
+import juicebox.track.feature.Feature2DGuiContainer;
 import juicebox.windowui.MatrixType;
 import juicebox.windowui.layers.Load2DAnnotationsDialog;
 import org.broad.igv.util.Pair;
@@ -335,6 +336,38 @@ public class GenerateHeatmap {
             return "";//没有传入文件是无法获取数据的
         }
         return superAdapter.getHeatmapPanel().getMouseHandler().toolTipText(x, y);
+    }
+
+    public ArrayList<String> getAnnotationPoint(String path, ArrayList<String> annotation_path, String chromosome1_name, int x, int y) throws IOException {
+        generateAnnotation2D(path, annotation_path, chromosome1_name, "", "");
+        Point currMouse = new Point(x, y);
+        double minDistance = Double.POSITIVE_INFINITY;
+        ;
+        ArrayList<String> txt = new ArrayList<>();
+        int numLayers = superAdapter.getAllLayers().size();
+        int globalPriority = numLayers;
+        List<Feature2DGuiContainer> allFeaturePairs = superAdapter.getHeatmapPanel().getMouseHandler().getAllFeaturePairs();
+        for (Feature2DGuiContainer loop : allFeaturePairs) {
+            if (loop.getRectangle().contains(x, y)) {
+                // TODO - why is this code duplicated in this file?
+                String s = loop.getFeature2D().tooltipText();
+                boolean flag = true;
+                for (String string : txt) {
+                    if (string.equals(s)) {
+                        flag = false;
+                    }
+                }
+                if (flag) txt.add(s);
+                int layerNum = superAdapter.getAllLayers().indexOf(loop.getAnnotationLayerHandler());
+                int loopPriority = numLayers - layerNum;
+                double distance = currMouse.distance(loop.getRectangle().getX(), loop.getRectangle().getY());
+                if (distance < minDistance && loopPriority <= globalPriority) {
+                    minDistance = distance;
+                    globalPriority = loopPriority;
+                }
+            }
+        }
+        return txt;
     }
 
     /**

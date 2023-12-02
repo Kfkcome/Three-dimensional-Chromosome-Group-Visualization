@@ -6,6 +6,7 @@ import com.feidian.ChromosView.exception.QueryException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public interface HicService {
@@ -16,6 +17,8 @@ public interface HicService {
     UUID_matrixPoints findByCS_ID(String uuid, int cs_id1, int cs_id2, String norms, String binXStart, String binYStart, String binXEnd, String binYEnd, String resolution, Integer tissue_id) throws QueryException, FileNotFoundException;
 
     String getPoint(String species, String cultivar, String tissue, String chromosome, int x, int y) throws HicFileNotFoundException;
+
+    ArrayList<String> getAnnotation2DPoint(String species, String cultivar, String tissue, String chromosome, Boolean loop, Boolean tad, int x, int y) throws IOException;
 
     ArrayList<String> getNormalizationType(String species, String cultivar, String tissue, String chromosome) throws HicFileNotFoundException;
 

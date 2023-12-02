@@ -171,6 +171,20 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
+    public ArrayList<String> getAnnotation2DPoint(String species, String cultivar, String tissue, String chromosome, Boolean loop, Boolean tad, int x, int y) throws IOException {
+        ArrayList<String> annotation = new ArrayList<>();
+        if (loop)
+            annotation.add("./loop.bedpe");
+        if (tad)
+            annotation.add("./TAD.bedpe");
+        ArrayList<String> annotationPoint = generateHeatmap.getAnnotationPoint("./Gossypium-hirsutum_TM-1_Leaf.hic", annotation, chromosome, x, y);
+        for (String s : annotationPoint) {
+            System.out.println(s);
+        }
+        return annotationPoint;
+    }
+
+    @Override
     public ArrayList<String> getNormalizationType(String species, String cultivar, String tissue, String chromosome) throws HicFileNotFoundException {
         String fileName = uniteFileName(species, cultivar, tissue);
         String path = fileName + "/" + fileName + ".hic";
@@ -238,6 +252,7 @@ public class HicServiceImpl implements HicService {
         }
         return true;
     }
+
 
     public void writeTOFile(BufferedImage bufferedImage) {
         File outputFile = new File("/home/new/test_new" + ".png");
