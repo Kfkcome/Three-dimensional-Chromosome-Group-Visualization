@@ -9,9 +9,10 @@ import java.util.List;
 @Repository
 @Mapper
 public interface SpeciesMapper {
-    List<Species> findAll();
+    List<String> findAll();
 
     Integer findByName(String name);
+
     Species findById(int species_id);
 
     int addSpecies(Species species);

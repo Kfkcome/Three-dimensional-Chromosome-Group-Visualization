@@ -1,8 +1,9 @@
 package com.feidian.ChromosView.controller;
 
-import com.feidian.ChromosView.domain.*;
-import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.aop.LogPrint;
+import com.feidian.ChromosView.domain.ChromosomeT;
+import com.feidian.ChromosView.domain.Software;
+import com.feidian.ChromosView.exception.QueryException;
 import com.feidian.ChromosView.service.CultivarService;
 import com.feidian.ChromosView.service.SpeciesService;
 import com.feidian.ChromosView.utils.ApiResponse;
@@ -28,22 +29,22 @@ public class OptionController {
 
     @LogPrint
     @GetMapping("/species")
-    ApiResponse<List<Species>> findSpecies() {
-        List<Species> allSpecies = speciesService.findALLSpecies();
+    ApiResponse<List<String>> findSpecies() {
+        List<String> allSpecies = speciesService.findALLSpecies();
         return ApiResponse.success(allSpecies);
     }
 
     @LogPrint
     @GetMapping("/cultivar/all")
-    ApiResponse<List<Cultivar>> findCultivar() {
-        List<Cultivar> allCultivar = cultivarService.findAllCultivar();
+    ApiResponse<List<String>> findCultivar() {
+        List<String> allCultivar = cultivarService.findAllCultivar();
         return ApiResponse.success(allCultivar);
     }
 
     @LogPrint
-    @GetMapping("/cultivar/id/{SpeciesID}")
-    ApiResponse<List<Cultivar>> findCultivarBySpeciesID(@PathVariable(value = "SpeciesID") Integer SpeciesID) throws QueryException {
-        List<Cultivar> cultivarBySpeciesID = cultivarService.findCultivarBySpeciesID(SpeciesID);
+    @GetMapping("/cultivar/species/{SpeciesName}")
+    ApiResponse<List<String>> findCultivarBySpeciesName(@PathVariable(value = "SpeciesName") String SpeciesName) throws QueryException {
+        List<String> cultivarBySpeciesID = cultivarService.findCultivarBySpeciesName(SpeciesName);
         if (cultivarBySpeciesID.isEmpty()) {
             throw new QueryException("查询不到数据");
         }
@@ -58,25 +59,27 @@ public class OptionController {
     }
 
     @LogPrint
-    @GetMapping("/chromosome/id/{CultivarID}")
-    ApiResponse<List<ChromosomeT>> findChromosomeByID(@PathVariable(value = "CultivarID") Integer CultivarID) throws QueryException {
-        List<ChromosomeT> csByID = cultivarService.findCSByID(CultivarID);
+    @GetMapping("/chromosome/{SpeciesName}/{CultivarName}")
+    ApiResponse<List<ChromosomeT>> findChromosomeByID(@PathVariable String CultivarName, @PathVariable String SpeciesName) throws QueryException {
+        List<ChromosomeT> csByID = cultivarService.findCSByCultivar(SpeciesName, CultivarName);
         if (csByID.isEmpty()) {
             throw new QueryException("查询不到数据");
         }
         return ApiResponse.success(csByID);
     }
 
-    @GetMapping("/tissue/{CultivarID}")
-    ApiResponse<List<Tissue>> findTissueByCultivar(@PathVariable Integer CultivarID) {
-        List<Tissue> tissueByID = cultivarService.findTissueByID(CultivarID);
+    @LogPrint
+    @GetMapping("/tissue/{SpeciesName}/{CultivarName}")
+    ApiResponse<List<String>> findTissueByCultivar(@PathVariable String CultivarName, @PathVariable String SpeciesName) {
+        List<String> tissueByID = cultivarService.findTissueByID(SpeciesName, CultivarName);
         if (tissueByID == null) {
-            return ApiResponse.fail(202,"查询不到数据");
+            return ApiResponse.fail(202, "查询不到数据");
         }
         return ApiResponse.success(tissueByID);
     }
+
     @GetMapping("/software/all")
-    ApiResponse<List<Software>>findAllSoftware(){
+    ApiResponse<List<Software>> findAllSoftware() {
         return ApiResponse.success(cultivarService.findAllSoftware());
     }
 }
