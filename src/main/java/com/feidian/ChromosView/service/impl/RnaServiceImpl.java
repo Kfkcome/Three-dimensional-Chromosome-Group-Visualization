@@ -163,9 +163,13 @@ public class RnaServiceImpl implements RnaService {
 
     @Override
     public String getPointData(String species, String cultivar, String tissue, String chromosome, int x, int y) {
+        String fileName = uniteFileNameToHICPath(species, cultivar, tissue);
+        String path = "hic/" + fileName + ".hic";
+        String annotationName = uniteFileNameToAnnotationPath(species, cultivar);
+        String annotationPath = "Gene/" + annotationName + ".bed.gz";
         String data = null;
         try {
-            data = generateHeatmap.getAnnotation1DData("./Gossypium-hirsutum_TM-1_Leaf.hic", "./gene.bed.gz", chromosome, x, y);
+            data = generateHeatmap.getAnnotation1DData(path, annotationPath, chromosome, x, y);
         } catch (IOException e) {
             //TODO：处理找不到点的异常
         }

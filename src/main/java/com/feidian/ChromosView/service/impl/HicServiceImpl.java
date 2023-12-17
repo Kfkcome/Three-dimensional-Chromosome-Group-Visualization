@@ -30,11 +30,6 @@ public class HicServiceImpl implements HicService {
     private final SpeciesMapper speciesMapper;
     private final GenerateHeatmap generateHeatmap;
 
-    private String uniteFileName(String species, String cultivar, String tissue) {
-        return species + "_" + cultivar + "_" + tissue;
-    }
-
-
     @Autowired
     public HicServiceImpl(ChromosomeMapper chromosomeMapper, CultivarMapper cultivarMapper, RedisUtil redisUtil, SpeciesMapper speciesMapper) {
         this.chromosomeMapper = chromosomeMapper;
@@ -44,6 +39,9 @@ public class HicServiceImpl implements HicService {
         this.generateHeatmap = GenerateHeatmap.getInstance();
     }
 
+    private String uniteFileName(String species, String cultivar, String tissue) {
+        return species + "_" + cultivar + "_" + tissue;
+    }
 
     public boolean checkNorms(String norms) {
         String[] strings = {"KR", "SCALE", "VC", "VC_SQRT", "NONE"};
@@ -159,7 +157,7 @@ public class HicServiceImpl implements HicService {
     @Override
     public String getPoint(String species, String cultivar, String tissue, String chromosome, int x, int y) throws HicFileNotFoundException {
         String fileName = uniteFileName(species, cultivar, tissue);
-        String path = fileName + "/" + fileName + ".hic";
+        String path = "hic/" + fileName + ".hic";
         String s;
         try {
             s = generateHeatmap.getPointData(path, chromosome, x, y);
@@ -173,6 +171,7 @@ public class HicServiceImpl implements HicService {
     @Override
     public ArrayList<String> getAnnotation2DPoint(String species, String cultivar, String tissue, String chromosome, Boolean loop, Boolean tad, int x, int y) throws IOException {
         ArrayList<String> annotation = new ArrayList<>();
+        //todo:修复文件结构变动导致的问题
         if (loop)
             annotation.add("./loop.bedpe");
         if (tad)
@@ -187,7 +186,7 @@ public class HicServiceImpl implements HicService {
     @Override
     public ArrayList<String> getNormalizationType(String species, String cultivar, String tissue, String chromosome) throws HicFileNotFoundException {
         String fileName = uniteFileName(species, cultivar, tissue);
-        String path = fileName + "/" + fileName + ".hic";
+        String path = "hic/" + fileName + ".hic";
         try {
             return generateHeatmap.getNormalizationType(path, chromosome);
         } catch (Exception e) {
@@ -198,7 +197,7 @@ public class HicServiceImpl implements HicService {
     @Override
     public ArrayList<String> getDisplayOption(String species, String cultivar, String tissue, String chromosome) throws HicFileNotFoundException {
         String fileName = uniteFileName(species, cultivar, tissue);
-        String path = fileName + "/" + fileName + ".hic";
+        String path = "hic/" + fileName + ".hic";
         try {
             return generateHeatmap.getDisplayOption(path, chromosome);
         } catch (Exception e) {
