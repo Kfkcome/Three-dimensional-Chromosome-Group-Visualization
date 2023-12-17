@@ -136,11 +136,24 @@ public class CompartmentServiceImpl implements CompartmentService {
         return compartmentENDStart;
     }
 
+
+    private String uniteFileNameToHICPath(String species, String cultivar, String tissue) {
+        return species + "_" + cultivar + "_" + tissue;
+    }
+
+    private String uniteFileNameToAnnotationPath(String species, String cultivar) {
+        return species + "_" + cultivar;
+    }
+
     @Override
     public Boolean generateCompartment(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) {
         BufferedImage temp;
+        String fileName = uniteFileNameToHICPath(species, cultivar, tissue);
+        String path = "hic/" + fileName + ".hic";
+        String annotationName = uniteFileNameToHICPath(species, cultivar, tissue);
+        String annotationPath = "Compartment/" + annotationName + ".bed.gz";
         try {
-            temp = generateHeatmap.generateAnnotation1D("./Gossypium-hirsutum_TM-1_Leaf.hic", "./Compartment.bw", chromosome);
+            temp = generateHeatmap.generateAnnotation1D(path, annotationPath, chromosome);
         } catch (IOException e) {
             throw new RuntimeException(e);
             //TODO：处理生成Compartment图生成失败

@@ -127,13 +127,24 @@ public class RnaServiceImpl implements RnaService {
         return rnaStructureTs;
     }
 
+    private String uniteFileNameToHICPath(String species, String cultivar, String tissue) {
+        return species + "_" + cultivar + "_" + tissue;
+    }
+
+    private String uniteFileNameToAnnotationPath(String species, String cultivar) {
+        return species + "_" + cultivar;
+    }
+
     @Override
     public Boolean generateRnaStruct(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) throws HicFileNotFoundException {
         Boolean generateSuccess = true;
-
+        String fileName = uniteFileNameToHICPath(species, cultivar, tissue);
+        String path = "hic/" + fileName + ".hic";
+        String annotationName = uniteFileNameToAnnotationPath(species, cultivar);
+        String annotationPath = "Gene/" + annotationName + ".bed.gz";
         BufferedImage image;
         try {
-            image = generateHeatmap.generateAnnotation1D("./Gossypium-hirsutum_TM-1_Leaf.hic", "./gene.bed.gz", chromosome);
+            image = generateHeatmap.generateAnnotation1D(path, annotationPath, chromosome);
         } catch (IOException e) {
             throw new HicFileNotFoundException(e.getMessage());
         }

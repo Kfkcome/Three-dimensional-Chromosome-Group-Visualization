@@ -213,7 +213,7 @@ public class HicServiceImpl implements HicService {
 //        String csName = chromosomeMapper.findByCS_ID(cs_id).getCS_NAME();
 //        String csName = "SoyC02.Chr02";
         String fileName = uniteFileName(species, cultivar, tissue);
-        String path = fileName + "/" + fileName + ".hic";
+        String path = "hic/" + fileName + ".hic";
         BufferedImage image;
         try {
             image = generateHeatmap.generateFullHeatMap(path, chromosome, displayOption, normalizationType);
