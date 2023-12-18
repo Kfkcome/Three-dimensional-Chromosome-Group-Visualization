@@ -59,4 +59,16 @@
         where CULTIVAR_NAME = #{CultivarName}
           and SPECIES_NAME = #{SpeciesName}
     </select>
+    <select id="findTheSoftware" resultType="com.feidian.ChromosView.domain.SoftwareOfAnnotation2D">
+        select *
+        from t_software_annotation2d
+        where CULTIVAR_ID = #{CultivarID};
+    </select>
+    <select id="findByName" resultType="java.lang.Integer">
+        select *
+        from t_all_cultivar
+        where SPECIES_NAME = #{SpeciesName}
+          and CULTIVAR_NAME = #{CultivarName}
+          and TISSUE_NAME = #{TissueName};
+    </select>
 </mapper>

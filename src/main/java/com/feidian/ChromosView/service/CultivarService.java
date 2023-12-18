@@ -4,6 +4,7 @@ import com.feidian.ChromosView.domain.ChromosomeT;
 import com.feidian.ChromosView.domain.Software;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CultivarService {
     public List<String> findAllCultivar();
@@ -17,4 +18,6 @@ public interface CultivarService {
     public List<String> findTissueByID(String SpeciesName, String CultivarName);
 
     public List<Software> findAllSoftware();
+
+    public Map<String, List<String>> findTheSoftware(String SpeciesName, String CultivarName, String TissueName);
 }

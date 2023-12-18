@@ -8,12 +8,10 @@ import com.feidian.ChromosView.service.CultivarService;
 import com.feidian.ChromosView.service.SpeciesService;
 import com.feidian.ChromosView.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/option")
@@ -81,5 +79,13 @@ public class OptionController {
     @GetMapping("/software/all")
     ApiResponse<List<Software>> findAllSoftware() {
         return ApiResponse.success(cultivarService.findAllSoftware());
+    }
+
+    @LogPrint
+    @GetMapping("/software")
+    ApiResponse<Map<String, List<String>>> findTheSoftware(@RequestParam(value = "SpeciesName") String SpeciesName,
+                                                           @RequestParam(value = "CultivarName") String CultivarName,
+                                                           @RequestParam(value = "TissueName") String TissueName) {
+        return ApiResponse.success(cultivarService.findTheSoftware(SpeciesName, CultivarName, TissueName));
     }
 }

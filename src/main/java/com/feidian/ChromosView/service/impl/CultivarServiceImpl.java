@@ -2,13 +2,18 @@ package com.feidian.ChromosView.service.impl;
 
 import com.feidian.ChromosView.domain.ChromosomeT;
 import com.feidian.ChromosView.domain.Software;
+import com.feidian.ChromosView.domain.SoftwareOfAnnotation2D;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.CultivarMapper;
 import com.feidian.ChromosView.service.CultivarService;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CultivarServiceImpl implements CultivarService {
@@ -65,5 +70,43 @@ public class CultivarServiceImpl implements CultivarService {
     @Override
     public List<Software> findAllSoftware() {
         return cultivarMapper.findAllSoftware();
+    }
+
+    @Override
+    public Map<String, List<String>> findTheSoftware(String SpeciesName, String CultivarName, String TissueName) {
+        Integer byName = cultivarMapper.findByName(SpeciesName, CultivarName, TissueName);
+        if (byName == null) {
+            return null;
+        }
+        SoftwareOfAnnotation2D theSoftware = cultivarMapper.findTheSoftware(byName);
+        List<Boolean> binary = theSoftware.getBinary();
+        List<String> tadAvailable = new ArrayList<>();
+        List<String> loopAvailable = new ArrayList<>();
+        ArrayList<String> strings = Lists.newArrayList("TAD_Arrowhead",
+                "TAD_ClusterTAD",
+                "TAD_Cworld",
+                "TAD_deDoc",
+                "TAD_domaincaller",
+                "TAD_HiCExplorer",
+                "TAD_HiCseg",
+                "TAD_ICFinder",
+                "TAD_MSTD",
+                "TAD_OnTAD",
+                "TAD_rGMAP",
+                "TAD_Spectral",
+                "TAD_TADLib",
+                "TAD_TopDom",
+                "Loop_FitHiC",
+                "Loop_HiCCUPS",
+                "Loop_HiCExplorer");
+        for (int i = 0; i < binary.size(); i++) {
+            if (i <= 13 && binary.get(i)) {
+                tadAvailable.add(strings.get(i).split("_")[1]);
+            } else loopAvailable.add(strings.get(i).split("_")[1]);
+        }
+        HashMap<String, List<String>> listHashMap = new HashMap<>();
+        listHashMap.put("TAD", tadAvailable);
+        listHashMap.put("Loop", loopAvailable);
+        return listHashMap;
     }
 }

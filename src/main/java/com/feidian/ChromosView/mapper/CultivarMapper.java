@@ -2,6 +2,7 @@ package com.feidian.ChromosView.mapper;
 
 import com.feidian.ChromosView.domain.Cultivar;
 import com.feidian.ChromosView.domain.Software;
+import com.feidian.ChromosView.domain.SoftwareOfAnnotation2D;
 import com.feidian.ChromosView.domain.Tissue;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -31,6 +32,10 @@ public interface CultivarMapper {
     Tissue findTissueByID(int TISSUE_ID);
 
     List<Software> findAllSoftware();
+
+    Integer findByName(@Param("SpeciesName") String SpeciesName, @Param("CultivarName") String CultivarName, @Param("TissueName") String TissueName);
+
+    SoftwareOfAnnotation2D findTheSoftware(@Param("CultivarID") int CultivarID);
 
 //    List<String> findTissueByCultivarName()
 
