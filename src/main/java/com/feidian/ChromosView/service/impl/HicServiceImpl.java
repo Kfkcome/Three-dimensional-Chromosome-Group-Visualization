@@ -230,15 +230,19 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
-    public Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Boolean tad, Boolean loop, HttpServletResponse response) {
+    public Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Boolean tad, Boolean loop, String tadSoftware, String loopSoftware, HttpServletResponse response) {
         BufferedImage image;
+        String fileName = uniteFileName(species, cultivar, tissue);
+        String path = "hic/" + fileName + ".hic";
         ArrayList<String> annotation = new ArrayList<>();
-        if (loop)
-            annotation.add("./loop.bedpe");
-        if (tad)
-            annotation.add("./TAD.bedpe");
+        if (loop) {
+            annotation.add("Loop/" + loopSoftware + "/" + fileName + ".bedpe");
+        }
+        if (tad) {
+            annotation.add("TAD/" + tadSoftware + "/" + fileName + ".bedpe");
+        }
         try {
-            image = generateHeatmap.generateAnnotation2D("./Gossypium-hirsutum_TM-1_Leaf.hic", annotation, chromosome, displayOption, normalizationType);
+            image = generateHeatmap.generateAnnotation2D(path, annotation, chromosome, displayOption, normalizationType);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

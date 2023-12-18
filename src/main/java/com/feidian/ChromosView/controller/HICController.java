@@ -58,14 +58,15 @@ public class HICController {
     @LogPrint
     @GetMapping("/generateHeatmap2D")
     public ApiResponse<String> generateHeatMap2D(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome,
-                                                 @RequestParam(value = "loop") Boolean loop, @RequestParam("tad") Boolean tad,
+                                                 @RequestParam(value = "loop") Boolean loop, @RequestParam("tad") Boolean tad, @RequestParam("tadSoftware") String tadSoftware,
+                                                 @RequestParam(value = "loopSoftware") String loopSoftware,
                                                  @RequestParam(value = "DisplayOption", required = false) String displayOption, @RequestParam(value = "NormalizationType", required = false) String normalizationType,
                                                  HttpServletResponse httpServletResponse) throws HicFileNotFoundException {
         if (normalizationType.equals("Balanced11")) {
             normalizationType = "Balanced++";
             //由于++会被替换成空格所以约定用11替代++
         }
-        if (hicService.generateAnnotation2DMap(species, cultivar, tissue, chromosome, displayOption, normalizationType, tad, loop, httpServletResponse))
+        if (hicService.generateAnnotation2DMap(species, cultivar, tissue, chromosome, displayOption, normalizationType, tad, loop, tadSoftware, loopSoftware, httpServletResponse))
             return ApiResponse.success("Generate heatmap successfully!");
         return ApiResponse.fail(505, "Failed to generate the heatmap");
     }
