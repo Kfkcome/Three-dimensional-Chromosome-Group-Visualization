@@ -169,14 +169,17 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
-    public ArrayList<String> getAnnotation2DPoint(String species, String cultivar, String tissue, String chromosome, Boolean loop, Boolean tad, int x, int y) throws IOException {
+    public ArrayList<String> getAnnotation2DPoint(String species, String cultivar, String tissue, String chromosome, Boolean tad, Boolean loop, String tadSoftware, String loopSoftware, int x, int y) throws IOException {
+        String fileName = uniteFileName(species, cultivar, tissue);
+        String path = "hic/" + fileName + ".hic";
         ArrayList<String> annotation = new ArrayList<>();
-        //todo:修复文件结构变动导致的问题
-        if (loop)
-            annotation.add("./loop.bedpe");
-        if (tad)
-            annotation.add("./TAD.bedpe");
-        ArrayList<String> annotationPoint = generateHeatmap.getAnnotationPoint("./Gossypium-hirsutum_TM-1_Leaf.hic", annotation, chromosome, x, y);
+        if (loop) {
+            annotation.add("Loop/" + loopSoftware + "/" + fileName + ".bedpe");
+        }
+        if (tad) {
+            annotation.add("TAD/" + tadSoftware + "/" + fileName + ".bedpe");
+        }
+        ArrayList<String> annotationPoint = generateHeatmap.getAnnotationPoint(path, annotation, chromosome, x, y);
         for (String s : annotationPoint) {
             System.out.println(s);
         }

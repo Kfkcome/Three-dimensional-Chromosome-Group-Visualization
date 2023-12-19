@@ -81,6 +81,19 @@ public class GenerateHeatmap {
         return instance;
     }
 
+    @NotNull
+    private synchronized static List<String> getFileNames(String path) {
+//        File hicFile=new File("/home/new/fsdownload/Arabidopsis-thaliana_Col-0_Root/Arabidopsis-thaliana_Col-0_Root.hic");
+        File hicFile = new File(path);
+        List<File> files = new ArrayList<>();
+        List<String> fileNames = new ArrayList<>();
+        files.add(hicFile);
+        for (File f : files) {
+            fileNames.add(f.getAbsolutePath());
+        }
+        return fileNames;
+    }
+
     /**
      * 功能描述：
      *
@@ -303,20 +316,6 @@ public class GenerateHeatmap {
 
     }
 
-    @NotNull
-    private synchronized static List<String> getFileNames(String path) {
-//        File hicFile=new File("/home/new/fsdownload/Arabidopsis-thaliana_Col-0_Root/Arabidopsis-thaliana_Col-0_Root.hic");
-        File hicFile = new File(path);
-        List<File> files = new ArrayList<>();
-        List<String> fileNames = new ArrayList<>();
-        files.add(hicFile);
-        for (File f : files) {
-            fileNames.add(f.getAbsolutePath());
-        }
-        return fileNames;
-    }
-
-
     /**
      * 功能描述：获取点的数据
      *
@@ -497,10 +496,10 @@ public class GenerateHeatmap {
     public void actionPerformed2(ActionEvent e, File[] annotation_path) {
         superAdapter.getEncodeAction();
         Load2DAnnotationsDialog load2DAnnotationsDialog = superAdapter.getLayersPanel().getLoad2DAnnotationsDialog();
-        if (load2DAnnotationsDialog == null) {
-            load2DAnnotationsDialog = new Load2DAnnotationsDialog(superAdapter.getLayersPanel(), superAdapter);
-            superAdapter.getLayersPanel().setLoad2DAnnotationsDialog(load2DAnnotationsDialog);
-        }
+
+        load2DAnnotationsDialog = new Load2DAnnotationsDialog(superAdapter.getLayersPanel(), superAdapter);
+        superAdapter.getLayersPanel().setLoad2DAnnotationsDialog(load2DAnnotationsDialog);
+
         load2DAnnotationsDialog.addLocalButtonActionPerformed(superAdapter.getLayersPanel(), annotation_path);
     }
 

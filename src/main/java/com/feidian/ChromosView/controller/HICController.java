@@ -84,9 +84,10 @@ public class HICController {
     @LogPrint
     @GetMapping("/getAnnotationPoint")
     public ApiResponse<Annotation2DPoint> getAnnotationPoint(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome,
-                                                             @RequestParam(value = "loop") Boolean loop, @RequestParam("tad") Boolean tad,
-                                                             int x, int y, HttpServletResponse httpServletResponse) throws IOException {
-        ArrayList<String> annotation2DPoint = hicService.getAnnotation2DPoint(species, cultivar, tissue, chromosome, loop, tad, x, y);
+                                                             @RequestParam(value = "loop") Boolean loop, @RequestParam("tad") Boolean tad, @RequestParam("tadSoftware") String tadSoftware,
+                                                             @RequestParam(value = "loopSoftware") String loopSoftware,
+                                                             int x, int y) throws IOException {
+        ArrayList<String> annotation2DPoint = hicService.getAnnotation2DPoint(species, cultivar, tissue, chromosome, loop, tad, tadSoftware, loopSoftware, x, y);
         if (annotation2DPoint.isEmpty()) {
             return ApiResponse.fail(505, "found nothing");
         }

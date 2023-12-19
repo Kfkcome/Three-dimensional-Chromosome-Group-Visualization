@@ -54,19 +54,6 @@ import java.util.Map;
 public class Load2DAnnotationsDialog extends JDialog implements TreeSelectionListener {
 
     private static final long serialVersionUID = 9000048;
-
-    public static void setCustomAddedFeatures(DefaultMutableTreeNode customAddedFeatures) {
-        Load2DAnnotationsDialog.customAddedFeatures = customAddedFeatures;
-    }
-
-    public static DefaultMutableTreeNode getCustomAddedFeatures() {
-        return customAddedFeatures;
-    }
-
-    public Map<String, MutableTreeNode> getLoadedAnnotationsMap() {
-        return loadedAnnotationsMap;
-    }
-
     private static DefaultMutableTreeNode customAddedFeatures = null;
     private final String[] searchHighlightColors = {"#ff0000", "#00ff00", "#0000ff", "#ff00ff", "#00ffff", "#ff9900", "#ff66ff", "#ffff00"};
     private final JTree tree;
@@ -234,6 +221,17 @@ public class Load2DAnnotationsDialog extends JDialog implements TreeSelectionLis
         });
     }
 
+    public static DefaultMutableTreeNode getCustomAddedFeatures() {
+        return customAddedFeatures;
+    }
+
+    public static void setCustomAddedFeatures(DefaultMutableTreeNode customAddedFeatures) {
+        Load2DAnnotationsDialog.customAddedFeatures = customAddedFeatures;
+    }
+
+    public Map<String, MutableTreeNode> getLoadedAnnotationsMap() {
+        return loadedAnnotationsMap;
+    }
 
     public JTree getTree() {
         return tree;
