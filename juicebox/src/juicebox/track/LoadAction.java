@@ -214,7 +214,9 @@ public class LoadAction extends AbstractAction {
                 }
             }
         };
-        mainWindow.executeLongRunningTask(runnable, "safe load nodes");
+        //防止多线程导致的错误
+        runnable.run();
+//        mainWindow.executeLongRunningTask(runnable, "safe load nodes");
     }
 
     public void checkBoxesForReload(String track) {
