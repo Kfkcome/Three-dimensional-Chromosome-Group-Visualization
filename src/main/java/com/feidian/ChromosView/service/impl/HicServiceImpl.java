@@ -210,15 +210,22 @@ public class HicServiceImpl implements HicService {
 
 
     @Override
-    public Boolean generateMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, HttpServletResponse response) throws HicFileNotFoundException {
+    public Boolean generateMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Integer colorValue, Integer clarity, HttpServletResponse response) throws HicFileNotFoundException {
         //todo:实现对物种的搜索
 //        String csName = chromosomeMapper.findByCS_ID(cs_id).getCS_NAME();
 //        String csName = "SoyC02.Chr02";
+        if (clarity == null) {
+            clarity = 1;//默认分辨率为1
+        }
+        if (colorValue == null) {
+            colorValue = 1;//默认颜色值为1
+        }
+
         String fileName = uniteFileName(species, cultivar, tissue);
         String path = "hic/" + fileName + ".hic";
         BufferedImage image;
         try {
-            image = generateHeatmap.generateFullHeatMap(path, chromosome, displayOption, normalizationType);
+            image = generateHeatmap.generateFullHeatMap(path, chromosome, displayOption, normalizationType, colorValue, clarity);
         } catch (Exception e) {
             throw new HicFileNotFoundException(e.getMessage());
         }

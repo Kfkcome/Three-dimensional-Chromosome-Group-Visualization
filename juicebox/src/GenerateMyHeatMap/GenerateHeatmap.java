@@ -156,14 +156,21 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/27
      */
-    public synchronized BufferedImage generateFullHeatMap(String path, String chromosome1_name, String displayOption, String normalizationType) throws IOException {
-        BufferedImage temp = new BufferedImage(1502, 1502, BufferedImage.TYPE_INT_ARGB);
+    public synchronized BufferedImage generateFullHeatMap(String path, String chromosome1_name, String displayOption, String normalizationType, int colorValue, int clarity) throws IOException {
+        BufferedImage temp = new BufferedImage(1502 * clarity, 1502 * clarity, BufferedImage.TYPE_INT_ARGB);
         loadHicFile(path);//加载hic文件
         setChromosome(chromosome1_name);//选择染色体
         setNormalizationType(normalizationType);//设置标准化类型
         setDisplayOption(displayOption);//设置显示选项
-        superAdapter.getHeatmapPanel().setSize(1502, 1502);
-        superAdapter.getMainWindow().setSize(3000, 3000);
+
+        //设置颜色
+        superAdapter.getMainViewPanel().getColorRangePanel().getColorRangeSlider().setLowerValue(0);
+        superAdapter.getMainViewPanel().getColorRangePanel().getColorRangeSlider().setExtent(colorValue - 1);
+        superAdapter.getMainViewPanel().getColorRangePanel().getColorRangeSlider().setExtent(colorValue);
+
+//        superAdapter.getMainViewPanel().getResolutionSlider().getResolutionSlider().setValue(1);
+        superAdapter.getHiC().setScaleFactor(clarity);
+        superAdapter.getHeatmapPanel().setSize(1502 * clarity, 1502 * clarity);
 
         superAdapter.getHeatmapPanel().paint(temp.getGraphics());
         String selectedItem = (String) superAdapter.getMainViewPanel().getObservedNormalizationComboBox().getSelectedItem();
@@ -186,6 +193,7 @@ public class GenerateHeatmap {
      */
     public synchronized BufferedImage generateAnnotation1D(String path, String annotation_path, String chromosome1_name) throws IOException {
         superAdapter = MainWindow.superAdapter;
+        //TODO:动态生成图片大小
         BufferedImage temp = new BufferedImage(1502, 25, BufferedImage.TYPE_INT_ARGB);
         //加载hic文件
         loadHicFile(path);
@@ -198,7 +206,7 @@ public class GenerateHeatmap {
             return null;
             //TODO:添加找不到染色体异常
         }
-
+        //TODO:动态生成图片大小
         superAdapter.getHeatmapPanel().setSize(1502, 1502);
         superAdapter.getMainWindow().setSize(3000, 3000);
         //画制基因结构图

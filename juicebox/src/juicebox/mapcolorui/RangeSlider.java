@@ -37,7 +37,7 @@ import javax.swing.*;
  *
  * @author Ernest Yu, Jim Robinson, Muhammad S Shamim
  */
-class RangeSlider extends JSlider {
+public class RangeSlider extends JSlider {
 
     private static final long serialVersionUID = 9000031;
     private RangeSliderUI rangeSliderUI;
@@ -78,6 +78,10 @@ class RangeSlider extends JSlider {
     public void setLowerValue(int value) {
 
         setValue(value);
+    }
+
+    public void setTrueValue(int value) {
+        super.setValue(value);
     }
 
     /**

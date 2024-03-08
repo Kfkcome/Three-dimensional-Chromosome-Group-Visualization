@@ -58,21 +58,11 @@ public class HeatmapPanel extends JComponent {
     private final SuperAdapter superAdapter;
     private final ColorScaleHandler colorScaleHandler = new ColorScaleHandler();
     private final GeneralTileManager tileManager = new GeneralTileManager(colorScaleHandler);
-
-    public HeatmapMouseHandler getMouseHandler() {
-        return mouseHandler;
-    }
-
     private final HeatmapMouseHandler mouseHandler;
-    private boolean showGridLines = true;
-
-    public HeatmapClickListener getClickListener() {
-        return clickListener;
-    }
-
     private final HeatmapClickListener clickListener;
-    private long[] chromosomeBoundaries;
     private final BoundingBoxRenderer boundingBoxRenderer = new BoundingBoxRenderer(this);
+    private boolean showGridLines = true;
+    private long[] chromosomeBoundaries;
 
     public HeatmapPanel(SuperAdapter superAdapter) {
         this.mainWindow = superAdapter.getMainWindow();
@@ -85,6 +75,14 @@ public class HeatmapPanel extends JComponent {
         addMouseListener(mouseHandler);
         addMouseListener(clickListener);
         addMouseWheelListener(mouseHandler);
+    }
+
+    public HeatmapMouseHandler getMouseHandler() {
+        return mouseHandler;
+    }
+
+    public HeatmapClickListener getClickListener() {
+        return clickListener;
     }
 
     public long[] getChromosomeBoundaries() {
@@ -146,6 +144,7 @@ public class HeatmapPanel extends JComponent {
 
         // Same scale used for X & Y (square pixels)
         final double scaleFactor = hic.getScaleFactor();
+//        setBounds(0, 0, 9000, 9000);
         final int screenWidth = getBounds().width;
         final int screenHeight = getBounds().height;
         double binOriginX = hic.getXContext().getBinOrigin();

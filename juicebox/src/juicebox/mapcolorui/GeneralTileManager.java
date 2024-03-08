@@ -148,13 +148,12 @@ public class GeneralTileManager {
             //In case render is called as a result of zoom change event, check if
             //We need to update slider with map range:
             String cacheKey = HeatmapRenderer.getColorScaleCacheKey(zd, displayOption, observedNormalizationType, controlNormalizationType);
-            mapTileManager.updateColorSliderFromColorScale(superAdapter, displayOption, cacheKey);
+//            mapTileManager.updateColorSliderFromColorScale(superAdapter, displayOption, cacheKey);
             //debrisFeatureSize = (int) (debrisFeatureSize * scaleFactor);
         }
 
         return allTilesNull;
     }
-
 
 
     private void bypassTileAndDirectlyDrawOnGraphics(HeatmapRenderer renderer, MatrixZoomData zd, int tileRow, int tileColumn,

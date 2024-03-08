@@ -151,7 +151,7 @@ public class CompartmentServiceImpl implements CompartmentService {
         String fileName = uniteFileNameToHICPath(species, cultivar, tissue);
         String path = "hic/" + fileName + ".hic";
         String annotationName = uniteFileNameToHICPath(species, cultivar, tissue);
-        String annotationPath = "Compartment/" + annotationName + ".bed.gz";
+        String annotationPath = "Compartment/" + annotationName + ".bw";
         try {
             temp = generateHeatmap.generateAnnotation1D(path, annotationPath, chromosome);
         } catch (IOException e) {

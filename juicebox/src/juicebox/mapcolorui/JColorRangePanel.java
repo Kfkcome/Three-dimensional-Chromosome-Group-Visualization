@@ -53,8 +53,8 @@ public class JColorRangePanel extends JPanel {
     private static RangeSlider colorRangeSlider;
     private static JLabel colorRangeLabel;
     private static JButton plusButton, minusButton;
-    private double colorRangeScaleFactor = 1;
     private final HeatmapPanel heatmapPanel;
+    private double colorRangeScaleFactor = 1;
 
     public JColorRangePanel(final SuperAdapter superAdapter, final HeatmapPanel heatmapPanel) {
         super();
@@ -223,6 +223,9 @@ public class JColorRangePanel extends JPanel {
         setMaximumSize(new Dimension(32769, 70));
     }
 
+    public RangeSlider getColorRangeSlider() {
+        return colorRangeSlider;
+    }
 
     public boolean setColorRangeSliderVisible(boolean state, SuperAdapter superAdapter) {
         plusButton.setEnabled(state);
@@ -353,6 +356,11 @@ public class JColorRangePanel extends JPanel {
 
     public double getColorRangeScaleFactor() {
         return colorRangeScaleFactor;
+    }
+
+    public void setColorRangeScaleFactor(double colorRangeScaleFactor1) {
+        colorRangeScaleFactor = colorRangeScaleFactor1;
+
     }
 
     private void colorRangeSliderUpdateToolTip(MatrixType displayOption) {

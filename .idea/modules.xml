@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ChromosView.iml" filepath="$PROJECT_DIR$/ChromosView.iml" />
-      <module fileurl="file://$PROJECT_DIR$/juicebox/juicebox.iml" filepath="$PROJECT_DIR$/juicebox/juicebox.iml" />
     </modules>
   </component>
 </project>

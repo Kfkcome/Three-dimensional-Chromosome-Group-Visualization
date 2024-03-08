@@ -13,9 +13,9 @@ spring:
         max-idle: 30
 
   datasource:
-    url: jdbc:mysql://122.205.95.110:3366/biology?characterEncoding=utf-8&serverTimezone=UTC
-    username: root
-    password: root
+    url: jdbc:mysql://122.205.95.218:33366/biology?characterEncoding=utf-8&serverTimezone=UTC
+    username: user
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource #切换数据源
     initialSize: 5

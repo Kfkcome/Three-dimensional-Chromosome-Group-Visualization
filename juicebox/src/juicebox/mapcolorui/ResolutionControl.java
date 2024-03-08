@@ -60,9 +60,9 @@ public class ResolutionControl extends JPanel {
     private final Map<Integer, HiCZoom> idxZoomMap = new ConcurrentHashMap<>();
     private final Map<Integer, String> bpLabelMap;
     private final HiCZoom pearsonZoom = new HiCZoom(HiC.Unit.BP, 500000);
+    private final JSlider resolutionSlider;
     public HiC.Unit unit = HiC.Unit.BP;
     private boolean resolutionLocked = false;
-    private final JSlider resolutionSlider;
     private int lastValue = 0;
 
     {
@@ -229,14 +229,14 @@ public class ResolutionControl extends JPanel {
                 }
 
                 if (hic.getXContext() != null) {
-    
+
                     double scaledXWidth = heatmapPanel.getWidth() / hic.getScaleFactor();
                     double scaledYHeight = heatmapPanel.getHeight() / hic.getScaleFactor();
                     double centerBinX = hic.getXContext().getBinOrigin() + scaledXWidth / 2;
                     double centerBinY = hic.getYContext().getBinOrigin() + scaledYHeight / 2;
                     long xGenome = zd.getXGridAxis().getGenomicMid(centerBinX);
                     long yGenome = zd.getYGridAxis().getGenomicMid(centerBinY);
-    
+
                     // this to center zooming when there is lots of whitespace in the margins
                     try {
                         if (scaledXWidth > hic.getZd().getXGridAxis().getBinCount()) {
@@ -244,7 +244,7 @@ public class ResolutionControl extends JPanel {
                         }
                     } catch (Exception ignored) {
                     }
-    
+
                     try {
                         if (scaledYHeight > hic.getZd().getYGridAxis().getBinCount()) {
                             yGenome = hic.getYContext().getChrLength() / 2;
@@ -270,6 +270,10 @@ public class ResolutionControl extends JPanel {
             }
         });
         setEnabled(false);
+    }
+
+    public JSlider getResolutionSlider() {
+        return resolutionSlider;
     }
 
     private String getUnitLabel() {

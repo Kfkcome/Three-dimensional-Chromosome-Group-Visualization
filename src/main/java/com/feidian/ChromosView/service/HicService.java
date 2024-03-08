@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public interface HicService {
-    Boolean generateMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, HttpServletResponse response) throws HicFileNotFoundException;
+    Boolean generateMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Integer colorValue, Integer resolution, HttpServletResponse response) throws HicFileNotFoundException;
 
     Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Boolean loop, Boolean tad, String tadSoftware, String loopSoftware, HttpServletResponse response);
 

@@ -142,6 +142,11 @@ public class RnaServiceImpl implements RnaService {
         String path = "hic/" + fileName + ".hic";
         String annotationName = uniteFileNameToAnnotationPath(species, cultivar);
         String annotationPath = "Gene/" + annotationName + ".bed.gz";
+        File file = new File(annotationPath);
+        if (!file.exists()) {
+            generateSuccess = false;
+            return generateSuccess;
+        }
         BufferedImage image;
         try {
             image = generateHeatmap.generateAnnotation1D(path, annotationPath, chromosome);
