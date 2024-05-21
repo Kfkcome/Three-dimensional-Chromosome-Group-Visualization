@@ -146,14 +146,17 @@ public class CompartmentServiceImpl implements CompartmentService {
     }
 
     @Override
-    public Boolean generateCompartment(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) {
+    public Boolean generateCompartment(String species, String cultivar, String tissue, String chromosome, Integer clarity, HttpServletResponse response) {
         BufferedImage temp;
         String fileName = uniteFileNameToHICPath(species, cultivar, tissue);
         String path = "hic/" + fileName + ".hic";
         String annotationName = uniteFileNameToHICPath(species, cultivar, tissue);
         String annotationPath = "Compartment/" + annotationName + ".bw";
+        if (clarity == null) {
+            clarity = 1;//默认分辨率为1
+        }
         try {
-            temp = generateHeatmap.generateAnnotation1D(path, annotationPath, chromosome);
+            temp = generateHeatmap.generateAnnotation1D(path, annotationPath, chromosome, clarity);
         } catch (IOException e) {
             throw new RuntimeException(e);
             //TODO：处理生成Compartment图生成失败

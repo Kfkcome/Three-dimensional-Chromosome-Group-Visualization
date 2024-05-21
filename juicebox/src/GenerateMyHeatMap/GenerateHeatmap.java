@@ -191,10 +191,10 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/27
      */
-    public synchronized BufferedImage generateAnnotation1D(String path, String annotation_path, String chromosome1_name) throws IOException {
+    public synchronized BufferedImage generateAnnotation1D(String path, String annotation_path, String chromosome1_name, int clarity) throws IOException {
         superAdapter = MainWindow.superAdapter;
         //TODO:动态生成图片大小
-        BufferedImage temp = new BufferedImage(1502, 25, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage temp = new BufferedImage(1502 * clarity, 25, BufferedImage.TYPE_INT_ARGB);
         //加载hic文件
         loadHicFile(path);
 
@@ -207,8 +207,10 @@ public class GenerateHeatmap {
             //TODO:添加找不到染色体异常
         }
         //TODO:动态生成图片大小
-        superAdapter.getHeatmapPanel().setSize(1502, 1502);
-        superAdapter.getMainWindow().setSize(3000, 3000);
+        superAdapter.getHiC().setScaleFactor(clarity);
+        superAdapter.getHeatmapPanel().setSize(1502 * clarity, 1502 * clarity);
+        superAdapter.getMainWindow().setSize(3000 * clarity, 3000 * clarity);
+
         //画制基因结构图
         superAdapter.getMainViewPanel().getTrackPanelX().paint(temp.getGraphics());
 
@@ -218,16 +220,18 @@ public class GenerateHeatmap {
     /**
      * 功能描述：生成带2D注释的热图
      *
-     * @param path
-     * @param annotation_path
-     * @param chromosome1_name
-     * @param displayOption
-     * @param normalizationType
+     * @param path              hic文件路径
+     * @param annotation_path   注释路径
+     * @param chromosome1_name  染色体名字
+     * @param displayOption     展示选项
+     * @param normalizationType 正则化的选项
+     * @param colorValue        颜色
+     * @param clarity           清晰度
      * @return {@link BufferedImage }
      * @author new
-     * @date 2023/11/30
+     * {@code @date} 2024/5/20
      */
-    public synchronized BufferedImage generateAnnotation2D(String path, ArrayList<String> annotation_path, String chromosome1_name, String displayOption, String normalizationType) throws IOException {
+    public synchronized BufferedImage generateAnnotation2D(String path, ArrayList<String> annotation_path, String chromosome1_name, String displayOption, String normalizationType, int colorValue, int clarity) throws IOException {
         BufferedImage temp = new BufferedImage(1502, 1502, BufferedImage.TYPE_INT_ARGB);
         loadHicFile(path);//加载hic文件
         setChromosome(chromosome1_name);//选择染色体
@@ -280,7 +284,9 @@ public class GenerateHeatmap {
             throw new IOException("没有找到文件");
         }
         //绘制
-        superAdapter.getHeatmapPanel().paint(temp.getGraphics());
+//        superAdapter.getHeatmapPanel().paint(temp.getGraphics());
+
+        temp = generateFullHeatMap(path, chromosome1_name, displayOption, normalizationType, colorValue, clarity);
         //删除已添加的注释文件
         root.remove(1);
         superAdapter.getLayersPanel().getLoad2DAnnotationsDialog().setCustomAddedFeatures(null);
@@ -302,7 +308,7 @@ public class GenerateHeatmap {
      *
      * @param path
      * @author new
-     * @date 2023/11/28
+     * &#064;date  2023/11/28
      */
     public synchronized void setAnnotation1D(String path) {
 
@@ -346,7 +352,7 @@ public class GenerateHeatmap {
     }
 
     public ArrayList<String> getAnnotationPoint(String path, ArrayList<String> annotation_path, String chromosome1_name, int x, int y) throws IOException {
-        generateAnnotation2D(path, annotation_path, chromosome1_name, "", "");
+        generateAnnotation2D(path, annotation_path, chromosome1_name, "", "", 0, 0);
         Point currMouse = new Point(x, y);
         double minDistance = Double.POSITIVE_INFINITY;
         ;

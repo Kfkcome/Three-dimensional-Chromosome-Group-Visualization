@@ -136,12 +136,15 @@ public class RnaServiceImpl implements RnaService {
     }
 
     @Override
-    public Boolean generateRnaStruct(String species, String cultivar, String tissue, String chromosome, HttpServletResponse response) throws HicFileNotFoundException {
+    public Boolean generateRnaStruct(String species, String cultivar, String tissue, String chromosome, Integer clarity, HttpServletResponse response) throws HicFileNotFoundException {
         Boolean generateSuccess = true;
         String fileName = uniteFileNameToHICPath(species, cultivar, tissue);
         String path = "hic/" + fileName + ".hic";
         String annotationName = uniteFileNameToAnnotationPath(species, cultivar);
         String annotationPath = "Gene/" + annotationName + ".bed.gz";
+        if (clarity == null) {
+            clarity = 1;//默认分辨率为1
+        }
         File file = new File(annotationPath);
         if (!file.exists()) {
             generateSuccess = false;
@@ -149,7 +152,7 @@ public class RnaServiceImpl implements RnaService {
         }
         BufferedImage image;
         try {
-            image = generateHeatmap.generateAnnotation1D(path, annotationPath, chromosome);
+            image = generateHeatmap.generateAnnotation1D(path, annotationPath, chromosome, clarity);
         } catch (IOException e) {
             throw new HicFileNotFoundException(e.getMessage());
         }

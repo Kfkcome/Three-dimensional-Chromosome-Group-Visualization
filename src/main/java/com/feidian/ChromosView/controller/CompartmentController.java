@@ -53,9 +53,11 @@ public class CompartmentController {
 
     @LogPrint
     @GetMapping("/generate")
-    ApiResponse<String> generateCompartment(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome,
+    ApiResponse<String> generateCompartment(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar,
+                                            @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome,
+                                            @RequestParam(value = "clarity", required = false) Integer clarity,
                                             HttpServletResponse httpServletResponse) {
-        if (compartmentService.generateCompartment(species, cultivar, tissue, chromosome, httpServletResponse)) {
+        if (compartmentService.generateCompartment(species, cultivar, tissue, chromosome, clarity, httpServletResponse)) {
             return ApiResponse.success("Generate Compartment successfully!");
         }
         return ApiResponse.fail(505, "Failed to generate the compartment");

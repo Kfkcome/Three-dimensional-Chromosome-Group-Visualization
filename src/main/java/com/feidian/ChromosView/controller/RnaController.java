@@ -71,8 +71,9 @@ public class RnaController {
     @LogPrint
     @GetMapping("/RnaStruct")
     public ApiResponse<String> generateRnaStruct(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome,
+                                                 @RequestParam(value = "clarity", required = false) Integer clarity,
                                                  HttpServletResponse httpServletResponse) throws HicFileNotFoundException, IOException {
-        if (rnaService.generateRnaStruct(species, cultivar, tissue, chromosome, httpServletResponse))
+        if (rnaService.generateRnaStruct(species, cultivar, tissue, chromosome, clarity, httpServletResponse))
             return ApiResponse.success("Generate gene struct successfully!");
         return ApiResponse.fail(505, "Failed to generate the gene struct map");
     }
