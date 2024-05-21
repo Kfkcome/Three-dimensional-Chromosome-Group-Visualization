@@ -6,14 +6,10 @@ import com.feidian.ChromosView.domain.SoftwareOfAnnotation2D;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.CultivarMapper;
 import com.feidian.ChromosView.service.CultivarService;
-import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CultivarServiceImpl implements CultivarService {
@@ -82,7 +78,7 @@ public class CultivarServiceImpl implements CultivarService {
         List<Boolean> binary = theSoftware.getBinary();
         List<String> tadAvailable = new ArrayList<>();
         List<String> loopAvailable = new ArrayList<>();
-        ArrayList<String> strings = Lists.newArrayList("TAD_Arrowhead",
+        ArrayList<String> strings = new ArrayList<>(Arrays.asList("TAD_Arrowhead",
                 "TAD_ClusterTAD",
                 "TAD_Cworld",
                 "TAD_deDoc",
@@ -98,7 +94,7 @@ public class CultivarServiceImpl implements CultivarService {
                 "TAD_TopDom",
                 "Loop_FitHiC",
                 "Loop_HiCCUPS",
-                "Loop_HiCExplorer");
+                "Loop_HiCExplorer"));
         for (int i = 0; i < binary.size(); i++) {
             if (i <= 13 && binary.get(i)) {
                 tadAvailable.add(strings.get(i).split("_")[1]);
