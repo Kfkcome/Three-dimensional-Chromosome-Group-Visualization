@@ -194,7 +194,7 @@ public class GenerateHeatmap {
     public synchronized BufferedImage generateAnnotation1D(String path, String annotation_path, String chromosome1_name, int clarity) throws IOException {
         superAdapter = MainWindow.superAdapter;
         //TODO:动态生成图片大小
-        BufferedImage temp = new BufferedImage(1502 * clarity, 25, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage temp = new BufferedImage(3000 * clarity, 25, BufferedImage.TYPE_INT_ARGB);
         //加载hic文件
         loadHicFile(path);
 
@@ -208,10 +208,16 @@ public class GenerateHeatmap {
         }
         //TODO:动态生成图片大小
         superAdapter.getHiC().setScaleFactor(clarity);
-        superAdapter.getHeatmapPanel().setSize(1502 * clarity, 1502 * clarity);
-        superAdapter.getMainWindow().setSize(3000 * clarity, 3000 * clarity);
+        superAdapter.getHeatmapPanel().setSize(3000 * clarity, 3000 * clarity);
+        superAdapter.getMainWindow().setSize(3100 * clarity, 3100 * clarity);
 
+        superAdapter.getMainViewPanel().getTrackPanelX().paint(temp.getGraphics());
         //画制基因结构图
+        Collection<Pair<Rectangle, HiCTrack>> trackRectangles = superAdapter.getMainViewPanel().getTrackPanelX().getTrackRectangles();
+        for (Pair<Rectangle, HiCTrack> p : trackRectangles) {
+            p.getSecond().setPosColor(new Color(255,0,0));
+        }
+        superAdapter.updateTrackPanel();
         superAdapter.getMainViewPanel().getTrackPanelX().paint(temp.getGraphics());
 
         return temp;
