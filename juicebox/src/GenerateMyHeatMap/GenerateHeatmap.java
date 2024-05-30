@@ -35,6 +35,7 @@ import juicebox.track.HiCTrack;
 import juicebox.track.ResourceTree;
 import juicebox.track.TrackPanel;
 import juicebox.track.feature.Feature2DGuiContainer;
+import juicebox.windowui.HiCZoom;
 import juicebox.windowui.MatrixType;
 import juicebox.windowui.layers.Load2DAnnotationsDialog;
 import org.broad.igv.util.Pair;
@@ -177,7 +178,7 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/27
      */
-    public synchronized BufferedImage generateFullHeatMap(String path, String chromosome1_name, String displayOption, String normalizationType, double minColor, double maxColor, int clarity) throws IOException {
+    public synchronized BufferedImage generateFullHeatMap(String path, String chromosome1_name, String displayOption, String normalizationType, double minColor, double maxColor, int clarity,int resolution) throws IOException {
         BufferedImage temp = new BufferedImage(1502 * clarity, 1502 * clarity, BufferedImage.TYPE_INT_ARGB);
         loadHicFile(path);//加载hic文件
         setChromosome(chromosome1_name);//选择染色体
@@ -186,6 +187,22 @@ public class GenerateHeatmap {
 
         //设置颜色
         setHeatMapColor(minColor, maxColor);
+
+
+        //设置resolution
+        Map<Integer, HiCZoom> idxZoomMap = superAdapter.getMainViewPanel().getResolutionSlider().getIdxZoomMap();
+        Integer targetKey = -1;
+        for (Map.Entry<Integer, HiCZoom> entry : idxZoomMap.entrySet()) {
+            if (entry.getValue().getBinSize() == resolution) {
+                targetKey = entry.getKey();
+                break;
+            }
+        }
+        if(targetKey == -1)
+        {
+            targetKey = 0;
+        }
+        superAdapter.getMainViewPanel().getResolutionSlider().getSlider().setValue(targetKey);
 
         superAdapter.getHiC().setScaleFactor(clarity);
         superAdapter.getHeatmapPanel().setSize(1502 * clarity, 1502 * clarity);
@@ -257,7 +274,7 @@ public class GenerateHeatmap {
      * @author new
      * {@code @date} 2024/5/20
      */
-    public synchronized BufferedImage generateAnnotation2D(String path, ArrayList<String> annotation_path, String chromosome1_name, String displayOption, String normalizationType, double minColor, double maxColor, int clarity) throws IOException {
+    public synchronized BufferedImage generateAnnotation2D(String path, ArrayList<String> annotation_path, String chromosome1_name, String displayOption, String normalizationType, double minColor, double maxColor, int clarity, int resolution) throws IOException {
         BufferedImage temp = new BufferedImage(1502, 1502, BufferedImage.TYPE_INT_ARGB);
         loadHicFile(path);//加载hic文件
         setChromosome(chromosome1_name);//选择染色体
@@ -312,7 +329,7 @@ public class GenerateHeatmap {
         //绘制
 //        superAdapter.getHeatmapPanel().paint(temp.getGraphics());
 
-        temp = generateFullHeatMap(path, chromosome1_name, displayOption, normalizationType, minColor, maxColor, clarity);
+        temp = generateFullHeatMap(path, chromosome1_name, displayOption, normalizationType, minColor, maxColor, clarity, resolution);
         //删除已添加的注释文件
         root.remove(1);
         superAdapter.getLayersPanel().getLoad2DAnnotationsDialog().setCustomAddedFeatures(null);
@@ -378,7 +395,7 @@ public class GenerateHeatmap {
     }
 
     public ArrayList<String> getAnnotationPoint(String path, ArrayList<String> annotation_path, String chromosome1_name, int x, int y) throws IOException {
-        generateAnnotation2D(path, annotation_path, chromosome1_name, "", "", 0,100, 0);
+        generateAnnotation2D(path, annotation_path, chromosome1_name, "", "", 0,100, 0,40000);
         Point currMouse = new Point(x, y);
         double minDistance = Double.POSITIVE_INFINITY;
         ;

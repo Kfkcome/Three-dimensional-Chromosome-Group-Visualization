@@ -139,12 +139,15 @@ public class HicServiceImpl implements HicService {
 
 
     @Override
-    public Boolean generateMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double minColor, Double maxColor, Integer clarity, HttpServletResponse response) throws HicFileNotFoundException {
+    public Boolean generateMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double minColor, Double maxColor, Integer clarity, Integer resolution,HttpServletResponse response) throws HicFileNotFoundException {
         //todo:实现对物种的搜索
 //        String csName = chromosomeMapper.findByCS_ID(cs_id).getCS_NAME();
 //        String csName = "SoyC02.Chr02";
         if (clarity == null) {
             clarity = 1;//默认分辨率为1
+        }
+        if (resolution== null) {
+            resolution = 10000;//默认分辨率为10000
         }
         maxColor = maxColor == null ? 100 : maxColor;
         minColor = minColor == null ? 1 : minColor;
@@ -153,7 +156,7 @@ public class HicServiceImpl implements HicService {
         String path = "hic/" + fileName + ".hic";
         BufferedImage image;
         try {
-            image = generateHeatmap.generateFullHeatMap(path, chromosome, displayOption, normalizationType, minColor, maxColor, clarity);
+            image = generateHeatmap.generateFullHeatMap(path, chromosome, displayOption, normalizationType, minColor, maxColor, clarity, resolution);
         } catch (Exception e) {
             throw new HicFileNotFoundException(e.getMessage());
         }
@@ -168,7 +171,7 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
-    public Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double maxColor, Double minColor, Integer clarity, Boolean tad, Boolean loop, String tadSoftware, String loopSoftware, HttpServletResponse response) {
+    public Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double maxColor, Double minColor, Integer clarity, Integer resolution,Boolean tad, Boolean loop, String tadSoftware, String loopSoftware, HttpServletResponse response) {
         BufferedImage image;
         String fileName = uniteFileName(species, cultivar, tissue);
         String path = "hic/" + fileName + ".hic";
@@ -185,7 +188,7 @@ public class HicServiceImpl implements HicService {
             annotation.add("TAD/" + tadSoftware + "/" + fileName + ".bedpe");
         }
         try {
-            image = generateHeatmap.generateAnnotation2D(path, annotation, chromosome, displayOption, normalizationType, minColor, maxColor, clarity);
+            image = generateHeatmap.generateAnnotation2D(path, annotation, chromosome, displayOption, normalizationType, minColor, maxColor, clarity, resolution);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

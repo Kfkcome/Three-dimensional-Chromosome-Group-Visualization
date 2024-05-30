@@ -57,10 +57,18 @@ public class ResolutionControl extends JPanel {
     private final HeatmapPanel heatmapPanel;
     private final JideButton lockButton;
     private final JLabel resolutionLabel;
+
+    public Map<Integer, HiCZoom> getIdxZoomMap() {
+        return idxZoomMap;
+    }
+
     private final Map<Integer, HiCZoom> idxZoomMap = new ConcurrentHashMap<>();
     private final Map<Integer, String> bpLabelMap;
     private final HiCZoom pearsonZoom = new HiCZoom(HiC.Unit.BP, 500000);
     private final JSlider resolutionSlider;
+    public JSlider getSlider() {
+        return resolutionSlider;
+    }
     public HiC.Unit unit = HiC.Unit.BP;
     private boolean resolutionLocked = false;
     private int lastValue = 0;
