@@ -45,6 +45,17 @@ public class HICController {
     }
 
     @LogPrint
+    @GetMapping("/getChromosomeLength")
+    public ApiResponse<Long> getChromosomeLength(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome) throws HicFileNotFoundException {
+        Long length = hicService.getChromosomeLength(species, cultivar, tissue, chromosome);
+        if (length == null || length == -1) {
+            return ApiResponse.error(502, "找不到物种或品种");
+        }
+        return ApiResponse.success(length);
+    }
+
+
+    @LogPrint
     @GetMapping("/generateHeatmap2D")
     public ApiResponse<String> generateHeatMap2D(@RequestParam(value = "species") String species, @RequestParam("cultivar") String cultivar, @RequestParam("tissue") String tissue, @RequestParam(value = "chromosome") String chromosome,
                                                  @RequestParam(value = "minColor", required = false) Double minColor, @RequestParam(value = "maxColor") Double maxColor,

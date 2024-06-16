@@ -24,6 +24,7 @@
 
 package GenerateMyHeatMap;
 
+import juicebox.Context;
 import juicebox.HiC;
 import juicebox.HiCGlobals;
 import juicebox.MainWindow;
@@ -217,6 +218,12 @@ public class GenerateHeatmap {
         return temp;
     }
 
+    public synchronized long getChromosomeLength(String path, String chromosome1_name) throws IOException {
+        loadHicFile(path);
+        setChromosome(chromosome1_name);
+        Context xContext = superAdapter.getHiC().getXContext();
+        return xContext.getChromosome().getLength();
+    }
     /**
      * 功能描述：生成基因结构注释的图
      *

@@ -171,6 +171,17 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
+    public Long getChromosomeLength(String species, String cultivar, String tissue, String chromosome) throws HicFileNotFoundException {
+        String fileName = uniteFileName(species, cultivar, tissue);
+        String path = "hic/" + fileName + ".hic";
+        try {
+            return generateHeatmap.getChromosomeLength(path, chromosome);
+        } catch (Exception e) {
+            throw new HicFileNotFoundException(e.getMessage());
+        }
+    }
+
+    @Override
     public Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double maxColor, Double minColor, Integer clarity, Integer resolution,Boolean tad, Boolean loop, String tadSoftware, String loopSoftware, HttpServletResponse response) {
         BufferedImage image;
         String fileName = uniteFileName(species, cultivar, tissue);
