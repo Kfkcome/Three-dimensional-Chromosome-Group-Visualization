@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.feidian.ChromosView.mapper.ExcelMapper">
+
+    <select id="getExcelTable">
+        select *
+        from ${table} limit #{pageNow},#{pageSize};
+    </select>
+    <select id="getExcelTableComparation" resultType="com.feidian.ChromosView.domain.ExcelComparation">
+        select *
+        from biology.excel_comparation limit #{pageNow},#{pageSize};
+    </select>
+    <select id="getExcelTableGenomics" resultType="com.feidian.ChromosView.domain.ExcelGenomics">
+        select *
+        from biology.excel_genomics limit #{pageNow},#{pageSize};
+    </select>
+    <select id="getExcelTableHiCMatrix" resultType="com.feidian.ChromosView.domain.ExcelHiCMatrix">
+        select *
+        from biology.excel_hic_matrix limit #{pageNow},#{pageSize};
+    </select>
+    <select id="getExcelTableLoop" resultType="com.feidian.ChromosView.domain.ExcelLoop">
+        select *
+        from biology.excel_loop limit #{pageNow},#{pageSize};
+    </select>
+    <select id="getExcelTableTad" resultType="com.feidian.ChromosView.domain.ExcelTad">
+        select *
+        from biology.excel_tad limit #{pageNow},#{pageSize};
+    </select>
+    <select id="getExcelTableCount" resultType="java.lang.Integer">
+        select count(*)
+        from ${table};
+    </select>
+</mapper>
