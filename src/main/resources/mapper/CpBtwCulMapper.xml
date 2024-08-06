@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.feidian.ChromosView.mapper.CpBtwCulMapper">
+
+    <select id="getGenusName" resultType="java.lang.String">
+        select Distinct genus
+        from biology.t_connection_list;
+    </select>
+    <select id="getSpeciesName" resultType="java.lang.String">
+        select species
+        from biology.t_connection_list
+        where genus = #{genus};
+    </select>
+    <select id="getCultivarName" resultType="java.lang.String">
+        select cultivar
+        from biology.t_connection_list
+        where genus = #{genus}
+          and species = #{species};
+    </select>
+    <select id="getChromosomeName" resultType="java.lang.String">
+        select cs
+        from biology.t_connection_cs
+        where species_name = #{target};
+    </select>
+    <select id="getConnectionALL" resultType="com.feidian.ChromosView.domain.ConBtwSpe">
+        select *
+        from biology.${table_name}
+        where CS_NAME1 = #{cs1_name}
+          and CS_NAME2 = #{cs2_name};
+    </select>
+    <select id="getConnectionByRange" resultType="com.feidian.ChromosView.domain.ConBtwSpe">
+        select *
+        from biology.${table_name}
+        where CS_NAME1 = #{cs1_name}
+          and CS_NAME2 = #{cs2_name}
+          and S1 &gt;= #{cs1_start}
+          and E1 &lt;= #{cs1_end}
+          and S2 &gt;= #{cs2_start}
+          and E2 &lt;= #{cs2_end};
+    </select>
+    <select id="getTadDataByChromosome" resultType="com.feidian.ChromosView.domain.TadData">
+        select *
+        from biology.${table_name}
+        where CS_NAME = #{cs_name};
+    </select>
+    <select id="getTadDataByRange" resultType="com.feidian.ChromosView.domain.TadData">
+        select *
+        from biology.${table_name}
+        where CS_NAME = #{cs_name}
+          and X2 &gt;= #{start}
+          and X1 &lt;= #{end};
+    </select>
+    <select id="getLoopDataByChromosome" resultType="com.feidian.ChromosView.domain.LoopData">
+        select *
+        from biology.${table_name}
+        where CS_NAME = #{cs_name};
+    </select>
+    <select id="getLoopDataByRange" resultType="com.feidian.ChromosView.domain.LoopData">
+        select *
+        from biology.${table_name}
+        where CS_NAME = #{cs_name}
+            and (Y1 &gt;= #{start} and X1 &lt;= #{end})
+           or (Y2 &gt;= #{start} and X2 &lt;= #{end});
+    </select>
+    <select id="getCompartmentDataByChromosome" resultType="com.feidian.ChromosView.domain.CpData">
+        select *
+        from biology.${table_name}
+        where CS_NAME = #{cs_name};
+    </select>
+    <select id="getCompartmentDataByRange" resultType="com.feidian.ChromosView.domain.CpData">
+        select *
+        from biology.${table_name}
+        where CS_NAME = #{cs_name}
+          and Y1 &gt;= #{start}
+          and X1 &lt;= #{end};
+    </select>
+
+</mapper>
