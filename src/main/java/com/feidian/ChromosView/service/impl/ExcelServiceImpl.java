@@ -18,6 +18,7 @@ public class ExcelServiceImpl<T> implements ExcelService<T> {
         this.excelMapper = excelMapper;
         domain_to_table = new HashMap<>();
         domain_to_table.put("excel_comparation", "ExcelComparation");
+        domain_to_table.put("excel_compartment", "ExcelCompartment");
         domain_to_table.put("excel_genomics", "ExcelGenomics");
         domain_to_table.put("excel_hic_matrix", "ExcelHiCMatrix");
         domain_to_table.put("excel_loop", "ExcelLoop");
@@ -32,6 +33,8 @@ public class ExcelServiceImpl<T> implements ExcelService<T> {
             throw new RuntimeException("你输入的表不存在");
         } else if (s.equals("ExcelComparation")) {
             return excelMapper.getExcelTableComparation(pageNow, pageSize);
+        } else if (s.equals("ExcelCompartment")) {
+            return excelMapper.getExcelTableCompartment(pageNow, pageSize);
         } else if (s.equals("ExcelGenomics")) {
             return excelMapper.getExcelTableGenomics(pageNow, pageSize);
         } else if (s.equals("ExcelHiCMatrix")) {
@@ -45,10 +48,38 @@ public class ExcelServiceImpl<T> implements ExcelService<T> {
         }
     }
 
+    private List<? extends Object> searchExcelDataFromDB(String tableName, String searchParam, Integer pageNow, Integer pageSize) throws QueryException {
+        String s = domain_to_table.get(tableName);
+        if (s == null) {
+            throw new QueryException("你输入的表不存在");
+        } else if (s.equals("ExcelComparation")) {
+            return excelMapper.searchExcelTableComparation(searchParam, pageNow, pageSize);
+        } else if (s.equals("ExcelCompartment")) {
+            return excelMapper.searchExcelTableCompartment(searchParam, pageNow, pageSize);
+        } else if (s.equals("ExcelGenomics")) {
+            return excelMapper.searchExcelTableGenomics(searchParam, pageNow, pageSize);
+        } else if (s.equals("ExcelHiCMatrix")) {
+            return excelMapper.searchExcelTableHiCMatrix(searchParam, pageNow, pageSize);
+        } else if (s.equals("ExcelLoop")) {
+            return excelMapper.searchExcelTableLoop(searchParam, pageNow, pageSize);
+        } else if (s.equals("ExcelTad")) {
+            return excelMapper.searchExcelTableTad(searchParam, pageNow, pageSize);
+        } else {
+            throw new QueryException("你输入的表不存在");
+        }
+    }
+
     @Override
     public List<Object> getExcelData(String tableName, Integer pageNow, Integer pageSize) throws QueryException {
         List<Object> domain_list = new ArrayList<>();
         domain_list.addAll(getExcelDataFromDB(tableName, pageNow, pageSize));
+        return domain_list;
+    }
+
+    @Override
+    public List<Object> searchExcelData(String tableName, String searchParam, Integer pageNow, Integer pageSize) throws QueryException {
+        ArrayList<Object> domain_list = new ArrayList<>();
+        domain_list.addAll(searchExcelDataFromDB(tableName, searchParam, pageNow, pageSize));
         return domain_list;
     }
 

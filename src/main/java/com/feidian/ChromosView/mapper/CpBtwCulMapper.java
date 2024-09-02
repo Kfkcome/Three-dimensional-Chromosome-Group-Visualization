@@ -21,10 +21,15 @@ public interface CpBtwCulMapper {
 
     List<String> getChromosomeName(@Param("target") String target);
 
-    List<ConBtwSpe> getConnectionALL(@Param("cs1_name") String cs_name1, @Param("cs2_name") String cs_name2, @Param("table_name") String table_name);
+    List<ConBtwSpe> getConnectionALL(@Param("cs1_name") String cs_name1, @Param("table_name") String table_name);
 
-    List<ConBtwSpe> getConnectionByRange(@Param("cs1_name") String cs_name1, @Param("cs2_name") String cs_name2, @Param("table_name") String table_name
-            , @Param("cs1_start") int s1, @Param("cs1_end") int e1, @Param("cs2_start") int s2, @Param("cs2_end") int e2);
+    Integer getConnectionKind(@Param("cs1_name") String cs_name1, @Param("table_name") String table_name);
+
+    Integer getConnectionKindByRange(@Param("cs1_name") String cs_name1, @Param("table_name") String table_name
+            , @Param("cs1_start") int s1, @Param("cs1_end") int e1);
+
+    List<ConBtwSpe> getConnectionByRange(@Param("cs1_name") String cs_name1, @Param("table_name") String table_name
+            , @Param("cs1_start") int s1, @Param("cs1_end") int e1);
 
 
     List<TadData> getTadDataByChromosome(@Param("table_name") String table_name, @Param("cs_name") String chromosome);

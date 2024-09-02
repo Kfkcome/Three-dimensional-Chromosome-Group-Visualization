@@ -32,6 +32,16 @@ public class ExcelController {
     }
 
     @LogPrint
+    @GetMapping("/search")
+    ApiResponse<List<Object>> searchExcelData(String tableName, String searchParam, Integer pageNow, Integer pageSize) {
+        try {
+            return ApiResponse.success(excelService.searchExcelData(tableName, searchParam, pageNow, pageSize));
+        } catch (QueryException e) {
+            return ApiResponse.fail(500, e.getMessage());
+        }
+    }
+
+    @LogPrint
     @GetMapping("/count")
     ApiResponse<Integer> getExcelDataCount(String tableName) {
         try {

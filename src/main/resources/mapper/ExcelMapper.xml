@@ -2,32 +2,118 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.feidian.ChromosView.mapper.ExcelMapper">
 
-    <select id="getExcelTable">
+    <select id="getExcelTableComparation" resultType="java.util.HashMap">
         select *
-        from ${table} limit #{pageNow},#{pageSize};
+        from biology.excel_comparation
+        limit #{pageNow},#{pageSize};
     </select>
-    <select id="getExcelTableComparation" resultType="com.feidian.ChromosView.domain.ExcelComparation">
+    <select id="getExcelTableGenomics" resultType="java.util.HashMap">
         select *
-        from biology.excel_comparation limit #{pageNow},#{pageSize};
+        from biology.excel_genomics
+        limit #{pageNow},#{pageSize};
     </select>
-    <select id="getExcelTableGenomics" resultType="com.feidian.ChromosView.domain.ExcelGenomics">
+    <select id="getExcelTableHiCMatrix" resultType="java.util.HashMap">
         select *
-        from biology.excel_genomics limit #{pageNow},#{pageSize};
+        from biology.excel_hic_matrix
+        limit #{pageNow},#{pageSize};
     </select>
-    <select id="getExcelTableHiCMatrix" resultType="com.feidian.ChromosView.domain.ExcelHiCMatrix">
+    <select id="getExcelTableLoop" resultType="java.util.HashMap">
         select *
-        from biology.excel_hic_matrix limit #{pageNow},#{pageSize};
+        from biology.excel_loop
+        limit #{pageNow},#{pageSize};
     </select>
-    <select id="getExcelTableLoop" resultType="com.feidian.ChromosView.domain.ExcelLoop">
+    <select id="getExcelTableTad" resultType="java.util.HashMap">
         select *
-        from biology.excel_loop limit #{pageNow},#{pageSize};
-    </select>
-    <select id="getExcelTableTad" resultType="com.feidian.ChromosView.domain.ExcelTad">
-        select *
-        from biology.excel_tad limit #{pageNow},#{pageSize};
+        from biology.excel_tad
+        limit #{pageNow},#{pageSize};
     </select>
     <select id="getExcelTableCount" resultType="java.lang.Integer">
         select count(*)
         from ${table};
     </select>
+    <select id="getExcelTableCompartment" resultType="java.util.HashMap">
+        select *
+        from biology.excel_compartment
+        limit #{pageNow},#{pageSize};
+    </select>
+    <select id="searchExcelTableTad" resultType="java.util.HashMap">
+        SELECT *
+        FROM biology.excel_tad
+        WHERE Specie LIKE CONCAT('%', #{searchParam}, '%')
+           or Cultivar LIKE CONCAT('%', #{searchParam}, '%')
+           or Tissue LIKE CONCAT('%', #{searchParam}, '%')
+           or Arrowhead LIKE CONCAT('%', #{searchParam}, '%')
+           or ClusterTAD LIKE CONCAT('%', #{searchParam}, '%')
+           or Cworld LIKE CONCAT('%', #{searchParam}, '%')
+           or deDoc LIKE CONCAT('%', #{searchParam}, '%')
+           or domaincaller LIKE CONCAT('%', #{searchParam}, '%')
+           or HiCExplorer LIKE CONCAT('%', #{searchParam}, '%')
+           or HiCseg LIKE CONCAT('%', #{searchParam}, '%')
+           or ICFinder LIKE CONCAT('%', #{searchParam}, '%')
+           or MSTD LIKE CONCAT('%', #{searchParam}, '%')
+           or OnTAD LIKE CONCAT('%', #{searchParam}, '%')
+           or rGMAP LIKE CONCAT('%', #{searchParam}, '%')
+           or SpectralTAD LIKE CONCAT('%', #{searchParam}, '%')
+           or TADLib LIKE CONCAT('%', #{searchParam}, '%')
+           or TopDom LIKE CONCAT('%', #{searchParam}, '%')
+        limit #{pageNow},#{pageSize};
+    </select>
+    <select id="searchExcelTableComparation" resultType="java.util.HashMap">
+        select *
+        from biology.excel_comparation
+        where Genus LIKE CONCAT('%', #{searchParam}, '%')
+           or Tcbf LIKE CONCAT('%', #{searchParam}, '%')
+           or JCVI LIKE CONCAT('%', #{searchParam}, '%')
+        limit #{pageNow},#{pageSize};
+    </select>
+    <select id="searchExcelTableGenomics" resultType="java.util.HashMap">
+        select *
+        from biology.excel_genomics
+        where `Specie` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Cultivar` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Chromosomes + Scaffolds (FASTA Files)` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Predicted Genes (GFF3 Files)` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Predicted coding sequences (FASTA Files)` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Predicted protein sequences (FASTA Files)` LIKE CONCAT('%', #{searchParam}, '%')
+           or `REF` LIKE CONCAT('%', #{searchParam}, '%')
+        limit #{pageNow},#{pageSize};
+    </select>
+    <select id="searchExcelTableHiCMatrix" resultType="java.util.HashMap">
+        select *
+        from biology.excel_hic_matrix
+        where `Specie` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Cultivar` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Tissue` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Matrix (10K HiC-Pro)` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Bed (10K HiC-Pro)` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Matrix (40K HiC-Pro)` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Bed (40K HiC-Pro)` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Matrix (100K HiC-Pro)` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Bed (100K HiC-Pro)` LIKE CONCAT('%', #{searchParam}, '%')
+           or `allValidPairs Files` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Matrix (.hic format)` LIKE CONCAT('%', #{searchParam}, '%')
+        limit #{pageNow},#{pageSize};
+    </select>
+    <select id="searchExcelTableLoop" resultType="java.util.HashMap">
+        select *
+        from biology.excel_loop
+        where `Specie` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Cultivar` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Tissue` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Fit-HiC` LIKE CONCAT('%', #{searchParam}, '%')
+           or `HiCCUPS` LIKE CONCAT('%', #{searchParam}, '%')
+           or `HiCExplorer` LIKE CONCAT('%', #{searchParam}, '%')
+        limit #{pageNow},#{pageSize};
+    </select>
+    <select id="searchExcelTableCompartment" resultType="java.util.HashMap">
+        select *
+        from biology.excel_compartment
+        where `Specie` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Cultivar` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Tissue` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Cworld (bed format)` LIKE CONCAT('%', #{searchParam}, '%')
+        limit #{pageNow},#{pageSize};
+    </select>
+
+
 </mapper>

@@ -9,9 +9,7 @@ import com.feidian.ChromosView.service.ConnectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ConnectionServiceImpl implements ConnectionService {
@@ -57,14 +55,112 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
 
     @Override
-    public List<ConBtwSpe> getConnectionALL(String cs_name1, String cs_name2, String target1, String target2) {
-        return cpBtwCulMapper.getConnectionALL(cs_name1, cs_name2, "`" + "con_" + target1 + "." + target2 + "`");
+    public Map<String, Object> getConnectionALL(String cs_name1, String cs_name2, String target1, String target2) {
+        Integer connectionKind = cpBtwCulMapper.getConnectionKind(cs_name1, "`" + "con_" + target1 + "." + target2 + "`");
+        Map<String, Object> res = new HashMap<>();
+
+        if (connectionKind <= 1) {
+            List<ConBtwSpe> connectionALL = cpBtwCulMapper.getConnectionALL(cs_name1, "`" + "con_" + target1 + "." + target2 + "`");
+            res.put("data", connectionALL);
+            Integer s = null, e = null;
+            for (ConBtwSpe conBtwSpe : connectionALL) {
+                if (s == null || conBtwSpe.getS2() < s) {
+                    s = conBtwSpe.getS2();
+                }
+                if (e == null || conBtwSpe.getE2() > e) {
+                    e = conBtwSpe.getE2();
+                }
+            }
+            res.put("range_start", s);
+            res.put("range_end", e);
+            return res;
+        } else {
+            Map<String, Integer> connectionLength = new HashMap<>();
+            List<ConBtwSpe> connectionALL = cpBtwCulMapper.getConnectionALL(cs_name1, "`" + "con_" + target1 + "." + target2 + "`");
+            Map<String, ArrayList<ConBtwSpe>> connectionList = new HashMap<>();
+            for (ConBtwSpe conBtwSpe : connectionALL) {
+                String key = conBtwSpe.getCS_NAME2();
+                Integer length = conBtwSpe.getE2() - conBtwSpe.getS2();
+                connectionLength.put(key, connectionLength.get(key) == null ? 0 : connectionLength.get(key) + length);
+                connectionList.computeIfAbsent(key, k -> new ArrayList<>());
+                connectionList.get(key).add(conBtwSpe);
+            }
+            String max_key = "";
+            for (String s : connectionLength.keySet()) {
+                if (connectionLength.get(s) > (connectionLength.get(max_key) == null ? 0 : connectionLength.get(max_key))) {
+                    max_key = s;
+                }
+            }
+            Integer s = null, e = null;
+            for (ConBtwSpe conBtwSpe : connectionALL) {
+                if (s == null || conBtwSpe.getS2() < s) {
+                    s = conBtwSpe.getS2();
+                }
+                if (e == null || conBtwSpe.getE2() > e) {
+                    e = conBtwSpe.getE2();
+                }
+            }
+            res.put("data", connectionList.get(max_key));
+            res.put("range_start", s);
+            res.put("range_end", e);
+            return res;
+        }
+
+
     }
 
     @Override
-    public List<ConBtwSpe> getConnectionByRange(String cs_name1, String cs_name2, String target1, String target2, Integer s1, Integer e1, Integer s2, Integer e2) {
-        return cpBtwCulMapper.getConnectionByRange(cs_name1, cs_name2, "`" + "con_" + target1 + "." + target2 + "`", s1, e1, s2, e2);
+    public Map<String, Object> getConnectionByRange(String cs_name1, String target1, String target2, Integer s1, Integer e1) {
+        Integer connectionKind = cpBtwCulMapper.getConnectionKindByRange(cs_name1, "`" + "con_" + target1 + "." + target2 + "`", s1, e1);
+        Map<String, Object> res = new HashMap<>();
+        if (connectionKind <= 1) {
+            List<ConBtwSpe> connectionByRange = cpBtwCulMapper.getConnectionByRange(cs_name1, "`" + "con_" + target1 + "." + target2 + "`", s1, e1);
+            res.put("data", connectionByRange);
+            Integer s = null, e = null;
+            for (ConBtwSpe conBtwSpe : connectionByRange) {
+                if (s == null || conBtwSpe.getS2() < s) {
+                    s = conBtwSpe.getS2();
+                }
+                if (e == null || conBtwSpe.getE2() > e) {
+                    e = conBtwSpe.getE2();
+                }
+            }
+            res.put("range_start", s);
+            res.put("range_end", e);
+            return res;
+        } else {
+            Map<String, Integer> connectionLength = new HashMap<>();
+            List<ConBtwSpe> connectionALL = cpBtwCulMapper.getConnectionByRange(cs_name1, "`" + "con_" + target1 + "." + target2 + "`", s1, e1);
+            Map<String, ArrayList<ConBtwSpe>> connectionList = new HashMap<>();
+            for (ConBtwSpe conBtwSpe : connectionALL) {
+                String key = conBtwSpe.getCS_NAME2();
+                Integer length = conBtwSpe.getE2() - conBtwSpe.getS2();
+                connectionLength.put(key, connectionLength.get(key) == null ? 0 : connectionLength.get(key) + length);
+                connectionList.computeIfAbsent(key, k -> new ArrayList<>());
+                connectionList.get(key).add(conBtwSpe);
+            }
+            String max_key = "";
+            for (String s : connectionLength.keySet()) {
+                if (connectionLength.get(s) > (connectionLength.get(max_key) == null ? 0 : connectionLength.get(max_key))) {
+                    max_key = s;
+                }
+            }
+            Integer s = null, e = null;
+            for (ConBtwSpe conBtwSpe : connectionALL) {
+                if (s == null || conBtwSpe.getS2() < s) {
+                    s = conBtwSpe.getS2();
+                }
+                if (e == null || conBtwSpe.getE2() > e) {
+                    e = conBtwSpe.getE2();
+                }
+            }
+            res.put("data", connectionList.get(max_key));
+            res.put("range_start", s);
+            res.put("range_end", e);
+            return res;
+        }
     }
+
 
     @Override
     public List<TadData> getTadALL(String species, String cultivar, String chromosome, String software) {

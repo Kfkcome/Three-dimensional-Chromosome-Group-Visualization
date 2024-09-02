@@ -48,6 +48,8 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml # mapper??????
   type-aliases-package: com.feidian.ChromosView.domain   # ??????????????
+  configuration:
+    call-setters-on-nulls: true
   #configuration:
   #aop-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 logging:

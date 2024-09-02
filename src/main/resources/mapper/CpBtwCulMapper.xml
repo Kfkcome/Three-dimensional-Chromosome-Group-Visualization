@@ -7,7 +7,7 @@
         from biology.t_connection_list;
     </select>
     <select id="getSpeciesName" resultType="java.lang.String">
-        select species
+        select concat(species, '_', cultivar)
         from biology.t_connection_list
         where genus = #{genus};
     </select>
@@ -25,18 +25,14 @@
     <select id="getConnectionALL" resultType="com.feidian.ChromosView.domain.ConBtwSpe">
         select *
         from biology.${table_name}
-        where CS_NAME1 = #{cs1_name}
-          and CS_NAME2 = #{cs2_name};
+        where CS_NAME1 = #{cs1_name};
     </select>
     <select id="getConnectionByRange" resultType="com.feidian.ChromosView.domain.ConBtwSpe">
         select *
         from biology.${table_name}
         where CS_NAME1 = #{cs1_name}
-          and CS_NAME2 = #{cs2_name}
           and S1 &gt;= #{cs1_start}
-          and E1 &lt;= #{cs1_end}
-          and S2 &gt;= #{cs2_start}
-          and E2 &lt;= #{cs2_end};
+          and E1 &lt;= #{cs1_end};
     </select>
     <select id="getTadDataByChromosome" resultType="com.feidian.ChromosView.domain.TadData">
         select *
@@ -73,6 +69,18 @@
         where CS_NAME = #{cs_name}
           and Y1 &gt;= #{start}
           and X1 &lt;= #{end};
+    </select>
+    <select id="getConnectionKind" resultType="java.lang.Integer">
+        select count(DISTINCT CS_NAME2)
+        from biology.${table_name}
+        where CS_NAME1 = #{cs1_name};
+    </select>
+    <select id="getConnectionKindByRange" resultType="java.lang.Integer">
+        select count(DISTINCT CS_NAME2)
+        from biology.${table_name}
+        where CS_NAME1 = #{cs1_name}
+          and S1 &gt;= #{cs1_start}
+          and E1 &lt;= #{cs1_end};
     </select>
 
 </mapper>

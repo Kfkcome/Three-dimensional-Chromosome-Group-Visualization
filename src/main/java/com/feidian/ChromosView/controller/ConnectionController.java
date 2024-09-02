@@ -1,7 +1,6 @@
 package com.feidian.ChromosView.controller;
 
 import com.feidian.ChromosView.aop.LogPrint;
-import com.feidian.ChromosView.domain.ConBtwSpe;
 import com.feidian.ChromosView.domain.CpData;
 import com.feidian.ChromosView.domain.LoopData;
 import com.feidian.ChromosView.domain.TadData;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/connection")
@@ -31,16 +31,16 @@ public class ConnectionController {
     }
 
     @LogPrint
-    @GetMapping("/species")
+    @GetMapping("/species_cultivar")
     ApiResponse<List<String>> getSpeciesName(String genus) {
         return ApiResponse.success(connectionService.getSpeciesName(genus));
     }
 
-    @LogPrint
-    @GetMapping("/cultivar")
-    ApiResponse<List<String>> getCultivarName(String genus, String species) {
-        return ApiResponse.success(connectionService.getCultivarName(genus, species));
-    }
+//    @LogPrint
+//    @GetMapping("/cultivar")
+//    ApiResponse<List<String>> getCultivarName(String genus, String species) {
+//        return ApiResponse.success(connectionService.getCultivarName(genus, species));
+//    }
 
     @LogPrint
     @GetMapping("/chromosome")
@@ -50,14 +50,14 @@ public class ConnectionController {
 
     @LogPrint
     @GetMapping("/all")
-    ApiResponse<List<ConBtwSpe>> getConnectionALL(String cs_name1, String cs_name2, String target1, String target2) {
+    ApiResponse<Map<String, Object>> getConnectionALL(String cs_name1, String cs_name2, String target1, String target2) {
         return ApiResponse.success(connectionService.getConnectionALL(cs_name1, cs_name2, target1, target2));
     }
 
     @LogPrint
     @GetMapping("/range")
-    ApiResponse<List<ConBtwSpe>> getConnectionByRange(String cs_name1, String cs_name2, String target1, String target2, Integer s1, Integer e1, Integer s2, Integer e2) {
-        return ApiResponse.success(connectionService.getConnectionByRange(cs_name1, cs_name2, target1, target2, s1, e1, s2, e2));
+    ApiResponse<Map<String, Object>> getConnectionByRange(String cs_name1, String target1, String target2, Integer s1, Integer e1) {
+        return ApiResponse.success(connectionService.getConnectionByRange(cs_name1, target1, target2, s1, e1));
     }
 
     @LogPrint
