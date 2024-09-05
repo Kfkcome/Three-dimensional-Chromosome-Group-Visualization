@@ -34,19 +34,9 @@
         where CULTIVAR_NAME = #{CultivarName}
           and SPECIES_NAME = #{SpeciesName}
     </select>
-    <select id="findTissueByID" resultType="com.feidian.ChromosView.domain.Tissue">
-        select *
-        from biology.t_tissue
-        where TISSUE_ID = #{TISSUE_ID};
-    </select>
     <select id="findAllSoftware" resultType="com.feidian.ChromosView.domain.Software">
         select *
         from biology.t_software;
-    </select>
-    <select id="findOneByTissueId" resultType="com.feidian.ChromosView.domain.Cultivar">
-        select *
-        from biology.t_cultivar
-        where CULTIVAR_ID = #{cultivar_id};
     </select>
     <select id="findBCLABySpeciesID" resultType="java.lang.String">
         select t_all_cultivar.CULTIVAR_NAME

@@ -1,24 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.feidian.ChromosView.mapper.SpeciesMapper">
-    <insert id="addSpecies">
-        insert into biology.t_species(SPECIES_NAME)
-        values (#{SPECIES_NAME});
-    </insert>
     <select id="findAll" resultType="java.lang.String">
         --         select  SPECIES_ID,SPECIES_NAME from biology.t_species;
         select distinct t_all_cultivar.SPECIES_NAME
         from t_all_cultivar;
-    </select>
-    <select id="findByName" resultType="java.lang.Integer">
-        select SPECIES_ID
-        from biology.t_species
-        where SPECIES_NAME = #{name};
-    </select>
-    <select id="findById" resultType="com.feidian.ChromosView.domain.Species">
-        select *
-        from biology.t_species
-        where SPECIES_ID = #{species_id};;
     </select>
 
 </mapper>

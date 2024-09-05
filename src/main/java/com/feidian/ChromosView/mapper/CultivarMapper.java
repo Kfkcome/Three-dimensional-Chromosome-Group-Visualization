@@ -3,7 +3,6 @@ package com.feidian.ChromosView.mapper;
 import com.feidian.ChromosView.domain.Cultivar;
 import com.feidian.ChromosView.domain.Software;
 import com.feidian.ChromosView.domain.SoftwareOfAnnotation2D;
-import com.feidian.ChromosView.domain.Tissue;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -17,8 +16,6 @@ public interface CultivarMapper {
 
     List<String> findAll();
 
-    Cultivar findOneByTissueId(@Param("cultivar_id") int cultivar_id);
-
     List<String> findBCLABySpeciesID(@Param("SPECIES_NAME") String SPECIES_NAME);
 
     int findByName_SpeciesID(Cultivar cultivar);
@@ -29,7 +26,6 @@ public interface CultivarMapper {
 
     Integer findMinIdByCultivar(@Param("SpeciesName") String SpeciesName, @Param("CultivarName") String CultivarName);
 
-    Tissue findTissueByID(int TISSUE_ID);
 
     List<Software> findAllSoftware();
 

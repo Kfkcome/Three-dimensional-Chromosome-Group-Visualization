@@ -1,8 +1,6 @@
 package com.feidian.ChromosView.service.impl;
 
 import GenerateMyHeatMap.GenerateHeatmap;
-import com.feidian.ChromosView.domain.LastQuery;
-import com.feidian.ChromosView.domain.MatrixPoint;
 import com.feidian.ChromosView.exception.HicFileNotFoundException;
 import com.feidian.ChromosView.mapper.ChromosomeMapper;
 import com.feidian.ChromosView.mapper.CultivarMapper;
@@ -20,8 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class HicServiceImpl implements HicService {
@@ -42,44 +38,6 @@ public class HicServiceImpl implements HicService {
 
     private String uniteFileName(String species, String cultivar, String tissue) {
         return species + "_" + cultivar + "_" + tissue;
-    }
-
-    public boolean checkNorms(String norms) {
-        String[] strings = {"KR", "SCALE", "VC", "VC_SQRT", "NONE"};
-        for (String string : strings) {
-            if (norms.equals(string))
-                return true;
-        }
-        return false;
-    }
-
-    void addToCache(String uuid, LastQuery nowQuery, List<MatrixPoint> matrixPoints) {
-        removeFromCache(uuid);
-        redisUtil.setCacheObject(uuid + "last:", nowQuery, 10L, TimeUnit.MINUTES);
-
-        int num = 500000;
-        if (matrixPoints.size() <= num) {
-            redisUtil.setCacheList(uuid + "cache:", matrixPoints, 10L, TimeUnit.MINUTES);
-        } else {
-            int start = 0;
-            int end = num;
-            for (int i = 0; i < matrixPoints.size() / num + 1; i++) {
-                if (end >= matrixPoints.size()) {
-                    end = matrixPoints.size() - 1;
-                }
-                List<MatrixPoint> list = matrixPoints.subList(start, end);
-                redisUtil.setCacheList(uuid + "cache:", list, 10L, TimeUnit.MINUTES);
-                start = end;
-                end += num;
-            }
-        }
-        redisUtil.setCacheObject(uuid + "index:", 1, 10L, TimeUnit.MINUTES);
-    }
-
-    void removeFromCache(String uuid) {
-        redisUtil.deleteObject(uuid + "cache");
-        redisUtil.deleteObject(uuid + "cache");
-        redisUtil.deleteObject(uuid + "last");
     }
 
 
@@ -139,14 +97,14 @@ public class HicServiceImpl implements HicService {
 
 
     @Override
-    public Boolean generateMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double minColor, Double maxColor, Integer clarity, Integer resolution,HttpServletResponse response) throws HicFileNotFoundException {
+    public Boolean generateMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double minColor, Double maxColor, Integer clarity, Integer resolution, HttpServletResponse response) throws HicFileNotFoundException {
         //todo:实现对物种的搜索
 //        String csName = chromosomeMapper.findByCS_ID(cs_id).getCS_NAME();
 //        String csName = "SoyC02.Chr02";
         if (clarity == null) {
             clarity = 1;//默认分辨率为1
         }
-        if (resolution== null) {
+        if (resolution == null) {
             resolution = 10000;//默认分辨率为10000
         }
         maxColor = maxColor == null ? 100 : maxColor;
@@ -182,7 +140,7 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
-    public Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double maxColor, Double minColor, Integer clarity, Integer resolution,Boolean tad, Boolean loop, String tadSoftware, String loopSoftware, HttpServletResponse response) {
+    public Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double maxColor, Double minColor, Integer clarity, Integer resolution, Boolean tad, Boolean loop, String tadSoftware, String loopSoftware, HttpServletResponse response) {
         BufferedImage image;
         String fileName = uniteFileName(species, cultivar, tissue);
         String path = "hic/" + fileName + ".hic";
