@@ -22,6 +22,8 @@ public interface ExcelMapper {
 
     List<HashMap<String, String>> getExcelTableCompartment(@Param("pageNow") int pageNow, @Param("pageSize") int pageSize);
 
+    List<HashMap<String, String>> getExcelDataOverview(@Param("pageNow") int pageNow, @Param("pageSize") int pageSize);
+
     Integer getExcelTableCount(@Param("table") String table);
 
     List<HashMap<String, String>> searchExcelTableComparation(@Param("searchParam") String params, @Param("pageNow") int pageNow, @Param("pageSize") int pageSize);
@@ -36,5 +38,6 @@ public interface ExcelMapper {
 
     List<HashMap<String, String>> searchExcelTableCompartment(@Param("searchParam") String params, @Param("pageNow") int pageNow, @Param("pageSize") int pageSize);
 
+    List<HashMap<String, String>> searchExcelDataOverview(@Param("searchParam") String params, @Param("pageNow") int pageNow, @Param("pageSize") int pageSize);
 
 }

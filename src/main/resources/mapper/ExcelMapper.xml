@@ -27,6 +27,11 @@
         from biology.excel_tad
         limit #{pageNow},#{pageSize};
     </select>
+    <select id="getExcelDataOverview" resultType="java.util.HashMap">
+        select *
+        from biology.excel_data_overview
+        limit #{pageNow},#{pageSize};
+    </select>
     <select id="getExcelTableCount" resultType="java.lang.Integer">
         select count(*)
         from ${table};
@@ -113,6 +118,30 @@
            or `Tissue` LIKE CONCAT('%', #{searchParam}, '%')
            or `Cworld (bed format)` LIKE CONCAT('%', #{searchParam}, '%')
         limit #{pageNow},#{pageSize};
+    </select>
+    <select id="searchExcelDataOverview" resultType="java.util.HashMap">
+        select *
+        from biology.excel_data_overview
+        where `Resolution` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Total_pairs` LIKE CONCAT('%', #{searchParam}, '%')
+           or `valid_interaction` LIKE CONCAT('%', #{searchParam}, '%')
+           or `cis_interaction` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Project ID` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Phylum` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Class` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Order` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Family` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Genus` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Specie` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Cultivar` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Tissue` LIKE CONCAT('%', #{searchParam}, '%')
+           or `SRA ID` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Institute` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Enzyme digestion` LIKE CONCAT('%', #{searchParam}, '%')
+           or `Article title` LIKE CONCAT('%', #{searchParam}, '%')
+        LIMIT #{pageNow},#{pageSize};
+
+
     </select>
 
 

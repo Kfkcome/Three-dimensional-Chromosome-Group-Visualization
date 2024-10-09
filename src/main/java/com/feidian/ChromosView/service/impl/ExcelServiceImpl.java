@@ -23,6 +23,7 @@ public class ExcelServiceImpl<T> implements ExcelService<T> {
         domain_to_table.put("excel_hic_matrix", "ExcelHiCMatrix");
         domain_to_table.put("excel_loop", "ExcelLoop");
         domain_to_table.put("excel_tad", "ExcelTad");
+        domain_to_table.put("excel_data_overview", "ExcelDataOverview");
     }
 
     private List<? extends Object> getExcelDataFromDB(String tableName, Integer pageNow, Integer pageSize) throws QueryException {
@@ -43,6 +44,8 @@ public class ExcelServiceImpl<T> implements ExcelService<T> {
             return excelMapper.getExcelTableLoop(pageNow, pageSize);
         } else if (s.equals("ExcelTad")) {
             return excelMapper.getExcelTableTad(pageNow, pageSize);
+        } else if (s.equals("ExcelDataOverview")) {
+            return excelMapper.getExcelDataOverview(pageNow, pageSize);
         } else {
             throw new QueryException("你输入的表不存在");
         }
@@ -64,6 +67,8 @@ public class ExcelServiceImpl<T> implements ExcelService<T> {
             return excelMapper.searchExcelTableLoop(searchParam, pageNow, pageSize);
         } else if (s.equals("ExcelTad")) {
             return excelMapper.searchExcelTableTad(searchParam, pageNow, pageSize);
+        } else if (s.equals("ExcelDataOverview")) {
+            return excelMapper.searchExcelDataOverview(searchParam, pageNow, pageSize);
         } else {
             throw new QueryException("你输入的表不存在");
         }
