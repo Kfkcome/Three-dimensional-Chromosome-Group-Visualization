@@ -27,7 +27,7 @@ public interface ConnectionService {
 
     List<LoopData> getLoopALL(String species, String cultivar, String chromosome, String software);
 
-    List<LoopData> getLoopByRange(String species, String cultivar, String chromosome, Integer s, Integer e, String software);
+    List<LoopData> getLoopByRange(String species, String cultivar, String chromosome, Integer s, Integer e, String software, Double threshold);
 
     List<CpData> getCompartmentALL(String species, String cultivar, String chromosome);
 

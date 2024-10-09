@@ -38,7 +38,7 @@ public interface CpBtwCulMapper {
 
     List<LoopData> getLoopDataByChromosome(@Param("table_name") String table_name, @Param("cs_name") String chromosome);
 
-    List<LoopData> getLoopDataByRange(@Param("table_name") String table_name, @Param("cs_name") String chromosome, @Param("start") int start, @Param("end") int end);
+    List<LoopData> getLoopDataByRange(@Param("table_name") String table_name, @Param("cs_name") String chromosome, @Param("start") int start, @Param("end") int end, @Param("threshold") double threshold);
 
     List<CpData> getCompartmentDataByChromosome(@Param("table_name") String table_name, @Param("cs_name") String chromosome);
 

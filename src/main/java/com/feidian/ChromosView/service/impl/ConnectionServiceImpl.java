@@ -214,13 +214,13 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
 
     @Override
-    public List<LoopData> getLoopByRange(String species, String cultivar, String chromosome, Integer s, Integer e, String software) {
+    public List<LoopData> getLoopByRange(String species, String cultivar, String chromosome, Integer s, Integer e, String software, Double threshold) {
         String table_name;
         List<LoopData> loopDataByChromosome = null;
         for (String t : all_tissue) {
             table_name = "`loop_" + species + "_" + cultivar + "_" + t + '_' + software + "`";
             try {
-                loopDataByChromosome = cpBtwCulMapper.getLoopDataByRange(table_name, chromosome, s, e);
+                loopDataByChromosome = cpBtwCulMapper.getLoopDataByRange(table_name, chromosome, s, e, threshold);
                 return loopDataByChromosome;
 
             } catch (Exception e1) {

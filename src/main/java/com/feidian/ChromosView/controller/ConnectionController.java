@@ -80,8 +80,8 @@ public class ConnectionController {
 
     @LogPrint
     @GetMapping("/loop/range")
-    ApiResponse<List<LoopData>> getLoopByRange(String species, String cultivar, String cs_name, Integer s, Integer e, String software) {
-        return ApiResponse.success(connectionService.getLoopByRange(species, cultivar, cs_name, s, e, software));
+    ApiResponse<List<LoopData>> getLoopByRange(String species, String cultivar, String cs_name, Integer s, Integer e, String software, Double threshold) {
+        return ApiResponse.success(connectionService.getLoopByRange(species, cultivar, cs_name, s, e, software, threshold));
     }
 
     @LogPrint
