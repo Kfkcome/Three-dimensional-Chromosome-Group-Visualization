@@ -26,12 +26,12 @@ package GenerateMyHeatMap;
 
 import juicebox.Context;
 import juicebox.HiC;
-import juicebox.HiCGlobals;
 import juicebox.MainWindow;
 import juicebox.data.ChromosomeHandler;
 import juicebox.data.basics.Chromosome;
 import juicebox.gui.SuperAdapter;
-import juicebox.mapcolorui.HeatmapRenderer;
+import juicebox.mapcolorui.JColorRangePanel;
+import juicebox.mapcolorui.RangeSlider;
 import juicebox.track.HiCTrack;
 import juicebox.track.ResourceTree;
 import juicebox.track.TrackPanel;
@@ -43,6 +43,7 @@ import org.broad.igv.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -59,11 +60,10 @@ import java.util.Map;
 
 public class GenerateHeatmap {
 
-    private static final GenerateHeatmap instance = new GenerateHeatmap();
-
     public static SuperAdapter superAdapter;
     public static String current_hic_path;
     public static String current_gene_path;//基因结构注释文件
+    private static GenerateHeatmap instance;
     String current_chromosome;
 
     private GenerateHeatmap() {
@@ -81,7 +81,10 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/30
      */
-    public static GenerateHeatmap getInstance() {
+    public synchronized static GenerateHeatmap getInstance() {
+        if (instance == null) {
+            instance = new GenerateHeatmap();
+        }
         return instance;
     }
 
@@ -149,22 +152,34 @@ public class GenerateHeatmap {
         return true;
     }
 
-    private boolean setHeatMapColor(double min, double max)
-    {
+    private boolean setHeatMapColor(double min, double max) {
         HiC hic = superAdapter.getHiC();
+        JColorRangePanel colorRangePanel = superAdapter.getMainViewPanel().getColorRangePanel();
 
-        String key = "";
-        try {
-            if (hic != null && hic.getZd() != null && hic.getDisplayOption() != null) {
-                key = HeatmapRenderer.getColorScaleCacheKey(hic.getZd(), hic.getDisplayOption(), hic.getObsNormalizationType(), hic.getControlNormalizationType());
-            }
-        } catch (Exception e2) {
-            if (HiCGlobals.printVerboseComments) {
-                e2.printStackTrace();
-            }
+
+        RangeSlider colorRangeSlider = colorRangePanel.getColorRangeSlider();
+        double min_slider = min * colorRangePanel.getColorRangeScaleFactor();
+        double max_slider = max * colorRangePanel.getColorRangeScaleFactor();
+        colorRangeSlider.setLowerValue((int) min_slider);
+        colorRangeSlider.setUpperValue((int) max_slider);
+        ChangeListener[] changeListeners = colorRangeSlider.getChangeListeners();
+        for (ChangeListener changeListener : changeListeners) {
+            changeListener.stateChanged(null);
         }
 
-        superAdapter.getHeatmapPanel().setNewDisplayRange(hic.getDisplayOption(), min, max, key);
+
+//        String key = "";
+//        try {
+//            if (hic != null && hic.getZd() != null && hic.getDisplayOption() != null) {
+//                key = HeatmapRenderer.getColorScaleCacheKey(hic.getZd(), hic.getDisplayOption(), hic.getObsNormalizationType(), hic.getControlNormalizationType());
+//            }
+//        } catch (Exception e2) {
+//            if (HiCGlobals.printVerboseComments) {
+//                e2.printStackTrace();
+//            }
+//        }
+//
+//        superAdapter.getHeatmapPanel().setNewDisplayRange(hic.getDisplayOption(), min, max, key);
         return true;
     }
 
@@ -179,13 +194,16 @@ public class GenerateHeatmap {
      * @author new
      * @date 2023/11/27
      */
-    public synchronized BufferedImage generateFullHeatMap(String path, String chromosome1_name, String displayOption, String normalizationType, double minColor, double maxColor, int clarity,int resolution) throws IOException {
+    public synchronized BufferedImage generateFullHeatMap(int type, String path, String chromosome1_name, String displayOption, String normalizationType, double minColor, double maxColor, int clarity, int resolution) throws IOException {
         BufferedImage temp = new BufferedImage(1502 * clarity, 1502 * clarity, BufferedImage.TYPE_INT_ARGB);
-        loadHicFile(path);//加载hic文件
-        setChromosome(chromosome1_name);//选择染色体
-        setNormalizationType(normalizationType);//设置标准化类型
-        setDisplayOption(displayOption);//设置显示选项
-
+        Graphics2D g2d = temp.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        if (type == 1) {
+            loadHicFile(path);//加载hic文件
+            setChromosome(chromosome1_name);//选择染色体
+            setNormalizationType(normalizationType);//设置标准化类型
+            setDisplayOption(displayOption);//设置显示选项
+        }
         //设置颜色
         setHeatMapColor(minColor, maxColor);
 
@@ -199,22 +217,31 @@ public class GenerateHeatmap {
                 break;
             }
         }
-        if(targetKey == -1)
-        {
+        if (targetKey == -1) {
             targetKey = 0;
         }
         superAdapter.getMainViewPanel().getResolutionSlider().getSlider().setValue(targetKey);
 
         superAdapter.getHiC().setScaleFactor(clarity);
-        superAdapter.getHeatmapPanel().setSize(1502 * clarity, 1502 * clarity);
-        superAdapter.getMainWindow().setSize(3000 * clarity, 3000 * clarity);
 
-        superAdapter.getHeatmapPanel().paint(temp.getGraphics());
+//        superAdapter.getMainWindow().setSize(3000 * clarity, 3000 * clarity);
+//        superAdapter.getMainWindow().setMinimumSize(new Dimension(1502 * clarity, 1502 * clarity));
+//        superAdapter.getHeatmapPanel().setSize(1502 * clarity, 1502 * clarity);
+        superAdapter.getHeatmapPanel().setMinimumSize(new Dimension(1502 * clarity * clarity, 1502 * clarity * clarity));
+        superAdapter.getHeatmapPanel().setPreferredSize(new Dimension(1502 * clarity * clarity, 1502 * clarity * clarity));
+        superAdapter.getHeatmapPanel().setSize(1502 * clarity * clarity, 1502 * clarity * clarity);
+
+        //设置颜色
+        System.out.println("修改颜色成功: minColor=" + minColor + ", maxColor=" + maxColor);
+        setHeatMapColor(minColor, maxColor);
+        
+        superAdapter.getHeatmapPanel().paint(g2d);
         String selectedItem = (String) superAdapter.getMainViewPanel().getObservedNormalizationComboBox().getSelectedItem();
         String selectedItem1 = superAdapter.getMainViewPanel().getDisplayOptionComboBox().getSelectedItem().toString();
 
         System.out.println("当前选择的标准化类型为：" + selectedItem + "\n" +
                 "当前选择的显示类型是：" + selectedItem1);
+        superAdapter.getHeatmapPanel().reset();
         return temp;
     }
 
@@ -224,6 +251,7 @@ public class GenerateHeatmap {
         Context xContext = superAdapter.getHiC().getXContext();
         return xContext.getChromosome().getLength();
     }
+
     /**
      * 功能描述：生成基因结构注释的图
      *
@@ -258,7 +286,7 @@ public class GenerateHeatmap {
         //画制基因结构图
         Collection<Pair<Rectangle, HiCTrack>> trackRectangles = superAdapter.getMainViewPanel().getTrackPanelX().getTrackRectangles();
         for (Pair<Rectangle, HiCTrack> p : trackRectangles) {
-            p.getSecond().setPosColor(new Color(255,0,0));
+            p.getSecond().setPosColor(new Color(255, 0, 0));
         }
         superAdapter.updateTrackPanel();
         superAdapter.getMainViewPanel().getTrackPanelX().paint(temp.getGraphics());
@@ -274,8 +302,8 @@ public class GenerateHeatmap {
      * @param chromosome1_name  染色体名字
      * @param displayOption     展示选项
      * @param normalizationType 正则化的选项
-     * @param maxColor        颜色最大值
-     * @param minColor        颜色最小值
+     * @param maxColor          颜色最大值
+     * @param minColor          颜色最小值
      * @param clarity           清晰度
      * @return {@link BufferedImage }
      * @author new
@@ -287,8 +315,6 @@ public class GenerateHeatmap {
         setChromosome(chromosome1_name);//选择染色体
         setNormalizationType(normalizationType);//设置标准化类型
         setDisplayOption(displayOption);//设置显示选项
-        superAdapter.getHeatmapPanel().setSize(1502, 1502);
-        superAdapter.getMainWindow().setSize(3000, 3000);
 
 
         //寻找2D注释文件
@@ -336,7 +362,7 @@ public class GenerateHeatmap {
         //绘制
 //        superAdapter.getHeatmapPanel().paint(temp.getGraphics());
 
-        temp = generateFullHeatMap(path, chromosome1_name, displayOption, normalizationType, minColor, maxColor, clarity, resolution);
+        temp = generateFullHeatMap(0, path, chromosome1_name, displayOption, normalizationType, minColor, maxColor, clarity, resolution);
         //删除已添加的注释文件
         root.remove(1);
         superAdapter.getLayersPanel().getLoad2DAnnotationsDialog().setCustomAddedFeatures(null);
@@ -402,7 +428,7 @@ public class GenerateHeatmap {
     }
 
     public ArrayList<String> getAnnotationPoint(String path, ArrayList<String> annotation_path, String chromosome1_name, int x, int y) throws IOException {
-        generateAnnotation2D(path, annotation_path, chromosome1_name, "", "", 0,100, 0,40000);
+        generateAnnotation2D(path, annotation_path, chromosome1_name, "", "", 0, 100, 0, 40000);
         Point currMouse = new Point(x, y);
         double minDistance = Double.POSITIVE_INFINITY;
         ;

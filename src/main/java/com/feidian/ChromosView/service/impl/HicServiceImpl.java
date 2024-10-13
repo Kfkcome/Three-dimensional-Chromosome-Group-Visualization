@@ -114,7 +114,7 @@ public class HicServiceImpl implements HicService {
         String path = "hic/" + fileName + ".hic";
         BufferedImage image;
         try {
-            image = generateHeatmap.generateFullHeatMap(path, chromosome, displayOption, normalizationType, minColor, maxColor, clarity, resolution);
+            image = generateHeatmap.generateFullHeatMap(1, path, chromosome, displayOption, normalizationType, minColor, maxColor, clarity, resolution);
         } catch (Exception e) {
             throw new HicFileNotFoundException(e.getMessage());
         }
@@ -140,7 +140,7 @@ public class HicServiceImpl implements HicService {
     }
 
     @Override
-    public Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double maxColor, Double minColor, Integer clarity, Integer resolution, Boolean tad, Boolean loop, String tadSoftware, String loopSoftware, HttpServletResponse response) {
+    public Boolean generateAnnotation2DMap(String species, String cultivar, String tissue, String chromosome, String displayOption, String normalizationType, Double minColor, Double maxColor, Integer clarity, Integer resolution, Boolean tad, Boolean loop, String tadSoftware, String loopSoftware, HttpServletResponse response) {
         BufferedImage image;
         String fileName = uniteFileName(species, cultivar, tissue);
         String path = "hic/" + fileName + ".hic";

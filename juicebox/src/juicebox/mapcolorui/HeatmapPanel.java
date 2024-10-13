@@ -101,6 +101,12 @@ public class HeatmapPanel extends JComponent {
     @Override
     protected void paintComponent(Graphics g1) {
         Graphics2D g = (Graphics2D) g1;
+        System.out.println(getSize());
+        int lowerValue = superAdapter.getMainViewPanel().getColorRangePanel().getColorRangeSlider().getLowerValue();
+        int upperValue = superAdapter.getMainViewPanel().getColorRangePanel().getColorRangeSlider().getUpperValue();
+        double colorRangeScaleFactor = superAdapter.getMainViewPanel().getColorRangePanel().getColorRangeScaleFactor();
+        System.out.println("lowerValue: " + lowerValue * colorRangeScaleFactor + "\nupperValue: " + upperValue * colorRangeScaleFactor);
+
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Rectangle clipBounds = g.getClipBounds();
         g.clearRect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);

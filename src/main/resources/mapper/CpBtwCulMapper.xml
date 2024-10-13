@@ -55,8 +55,9 @@
         select *
         from biology.${table_name}
         where CS_NAME = #{cs_name}
-            and (Y1 &gt;= #{start} and X1 &lt;= #{end})
-           or (Y2 &gt;= #{start} and X2 &lt;= #{end});
+          and ((Y1 &gt;= #{start} and X1 &lt;= #{end})
+            or (Y2 &gt;= #{start} and X2 &lt;= #{end}))
+          and DEVALUE &lt;= #{threshold};
     </select>
     <select id="getCompartmentDataByChromosome" resultType="com.feidian.ChromosView.domain.CpData">
         select *

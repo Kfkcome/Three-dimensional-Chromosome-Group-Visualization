@@ -59,24 +59,6 @@ public class MainViewPanel {
     private final JPanel bottomChromosomeFigPanel = new JPanel(new BorderLayout());
     private final JPanel chrSidePanel = new JPanel(new BorderLayout());
     private final JPanel chrSidePanel3 = new JPanel(new BorderLayout());
-    private JComboBox<Chromosome> chrBox1;
-    private JComboBox<Chromosome> chrBox2;
-    private JComboBox<String> observedNormalizationComboBox, controlNormalizationComboBox;
-    private JComboBox<MatrixType> displayOptionComboBox;
-    private JColorRangePanel colorRangePanel;
-    private ResolutionControl resolutionSlider;
-    private TrackPanel trackPanelX;
-    private TrackPanel trackPanelY;
-    private TrackLabelPanel trackLabelPanel;
-    private HiCRulerPanel rulerPanelX;
-    private HeatmapPanel heatmapPanel;
-    private HiCRulerPanel rulerPanelY;
-    private ThumbnailPanel thumbnailPanel;
-    private JEditorPane mouseHoverTextPanel;
-    private GoToPanel goPanel;
-    private HiCChromosomeFigPanel chromosomePanelX;
-    private HiCChromosomeFigPanel chromosomePanelY;
-    private MainMenuBar menuBar;
     private final JToggleButton annotationsPanelToggleButton = new JToggleButton("Show Annotation Panel");
     private final JPanel annotationsPanel = new JPanel(new BorderLayout());
     private final JPanel mainPanel = new JPanel(new BorderLayout());
@@ -100,11 +82,33 @@ public class MainViewPanel {
     private final JLabel chrLabel = new JLabel("Chromosomes");
     private final JLabel normalizationLabel = new JLabel("Normalization  (Obs  |  Ctrl)");
     private final JLabel displayOptionLabel = new JLabel("Show");
+    private final JPanel tooltipPanel = new JPanel(new BorderLayout());
+    private JComboBox<Chromosome> chrBox1;
+    private JComboBox<Chromosome> chrBox2;
+    private JComboBox<String> observedNormalizationComboBox, controlNormalizationComboBox;
+    private JComboBox<MatrixType> displayOptionComboBox;
+    private JColorRangePanel colorRangePanel;
+    private ResolutionControl resolutionSlider;
+    private TrackPanel trackPanelX;
+    private TrackPanel trackPanelY;
+    private TrackLabelPanel trackLabelPanel;
+    private HiCRulerPanel rulerPanelX;
+    private HeatmapPanel heatmapPanel;
+    private HiCRulerPanel rulerPanelY;
+    private ThumbnailPanel thumbnailPanel;
+    private JEditorPane mouseHoverTextPanel;
+    private GoToPanel goPanel;
+    private HiCChromosomeFigPanel chromosomePanelX;
+    private HiCChromosomeFigPanel chromosomePanelY;
+    private MainMenuBar menuBar;
     private MiniAnnotationsLayerPanel miniAnnotationsLayerPanel;
     private boolean tooltipAllowedToUpdate = true;
     private boolean ignoreUpdateThumbnail = false;
-    private final JPanel tooltipPanel = new JPanel(new BorderLayout());
     private boolean controlIsLoaded = false;
+
+    public static void invertAssemblyMatCheck() {
+        HiCGlobals.isAssemblyMatCheck = !HiCGlobals.isAssemblyMatCheck;
+    }
 
     public void setIgnoreUpdateThumbnail(boolean flag) {
         ignoreUpdateThumbnail = flag;
@@ -356,7 +360,13 @@ public class MainViewPanel {
         heatmapPanel.setMinimumSize(new Dimension(panelWidth - 5, panelHeight - 5));
         heatmapPanel.setPreferredSize(new Dimension(panelWidth - 5, panelHeight - 5));
 
-        wrapHeatmapPanel.add(heatmapPanel, BorderLayout.CENTER);
+        // 创建一个使用 FlowLayout 的嵌套面板
+        JPanel nestedPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        // 添加 wrapHeatmapPanel 到嵌套面板
+        nestedPanel.add(heatmapPanel);
+
+        wrapHeatmapPanel.add(nestedPanel, BorderLayout.CENTER);
+//        wrapHeatmapPanel.add(heatmapPanel, BorderLayout.CENTER);
         wrapHeatmapPanel.add(bottomChromosomeFigPanel, BorderLayout.SOUTH);
         wrapHeatmapPanel.add(chromosomePanelY, BorderLayout.EAST);
 
@@ -689,10 +699,6 @@ public class MainViewPanel {
         } else {
             thumbnailPanel.setImage(null);
         }
-    }
-
-    public static void invertAssemblyMatCheck() {
-        HiCGlobals.isAssemblyMatCheck = !HiCGlobals.isAssemblyMatCheck;
     }
 
     private void chrBox1ActionPerformed(ActionEvent e) {
