@@ -506,6 +506,20 @@ public class GenerateHeatmap {
                 }
             }
         }
+
+        root.remove(1);
+        superAdapter.getLayersPanel().getLoad2DAnnotationsDialog().setCustomAddedFeatures(null);
+        //恢复环境
+        Load2DAnnotationsDialog load2DAnnotationsDialog = superAdapter.getLayersPanel().getLoad2DAnnotationsDialog();
+        Map<String, MutableTreeNode> loadedAnnotationsMap = load2DAnnotationsDialog.getLoadedAnnotationsMap();
+        for (File file : annotation_file) {
+            if (file != null) {
+                String absolutePath = file.getAbsolutePath();
+                superAdapter.getLayersPanel().getLoad2DAnnotationsDialog().getLoadedAnnotationsMap().remove(loadedAnnotationsMap.get(path));
+                loadedAnnotationsMap.remove(absolutePath);
+            }
+        }
+
         return txt;
     }
 
