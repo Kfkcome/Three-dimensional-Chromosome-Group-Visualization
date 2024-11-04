@@ -234,14 +234,14 @@ public class GenerateHeatmap {
         //设置颜色
         System.out.println("修改颜色成功: minColor=" + minColor + ", maxColor=" + maxColor);
         setHeatMapColor(minColor, maxColor);
-        
+
         superAdapter.getHeatmapPanel().paint(g2d);
         String selectedItem = (String) superAdapter.getMainViewPanel().getObservedNormalizationComboBox().getSelectedItem();
         String selectedItem1 = superAdapter.getMainViewPanel().getDisplayOptionComboBox().getSelectedItem().toString();
 
         System.out.println("当前选择的标准化类型为：" + selectedItem + "\n" +
                 "当前选择的显示类型是：" + selectedItem1);
-        superAdapter.getHeatmapPanel().reset();
+//        superAdapter.getHeatmapPanel().reset();
         return temp;
     }
 
@@ -419,25 +419,75 @@ public class GenerateHeatmap {
         loadHicFile(path);
         setChromosome(chromosome1_name);//检测时候是当前的图片，如果不是的话就更新
         superAdapter.getHeatmapPanel().setSize(1502, 1502);
-        superAdapter.getMainWindow().setSize(3000, 3000);
+//        superAdapter.getMainWindow().setSize(3000, 3000);
         //FIXME：修复相同坐标查询到数据不同
         if (superAdapter == null) {
             return "";//没有传入文件是无法获取数据的
         }
-        return superAdapter.getHeatmapPanel().getMouseHandler().toolTipText(x, y);
+        return superAdapter.getHeatmapPanel().getMouseHandler().toolTipText((int) (x / 40000 * superAdapter.getHiC().getScaleFactor()), (int) (y / 40000 * superAdapter.getHiC().getScaleFactor()));
     }
 
     public ArrayList<String> getAnnotationPoint(String path, ArrayList<String> annotation_path, String chromosome1_name, int x, int y) throws IOException {
-        generateAnnotation2D(path, annotation_path, chromosome1_name, "", "", 0, 100, 0, 40000);
-        Point currMouse = new Point(x, y);
+        BufferedImage temp = new BufferedImage(1502, 1502, BufferedImage.TYPE_INT_ARGB);
+        loadHicFile(path);//加载hic文件
+        setChromosome(chromosome1_name);//选择染色体
+
+
+        //寻找2D注释文件
+        File[] annotation_file = new File[3];
+        for (int i = 0; i < annotation_path.size(); i++) {
+            annotation_file[i] = new File(annotation_path.get(i));
+        }
+        //加载2D注释文件
+        actionPerformed2(new ActionEvent(new Object(), ActionEvent.ACTION_PERFORMED, "myCommand"), annotation_file);
+        JTree tree = superAdapter.getLayersPanel().getLoad2DAnnotationsDialog().getTree();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+
+        //打印当前加载的文件
+        DefaultMutableTreeNode tempNode = (DefaultMutableTreeNode) root.getChildAt(1);
+        for (int i = 0; i < tempNode.getChildCount(); i++) {
+            DefaultMutableTreeNode childAt1 = (DefaultMutableTreeNode) tempNode.getChildAt(i);
+            System.out.println(childAt1.toString());
+        }
+        System.out.println("________________________");
+        if (annotation_path.size() > 1) {
+            //模拟鼠标确认二维注释
+            TreeNode childAt = root.getChildAt(1);
+            TreeNode childAt1 = childAt.getChildAt(0);
+            TreeNode[] nodes = {root, childAt, childAt1};
+            TreePath treePath = new TreePath(nodes);
+            tree.setSelectionPath(treePath);
+            superAdapter.getLayersPanel().getLoad2DAnnotationsDialog().getOpenButton().doClick();
+
+            TreeNode childAt2 = childAt.getChildAt(1);
+            TreeNode[] nodes2 = {root, childAt, childAt2};
+            TreePath treePath1 = new TreePath(nodes2);
+            tree.setSelectionPath(treePath1);
+            superAdapter.getLayersPanel().getLoad2DAnnotationsDialog().getOpenButton().doClick();
+        } else if (annotation_path.size() == 1) {
+            TreeNode childAt = root.getChildAt(1);
+            TreeNode childAt1 = childAt.getChildAt(0);
+            TreeNode[] nodes = {root, childAt, childAt1};
+            TreePath treePath = new TreePath(nodes);
+            tree.setSelectionPath(treePath);
+            superAdapter.getLayersPanel().getLoad2DAnnotationsDialog().getOpenButton().doClick();
+        } else {
+            System.out.println("没有找到2D注释文件");
+            throw new IOException("没有找到文件");
+        }
+        temp = generateFullHeatMap(0, path, chromosome1_name, "", "", 1, 100, 1, 400000);
+
+
+        Point currMouse = new Point((int) (x), (int) (y));
         double minDistance = Double.POSITIVE_INFINITY;
-        ;
+
         ArrayList<String> txt = new ArrayList<>();
         int numLayers = superAdapter.getAllLayers().size();
         int globalPriority = numLayers;
         List<Feature2DGuiContainer> allFeaturePairs = superAdapter.getHeatmapPanel().getMouseHandler().getAllFeaturePairs();
         for (Feature2DGuiContainer loop : allFeaturePairs) {
-            if (loop.getRectangle().contains(x, y)) {
+            Long s1 = loop.getFeature2D().getStart1(), s2 = loop.getFeature2D().getStart2(), e1 = loop.getFeature2D().getEnd1(), e2 = loop.getFeature2D().getEnd2();
+            if (currMouse.x >= s1 && currMouse.x <= e1 && currMouse.y >= s2 && currMouse.y <= e2) {
                 // TODO - why is this code duplicated in this file?
                 String s = loop.getFeature2D().tooltipText();
                 boolean flag = true;
@@ -551,8 +601,7 @@ public class GenerateHeatmap {
      * @date 2023/11/29
      */
     public synchronized String getAnnotation1DData(String path, String gene_path, String chromosome1_name, int x, int y) throws IOException {
-        //FIXME:修复只能在画图后才能获取点的数据
-        superAdapter = MainWindow.superAdapter;
+        //FIXME:修复只能在画图后才能获取点的数
         BufferedImage temp = new BufferedImage(1502, 25, BufferedImage.TYPE_INT_ARGB);
         //加载hic文件
         loadHicFile(path);
@@ -567,7 +616,7 @@ public class GenerateHeatmap {
         }
 
         superAdapter.getHeatmapPanel().setSize(1502, 1502);
-        superAdapter.getMainWindow().setSize(3000, 3000);
+//        superAdapter.getMainWindow().setSize(3000, 3000);
         //画制基因结构图
         //TODO:修复不用画图也能获取到点的数据
         superAdapter.getMainViewPanel().getTrackPanelX().paint(temp.getGraphics());
@@ -576,7 +625,7 @@ public class GenerateHeatmap {
         String toolTipText = null;
         for (Pair<Rectangle, HiCTrack> trackRectangle : trackRectangles) {
             HiCTrack second = trackRectangle.getSecond();
-            toolTipText = second.getToolTipText(x, y, TrackPanel.Orientation.X);
+            toolTipText = second.getToolTipText((int) (x / 40000 * superAdapter.getHiC().getScaleFactor()), (int) (y / 40000 * superAdapter.getHiC().getScaleFactor()), TrackPanel.Orientation.X);
         }
 
         return toolTipText;

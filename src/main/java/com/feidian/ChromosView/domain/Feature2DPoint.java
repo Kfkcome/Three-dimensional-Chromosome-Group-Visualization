@@ -16,22 +16,30 @@ public class Feature2DPoint {
     // <span style='font-family: arial; font-size: 12pt;'>score = <b>1.08</b></span><br>
     // <span style='font-family: arial; font-size: 12pt;'>upSign = <b>0.61</b></span><br>
     // <span style='font-family: arial; font-size: 12pt;'>uVarScore = <b>0.09</b></span><br>
+//<span style='color:red; font-family: arial; font-size: 12pt;'>Feature</span><br>
+// <span style='font-family: arial; font-size: 12pt;color:#0000FF;'>Gm_C01_Chr1:45,870,001-45,880,000</span><br>
+// <span style='font-family: arial; font-size: 12pt;color:#009900;'>Gm_C01_Chr1:45,330,001-45,340,000</span><br>
+// <span style='font-family: arial; font-size: 12pt;'>pvalue = <b>0.03</b></span><br>
+
+    //<span style='color:red; font-family: arial; font-size: 12pt;'>Feature</span><br>
+// <span style='font-family: arial; font-size: 12pt;color:#0000FF;'>Gm_C01_Chr1:14,800,001-15,520,000</span><br>
+// <span style='font-family: arial; font-size: 12pt;color:#009900;'>Gm_C01_Chr1:14,800,001-15,520,000</span>
     String name;
     String range1;
     String range2;
-    String loSign;
-    String score;
-    String upSign;
-    String uVarScore;
+    String pValue;
 
     Feature2DPoint(String data) {
         String[] split = data.split("</span><br>");
         name = split[0].split(">")[1];
         range1 = split[1].split(">")[1];
-        range2 = split[2].split(">")[1];
-        loSign = split[3].split("<b>")[1].split("</b>")[0];
-        score = split[4].split("<b>")[1].split("</b>")[0];
-        upSign = split[5].split("<b>")[1].split("</b>")[0];
-        uVarScore = split[6].split("<b>")[1].split("</b>")[0];
+//        range2 = split[2].split(">")[1];
+        if (split.length <= 3) {
+            range2 = split[2].split(">")[1].split("</span")[0];
+        }
+        if (split.length > 3) {
+            range2 = split[2].split(">")[1];
+            pValue = split[3].split("<b>")[1].split("</b>")[0];
+        }
     }
 }
